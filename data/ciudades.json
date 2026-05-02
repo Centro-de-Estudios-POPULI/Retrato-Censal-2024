@@ -1,0 +1,3044 @@
+[
+  {
+    "slug": "santa_cruz_aioc_charagua_iyambae",
+    "municipio": "AIOC Charagua Iyambae",
+    "departamento": "Santa Cruz",
+    "manzanos": 181,
+    "poblacion": 11227,
+    "cobertura": 35.9,
+    "size_kb": 175.3
+  },
+  {
+    "slug": "santa_cruz_aioc_guarani_kereimba_iyaambae",
+    "municipio": "AIOC Guaraní Kereimba Iyaambae",
+    "departamento": "Santa Cruz",
+    "manzanos": 44,
+    "poblacion": 2429,
+    "cobertura": 29.3,
+    "size_kb": 43.9
+  },
+  {
+    "slug": "oruro_aioc_uru_chipaya",
+    "municipio": "AIOC Uru Chipaya",
+    "departamento": "Oruro",
+    "manzanos": 26,
+    "poblacion": 1567,
+    "cobertura": 11.9,
+    "size_kb": 24.0
+  },
+  {
+    "slug": "oruro_aioc_de_salinas",
+    "municipio": "AIOC de Salinas",
+    "departamento": "Oruro",
+    "manzanos": 96,
+    "poblacion": 7922,
+    "cobertura": 8.5,
+    "size_kb": 89.7
+  },
+  {
+    "slug": "potosi_acasio",
+    "municipio": "Acasio",
+    "departamento": "Potosí",
+    "manzanos": 19,
+    "poblacion": 818,
+    "cobertura": 31.1,
+    "size_kb": 19.1
+  },
+  {
+    "slug": "la_paz_achacachi",
+    "municipio": "Achacachi",
+    "departamento": "La Paz",
+    "manzanos": 300,
+    "poblacion": 14998,
+    "cobertura": 46.0,
+    "size_kb": 296.3
+  },
+  {
+    "slug": "la_paz_achocalla",
+    "municipio": "Achocalla                               ",
+    "departamento": "La Paz",
+    "manzanos": 872,
+    "poblacion": 42029,
+    "cobertura": 29.4,
+    "size_kb": 877.2
+  },
+  {
+    "slug": "cochabamba_aiquile",
+    "municipio": "Aiquile",
+    "departamento": "Cochabamba",
+    "manzanos": 220,
+    "poblacion": 10952,
+    "cobertura": 53.0,
+    "size_kb": 209.1
+  },
+  {
+    "slug": "chuquisaca_alcala",
+    "municipio": "Alcalá",
+    "departamento": "Chuquisaca",
+    "manzanos": 41,
+    "poblacion": 1726,
+    "cobertura": 64.1,
+    "size_kb": 38.2
+  },
+  {
+    "slug": "la_paz_alto_beni",
+    "municipio": "Alto Beni                               ",
+    "departamento": "La Paz",
+    "manzanos": 39,
+    "poblacion": 1815,
+    "cobertura": 23.1,
+    "size_kb": 36.7
+  },
+  {
+    "slug": "oruro_andamarca",
+    "municipio": "Andamarca                               ",
+    "departamento": "Oruro",
+    "manzanos": 51,
+    "poblacion": 2761,
+    "cobertura": 12.3,
+    "size_kb": 48.4
+  },
+  {
+    "slug": "oruro_antequera",
+    "municipio": "Antequera                               ",
+    "departamento": "Oruro",
+    "manzanos": 50,
+    "poblacion": 2335,
+    "cobertura": 25.9,
+    "size_kb": 48.7
+  },
+  {
+    "slug": "cochabamba_anzaldo",
+    "municipio": "Anzaldo",
+    "departamento": "Cochabamba",
+    "manzanos": 48,
+    "poblacion": 1895,
+    "cobertura": 33.1,
+    "size_kb": 46.3
+  },
+  {
+    "slug": "la_paz_apolo",
+    "municipio": "Apolo",
+    "departamento": "La Paz",
+    "manzanos": 133,
+    "poblacion": 6360,
+    "cobertura": 27.8,
+    "size_kb": 125.6
+  },
+  {
+    "slug": "potosi_arampampa",
+    "municipio": "Arampampa",
+    "departamento": "Potosí",
+    "manzanos": 8,
+    "poblacion": 523,
+    "cobertura": 11.6,
+    "size_kb": 7.9
+  },
+  {
+    "slug": "cochabamba_arani",
+    "municipio": "Arani",
+    "departamento": "Cochabamba",
+    "manzanos": 113,
+    "poblacion": 5677,
+    "cobertura": 54.3,
+    "size_kb": 116.2
+  },
+  {
+    "slug": "cochabamba_arbieto",
+    "municipio": "Arbieto",
+    "departamento": "Cochabamba",
+    "manzanos": 629,
+    "poblacion": 28031,
+    "cobertura": 30.7,
+    "size_kb": 615.2
+  },
+  {
+    "slug": "cochabamba_arque",
+    "municipio": "Arque",
+    "departamento": "Cochabamba",
+    "manzanos": 31,
+    "poblacion": 1514,
+    "cobertura": 20.5,
+    "size_kb": 32.0
+  },
+  {
+    "slug": "santa_cruz_ascencion_de_guarayos",
+    "municipio": "Ascención de Guarayos",
+    "departamento": "Santa Cruz",
+    "manzanos": 471,
+    "poblacion": 27838,
+    "cobertura": 51.5,
+    "size_kb": 447.9
+  },
+  {
+    "slug": "potosi_atocha",
+    "municipio": "Atocha",
+    "departamento": "Potosí",
+    "manzanos": 186,
+    "poblacion": 8622,
+    "cobertura": 30.9,
+    "size_kb": 179.6
+  },
+  {
+    "slug": "la_paz_aucapata",
+    "municipio": "Aucapata",
+    "departamento": "La Paz",
+    "manzanos": 37,
+    "poblacion": 1396,
+    "cobertura": 38.9,
+    "size_kb": 36.5
+  },
+  {
+    "slug": "la_paz_ayata",
+    "municipio": "Ayata",
+    "departamento": "La Paz",
+    "manzanos": 17,
+    "poblacion": 1001,
+    "cobertura": 32.7,
+    "size_kb": 16.3
+  },
+  {
+    "slug": "la_paz_ayo_ayo",
+    "municipio": "Ayo Ayo",
+    "departamento": "La Paz",
+    "manzanos": 70,
+    "poblacion": 2738,
+    "cobertura": 34.1,
+    "size_kb": 65.7
+  },
+  {
+    "slug": "cochabamba_ayopaya",
+    "municipio": "Ayopaya",
+    "departamento": "Cochabamba",
+    "manzanos": 122,
+    "poblacion": 5417,
+    "cobertura": 31.2,
+    "size_kb": 125.3
+  },
+  {
+    "slug": "chuquisaca_azurduy",
+    "municipio": "Azurduy",
+    "departamento": "Chuquisaca",
+    "manzanos": 30,
+    "poblacion": 1398,
+    "cobertura": 31.6,
+    "size_kb": 29.8
+  },
+  {
+    "slug": "la_paz_batallas",
+    "municipio": "Batallas",
+    "departamento": "La Paz",
+    "manzanos": 155,
+    "poblacion": 7186,
+    "cobertura": 33.0,
+    "size_kb": 145.5
+  },
+  {
+    "slug": "beni_baures",
+    "municipio": "Baures",
+    "departamento": "Beni",
+    "manzanos": 76,
+    "poblacion": 4252,
+    "cobertura": 33.5,
+    "size_kb": 71.5
+  },
+  {
+    "slug": "pando_bella_flor",
+    "municipio": "Bella Flor                              ",
+    "departamento": "Pando",
+    "manzanos": 14,
+    "poblacion": 1122,
+    "cobertura": 20.6,
+    "size_kb": 13.6
+  },
+  {
+    "slug": "oruro_belen_de_andamarca",
+    "municipio": "Belén de Andamarca",
+    "departamento": "Oruro",
+    "manzanos": 37,
+    "poblacion": 2146,
+    "cobertura": 18.0,
+    "size_kb": 34.9
+  },
+  {
+    "slug": "tarija_bermejo",
+    "municipio": "Bermejo",
+    "departamento": "Tarija",
+    "manzanos": 472,
+    "poblacion": 34453,
+    "cobertura": 62.0,
+    "size_kb": 445.9
+  },
+  {
+    "slug": "potosi_betanzos",
+    "municipio": "Betanzos",
+    "departamento": "Potosí",
+    "manzanos": 221,
+    "poblacion": 10988,
+    "cobertura": 29.0,
+    "size_kb": 217.3
+  },
+  {
+    "slug": "cochabamba_bolivar",
+    "municipio": "Bolivar",
+    "departamento": "Cochabamba",
+    "manzanos": 48,
+    "poblacion": 2321,
+    "cobertura": 20.2,
+    "size_kb": 49.3
+  },
+  {
+    "slug": "santa_cruz_boyuibe",
+    "municipio": "Boyuibe",
+    "departamento": "Santa Cruz",
+    "manzanos": 75,
+    "poblacion": 3877,
+    "cobertura": 48.7,
+    "size_kb": 71.2
+  },
+  {
+    "slug": "santa_cruz_buena_vista",
+    "municipio": "Buena Vista",
+    "departamento": "Santa Cruz",
+    "manzanos": 138,
+    "poblacion": 7767,
+    "cobertura": 55.0,
+    "size_kb": 135.9
+  },
+  {
+    "slug": "santa_cruz_cabezas",
+    "municipio": "Cabezas",
+    "departamento": "Santa Cruz",
+    "manzanos": 288,
+    "poblacion": 15312,
+    "cobertura": 40.1,
+    "size_kb": 274.0
+  },
+  {
+    "slug": "la_paz_cairoma",
+    "municipio": "Cairoma",
+    "departamento": "La Paz",
+    "manzanos": 71,
+    "poblacion": 3396,
+    "cobertura": 38.6,
+    "size_kb": 71.2
+  },
+  {
+    "slug": "potosi_caiza_d",
+    "municipio": "Caiza \"D\"",
+    "departamento": "Potosí",
+    "manzanos": 132,
+    "poblacion": 6658,
+    "cobertura": 28.6,
+    "size_kb": 127.6
+  },
+  {
+    "slug": "la_paz_cajuata",
+    "municipio": "Cajuata",
+    "departamento": "La Paz",
+    "manzanos": 163,
+    "poblacion": 9323,
+    "cobertura": 52.2,
+    "size_kb": 159.3
+  },
+  {
+    "slug": "la_paz_calacoto",
+    "municipio": "Calacoto",
+    "departamento": "La Paz",
+    "manzanos": 28,
+    "poblacion": 1660,
+    "cobertura": 13.2,
+    "size_kb": 26.1
+  },
+  {
+    "slug": "la_paz_calamarca",
+    "municipio": "Calamarca",
+    "departamento": "La Paz",
+    "manzanos": 128,
+    "poblacion": 6529,
+    "cobertura": 27.4,
+    "size_kb": 121.0
+  },
+  {
+    "slug": "chuquisaca_camargo",
+    "municipio": "Camargo",
+    "departamento": "Chuquisaca",
+    "manzanos": 121,
+    "poblacion": 7021,
+    "cobertura": 31.8,
+    "size_kb": 118.3
+  },
+  {
+    "slug": "santa_cruz_camiri",
+    "municipio": "Camiri",
+    "departamento": "Santa Cruz",
+    "manzanos": 451,
+    "poblacion": 27666,
+    "cobertura": 65.9,
+    "size_kb": 446.8
+  },
+  {
+    "slug": "cochabamba_capinota",
+    "municipio": "Capinota",
+    "departamento": "Cochabamba",
+    "manzanos": 268,
+    "poblacion": 15240,
+    "cobertura": 34.6,
+    "size_kb": 275.3
+  },
+  {
+    "slug": "la_paz_caquiaviri",
+    "municipio": "Caquiaviri",
+    "departamento": "La Paz",
+    "manzanos": 47,
+    "poblacion": 2527,
+    "cobertura": 23.2,
+    "size_kb": 43.9
+  },
+  {
+    "slug": "oruro_caracollo",
+    "municipio": "Caracollo",
+    "departamento": "Oruro",
+    "manzanos": 263,
+    "poblacion": 12693,
+    "cobertura": 36.0,
+    "size_kb": 246.3
+  },
+  {
+    "slug": "la_paz_caranavi",
+    "municipio": "Caranavi",
+    "departamento": "La Paz",
+    "manzanos": 502,
+    "poblacion": 23735,
+    "cobertura": 55.7,
+    "size_kb": 478.8
+  },
+  {
+    "slug": "oruro_carangas",
+    "municipio": "Carangas",
+    "departamento": "Oruro",
+    "manzanos": 6,
+    "poblacion": 442,
+    "cobertura": 14.6,
+    "size_kb": 5.7
+  },
+  {
+    "slug": "tarija_carapari",
+    "municipio": "Caraparí",
+    "departamento": "Tarija",
+    "manzanos": 107,
+    "poblacion": 6001,
+    "cobertura": 39.5,
+    "size_kb": 108.0
+  },
+  {
+    "slug": "potosi_caripuyo",
+    "municipio": "Caripuyo",
+    "departamento": "Potosí",
+    "manzanos": 39,
+    "poblacion": 2136,
+    "cobertura": 23.1,
+    "size_kb": 42.4
+  },
+  {
+    "slug": "la_paz_catacora",
+    "municipio": "Catacora",
+    "departamento": "La Paz",
+    "manzanos": 22,
+    "poblacion": 1137,
+    "cobertura": 25.9,
+    "size_kb": 21.2
+  },
+  {
+    "slug": "oruro_challapata",
+    "municipio": "Challapata",
+    "departamento": "Oruro",
+    "manzanos": 393,
+    "poblacion": 17450,
+    "cobertura": 34.6,
+    "size_kb": 369.3
+  },
+  {
+    "slug": "potosi_chaqui",
+    "municipio": "Chaquí",
+    "departamento": "Potosí",
+    "manzanos": 59,
+    "poblacion": 2573,
+    "cobertura": 29.6,
+    "size_kb": 59.7
+  },
+  {
+    "slug": "la_paz_charazani",
+    "municipio": "Charazani                               ",
+    "departamento": "La Paz",
+    "manzanos": 112,
+    "poblacion": 6375,
+    "cobertura": 51.1,
+    "size_kb": 116.9
+  },
+  {
+    "slug": "la_paz_charana",
+    "municipio": "Charaña",
+    "departamento": "La Paz",
+    "manzanos": 33,
+    "poblacion": 1694,
+    "cobertura": 20.6,
+    "size_kb": 30.6
+  },
+  {
+    "slug": "potosi_chayanta",
+    "municipio": "Chayanta",
+    "departamento": "Potosí",
+    "manzanos": 196,
+    "poblacion": 9609,
+    "cobertura": 34.6,
+    "size_kb": 188.0
+  },
+  {
+    "slug": "cochabamba_chimore",
+    "municipio": "Chimoré",
+    "departamento": "Cochabamba",
+    "manzanos": 350,
+    "poblacion": 16960,
+    "cobertura": 45.6,
+    "size_kb": 335.5
+  },
+  {
+    "slug": "oruro_choquecota",
+    "municipio": "Choquecota                              ",
+    "departamento": "Oruro",
+    "manzanos": 9,
+    "poblacion": 496,
+    "cobertura": 12.5,
+    "size_kb": 8.5
+  },
+  {
+    "slug": "la_paz_chua_cocani",
+    "municipio": "Chua Cocani                             ",
+    "departamento": "La Paz",
+    "manzanos": 54,
+    "poblacion": 1943,
+    "cobertura": 41.9,
+    "size_kb": 51.4
+  },
+  {
+    "slug": "la_paz_chulumani",
+    "municipio": "Chulumani",
+    "departamento": "La Paz",
+    "manzanos": 127,
+    "poblacion": 7005,
+    "cobertura": 58.5,
+    "size_kb": 140.4
+  },
+  {
+    "slug": "la_paz_chuma",
+    "municipio": "Chuma",
+    "departamento": "La Paz",
+    "manzanos": 70,
+    "poblacion": 3086,
+    "cobertura": 45.2,
+    "size_kb": 70.4
+  },
+  {
+    "slug": "potosi_chuquihuta_ayllu_jucumani",
+    "municipio": "Chuquihuta Ayllu Jucumani               ",
+    "departamento": "Potosí",
+    "manzanos": 67,
+    "poblacion": 3911,
+    "cobertura": 35.8,
+    "size_kb": 68.0
+  },
+  {
+    "slug": "potosi_ckochas",
+    "municipio": "Ckochas                                 ",
+    "departamento": "Potosí",
+    "manzanos": 21,
+    "poblacion": 1076,
+    "cobertura": 20.8,
+    "size_kb": 19.9
+  },
+  {
+    "slug": "cochabamba_cliza",
+    "municipio": "Cliza",
+    "departamento": "Cochabamba",
+    "manzanos": 291,
+    "poblacion": 17502,
+    "cobertura": 49.8,
+    "size_kb": 293.3
+  },
+  {
+    "slug": "pando_cobija",
+    "municipio": "Cobija",
+    "departamento": "Pando",
+    "manzanos": 975,
+    "poblacion": 53688,
+    "cobertura": 59.5,
+    "size_kb": 928.1
+  },
+  {
+    "slug": "cochabamba_cocapata",
+    "municipio": "Cocapata                                ",
+    "departamento": "Cochabamba",
+    "manzanos": 46,
+    "poblacion": 2172,
+    "cobertura": 27.4,
+    "size_kb": 47.1
+  },
+  {
+    "slug": "cochabamba_cochabamba",
+    "municipio": "Cochabamba",
+    "departamento": "Cochabamba",
+    "manzanos": 9278,
+    "poblacion": 665482,
+    "cobertura": 74.4,
+    "size_kb": 8948.1
+  },
+  {
+    "slug": "oruro_coipasa",
+    "municipio": "Coipasa",
+    "departamento": "Oruro",
+    "manzanos": 13,
+    "poblacion": 1261,
+    "cobertura": 13.7,
+    "size_kb": 12.1
+  },
+  {
+    "slug": "cochabamba_colcapirhua",
+    "municipio": "Colcapirhua",
+    "departamento": "Cochabamba",
+    "manzanos": 740,
+    "poblacion": 66505,
+    "cobertura": 81.6,
+    "size_kb": 768.6
+  },
+  {
+    "slug": "potosi_colcha_k",
+    "municipio": "Colcha \"K\"",
+    "departamento": "Potosí",
+    "manzanos": 126,
+    "poblacion": 10811,
+    "cobertura": 10.5,
+    "size_kb": 118.8
+  },
+  {
+    "slug": "la_paz_collana",
+    "municipio": "Collana                                 ",
+    "departamento": "La Paz",
+    "manzanos": 68,
+    "poblacion": 4099,
+    "cobertura": 54.0,
+    "size_kb": 65.3
+  },
+  {
+    "slug": "cochabamba_colomi",
+    "municipio": "Colomi",
+    "departamento": "Cochabamba",
+    "manzanos": 146,
+    "poblacion": 7766,
+    "cobertura": 66.7,
+    "size_kb": 164.5
+  },
+  {
+    "slug": "santa_cruz_colpa_belgica",
+    "municipio": "Colpa Bélgica",
+    "departamento": "Santa Cruz",
+    "manzanos": 73,
+    "poblacion": 4945,
+    "cobertura": 51.8,
+    "size_kb": 74.7
+  },
+  {
+    "slug": "potosi_colquechaca",
+    "municipio": "Colquechaca",
+    "departamento": "Potosí",
+    "manzanos": 98,
+    "poblacion": 5755,
+    "cobertura": 54.4,
+    "size_kb": 96.4
+  },
+  {
+    "slug": "la_paz_colquencha",
+    "municipio": "Colquencha",
+    "departamento": "La Paz",
+    "manzanos": 209,
+    "poblacion": 9721,
+    "cobertura": 40.3,
+    "size_kb": 200.6
+  },
+  {
+    "slug": "la_paz_colquiri",
+    "municipio": "Colquiri",
+    "departamento": "La Paz",
+    "manzanos": 172,
+    "poblacion": 8776,
+    "cobertura": 21.4,
+    "size_kb": 165.6
+  },
+  {
+    "slug": "la_paz_comanche",
+    "municipio": "Comanche",
+    "departamento": "La Paz",
+    "manzanos": 19,
+    "poblacion": 982,
+    "cobertura": 18.6,
+    "size_kb": 17.7
+  },
+  {
+    "slug": "santa_cruz_comarapa",
+    "municipio": "Comarapa",
+    "departamento": "Santa Cruz",
+    "manzanos": 231,
+    "poblacion": 11434,
+    "cobertura": 47.3,
+    "size_kb": 223.8
+  },
+  {
+    "slug": "la_paz_combaya",
+    "municipio": "Combaya",
+    "departamento": "La Paz",
+    "manzanos": 13,
+    "poblacion": 826,
+    "cobertura": 65.0,
+    "size_kb": 14.2
+  },
+  {
+    "slug": "santa_cruz_concepcion",
+    "municipio": "Concepción",
+    "departamento": "Santa Cruz",
+    "manzanos": 345,
+    "poblacion": 21326,
+    "cobertura": 34.9,
+    "size_kb": 326.1
+  },
+  {
+    "slug": "la_paz_copacabana",
+    "municipio": "Copacabana",
+    "departamento": "La Paz",
+    "manzanos": 187,
+    "poblacion": 7847,
+    "cobertura": 47.6,
+    "size_kb": 194.8
+  },
+  {
+    "slug": "la_paz_coripata",
+    "municipio": "Coripata",
+    "departamento": "La Paz",
+    "manzanos": 157,
+    "poblacion": 9216,
+    "cobertura": 54.1,
+    "size_kb": 162.3
+  },
+  {
+    "slug": "la_paz_corocoro",
+    "municipio": "Corocoro",
+    "departamento": "La Paz",
+    "manzanos": 66,
+    "poblacion": 3662,
+    "cobertura": 19.4,
+    "size_kb": 63.2
+  },
+  {
+    "slug": "la_paz_coroico",
+    "municipio": "Coroico",
+    "departamento": "La Paz",
+    "manzanos": 69,
+    "poblacion": 3551,
+    "cobertura": 41.3,
+    "size_kb": 72.2
+  },
+  {
+    "slug": "oruro_corque",
+    "municipio": "Corque",
+    "departamento": "Oruro",
+    "manzanos": 111,
+    "poblacion": 5612,
+    "cobertura": 20.6,
+    "size_kb": 105.5
+  },
+  {
+    "slug": "potosi_cotagaita",
+    "municipio": "Cotagaita",
+    "departamento": "Potosí",
+    "manzanos": 255,
+    "poblacion": 13054,
+    "cobertura": 25.0,
+    "size_kb": 244.8
+  },
+  {
+    "slug": "santa_cruz_cotoca",
+    "municipio": "Cotoca",
+    "departamento": "Santa Cruz",
+    "manzanos": 1494,
+    "poblacion": 101549,
+    "cobertura": 38.6,
+    "size_kb": 1440.7
+  },
+  {
+    "slug": "oruro_cruz_de_machacamarca",
+    "municipio": "Cruz de Machacamarca",
+    "departamento": "Oruro",
+    "manzanos": 12,
+    "poblacion": 1182,
+    "cobertura": 18.5,
+    "size_kb": 11.3
+  },
+  {
+    "slug": "santa_cruz_cuatro_canadas",
+    "municipio": "Cuatro Cañadas",
+    "departamento": "Santa Cruz",
+    "manzanos": 315,
+    "poblacion": 16709,
+    "cobertura": 50.3,
+    "size_kb": 298.4
+  },
+  {
+    "slug": "santa_cruz_cuevo",
+    "municipio": "Cuevo",
+    "departamento": "Santa Cruz",
+    "manzanos": 43,
+    "poblacion": 3058,
+    "cobertura": 54.4,
+    "size_kb": 41.5
+  },
+  {
+    "slug": "chuquisaca_culpina",
+    "municipio": "Culpina",
+    "departamento": "Chuquisaca",
+    "manzanos": 80,
+    "poblacion": 4184,
+    "cobertura": 22.5,
+    "size_kb": 77.9
+  },
+  {
+    "slug": "oruro_curahuara_de_carangas",
+    "municipio": "Curahuara de Carangas",
+    "departamento": "Oruro",
+    "manzanos": 29,
+    "poblacion": 1953,
+    "cobertura": 9.4,
+    "size_kb": 27.6
+  },
+  {
+    "slug": "la_paz_curva",
+    "municipio": "Curva",
+    "departamento": "La Paz",
+    "manzanos": 37,
+    "poblacion": 1997,
+    "cobertura": 44.0,
+    "size_kb": 35.6
+  },
+  {
+    "slug": "la_paz_desaguadero",
+    "municipio": "Desaguadero",
+    "departamento": "La Paz",
+    "manzanos": 83,
+    "poblacion": 5041,
+    "cobertura": 47.4,
+    "size_kb": 78.1
+  },
+  {
+    "slug": "la_paz_el_alto",
+    "municipio": "El Alto",
+    "departamento": "La Paz",
+    "manzanos": 15442,
+    "poblacion": 885210,
+    "cobertura": 76.9,
+    "size_kb": 14374.7
+  },
+  {
+    "slug": "santa_cruz_el_carmen_rivero_torrez",
+    "municipio": "El Carmen Rivero Tórrez",
+    "departamento": "Santa Cruz",
+    "manzanos": 71,
+    "poblacion": 4722,
+    "cobertura": 25.5,
+    "size_kb": 67.7
+  },
+  {
+    "slug": "oruro_el_choro",
+    "municipio": "El Choro",
+    "departamento": "Oruro",
+    "manzanos": 38,
+    "poblacion": 1660,
+    "cobertura": 21.5,
+    "size_kb": 35.4
+  },
+  {
+    "slug": "santa_cruz_el_puente",
+    "municipio": "El Puente",
+    "departamento": "Santa Cruz",
+    "manzanos": 146,
+    "poblacion": 7878,
+    "cobertura": 27.8,
+    "size_kb": 137.8
+  },
+  {
+    "slug": "tarija_el_puente",
+    "municipio": "El Puente",
+    "departamento": "Tarija",
+    "manzanos": 44,
+    "poblacion": 2803,
+    "cobertura": 17.5,
+    "size_kb": 43.1
+  },
+  {
+    "slug": "santa_cruz_el_torno",
+    "municipio": "El Torno",
+    "departamento": "Santa Cruz",
+    "manzanos": 737,
+    "poblacion": 47579,
+    "cobertura": 58.4,
+    "size_kb": 717.7
+  },
+  {
+    "slug": "chuquisaca_el_villar",
+    "municipio": "El Villar",
+    "departamento": "Chuquisaca",
+    "manzanos": 26,
+    "poblacion": 1618,
+    "cobertura": 27.1,
+    "size_kb": 24.7
+  },
+  {
+    "slug": "cochabamba_entre_rios",
+    "municipio": "Entre Ríos",
+    "departamento": "Cochabamba",
+    "manzanos": 716,
+    "poblacion": 31501,
+    "cobertura": 56.6,
+    "size_kb": 675.5
+  },
+  {
+    "slug": "tarija_entre_rios",
+    "municipio": "Entre Ríos",
+    "departamento": "Tarija",
+    "manzanos": 94,
+    "poblacion": 5041,
+    "cobertura": 48.2,
+    "size_kb": 90.1
+  },
+  {
+    "slug": "oruro_escara",
+    "municipio": "Escara",
+    "departamento": "Oruro",
+    "manzanos": 35,
+    "poblacion": 2871,
+    "cobertura": 47.9,
+    "size_kb": 33.0
+  },
+  {
+    "slug": "la_paz_escoma",
+    "municipio": "Escoma                                  ",
+    "departamento": "La Paz",
+    "manzanos": 39,
+    "poblacion": 1627,
+    "cobertura": 53.4,
+    "size_kb": 37.1
+  },
+  {
+    "slug": "oruro_esmeralda",
+    "municipio": "Esmeralda",
+    "departamento": "Oruro",
+    "manzanos": 40,
+    "poblacion": 3539,
+    "cobertura": 23.3,
+    "size_kb": 37.5
+  },
+  {
+    "slug": "oruro_eucaliptus",
+    "municipio": "Eucaliptus",
+    "departamento": "Oruro",
+    "manzanos": 104,
+    "poblacion": 4225,
+    "cobertura": 50.0,
+    "size_kb": 98.0
+  },
+  {
+    "slug": "beni_exaltacion",
+    "municipio": "Exaltación                              ",
+    "departamento": "Beni",
+    "manzanos": 13,
+    "poblacion": 2001,
+    "cobertura": 34.2,
+    "size_kb": 12.2
+  },
+  {
+    "slug": "santa_cruz_fernandez_alonso",
+    "municipio": "Fernández Alonso",
+    "departamento": "Santa Cruz",
+    "manzanos": 244,
+    "poblacion": 12046,
+    "cobertura": 58.8,
+    "size_kb": 228.9
+  },
+  {
+    "slug": "pando_filadelfia",
+    "municipio": "Filadelfia",
+    "departamento": "Pando",
+    "manzanos": 36,
+    "poblacion": 1677,
+    "cobertura": 32.1,
+    "size_kb": 34.3
+  },
+  {
+    "slug": "santa_cruz_general_saavedra",
+    "municipio": "General Saavedra",
+    "departamento": "Santa Cruz",
+    "manzanos": 229,
+    "poblacion": 13872,
+    "cobertura": 42.6,
+    "size_kb": 216.4
+  },
+  {
+    "slug": "la_paz_guanay",
+    "municipio": "Guanay",
+    "departamento": "La Paz",
+    "manzanos": 138,
+    "poblacion": 7849,
+    "cobertura": 54.3,
+    "size_kb": 131.2
+  },
+  {
+    "slug": "beni_guayaramerin",
+    "municipio": "Guayaramerín                            ",
+    "departamento": "Beni",
+    "manzanos": 586,
+    "poblacion": 37072,
+    "cobertura": 59.7,
+    "size_kb": 548.1
+  },
+  {
+    "slug": "beni_huacaraje",
+    "municipio": "Huacaraje",
+    "departamento": "Beni",
+    "manzanos": 42,
+    "poblacion": 3702,
+    "cobertura": 32.6,
+    "size_kb": 39.1
+  },
+  {
+    "slug": "chuquisaca_huacareta",
+    "municipio": "Huacareta                               ",
+    "departamento": "Chuquisaca",
+    "manzanos": 56,
+    "poblacion": 2473,
+    "cobertura": 30.8,
+    "size_kb": 52.5
+  },
+  {
+    "slug": "oruro_huachacalla",
+    "municipio": "Huachacalla",
+    "departamento": "Oruro",
+    "manzanos": 57,
+    "poblacion": 3874,
+    "cobertura": 42.2,
+    "size_kb": 53.7
+  },
+  {
+    "slug": "oruro_huanuni",
+    "municipio": "Huanuni",
+    "departamento": "Oruro",
+    "manzanos": 296,
+    "poblacion": 18487,
+    "cobertura": 30.1,
+    "size_kb": 285.4
+  },
+  {
+    "slug": "la_paz_huarina",
+    "municipio": "Huarina",
+    "departamento": "La Paz",
+    "manzanos": 32,
+    "poblacion": 1208,
+    "cobertura": 29.9,
+    "size_kb": 31.0
+  },
+  {
+    "slug": "la_paz_huatajata",
+    "municipio": "Huatajata                               ",
+    "departamento": "La Paz",
+    "manzanos": 40,
+    "poblacion": 1932,
+    "cobertura": 33.6,
+    "size_kb": 38.7
+  },
+  {
+    "slug": "la_paz_humanata",
+    "municipio": "Humanata                                ",
+    "departamento": "La Paz",
+    "manzanos": 9,
+    "poblacion": 298,
+    "cobertura": 34.6,
+    "size_kb": 8.5
+  },
+  {
+    "slug": "la_paz_ichoca",
+    "municipio": "Ichoca",
+    "departamento": "La Paz",
+    "manzanos": 70,
+    "poblacion": 4372,
+    "cobertura": 26.1,
+    "size_kb": 67.8
+  },
+  {
+    "slug": "chuquisaca_icla",
+    "municipio": "Icla",
+    "departamento": "Chuquisaca",
+    "manzanos": 22,
+    "poblacion": 1191,
+    "cobertura": 30.6,
+    "size_kb": 21.5
+  },
+  {
+    "slug": "chuquisaca_incahuasi",
+    "municipio": "Incahuasi",
+    "departamento": "Chuquisaca",
+    "manzanos": 50,
+    "poblacion": 3781,
+    "cobertura": 37.3,
+    "size_kb": 47.5
+  },
+  {
+    "slug": "pando_ingavi",
+    "municipio": "Ingavi                                  ",
+    "departamento": "Pando",
+    "manzanos": 11,
+    "poblacion": 770,
+    "cobertura": 40.7,
+    "size_kb": 10.2
+  },
+  {
+    "slug": "la_paz_inquisivi",
+    "municipio": "Inquisivi",
+    "departamento": "La Paz",
+    "manzanos": 52,
+    "poblacion": 2150,
+    "cobertura": 36.4,
+    "size_kb": 52.7
+  },
+  {
+    "slug": "la_paz_irupana",
+    "municipio": "Irupana",
+    "departamento": "La Paz",
+    "manzanos": 174,
+    "poblacion": 7455,
+    "cobertura": 42.2,
+    "size_kb": 173.4
+  },
+  {
+    "slug": "la_paz_ixiamas",
+    "municipio": "Ixiamas",
+    "departamento": "La Paz",
+    "manzanos": 100,
+    "poblacion": 5363,
+    "cobertura": 26.6,
+    "size_kb": 93.7
+  },
+  {
+    "slug": "la_paz_jesus_de_machaka",
+    "municipio": "Jesús de Machaka",
+    "departamento": "La Paz",
+    "manzanos": 81,
+    "poblacion": 3236,
+    "cobertura": 27.5,
+    "size_kb": 77.6
+  },
+  {
+    "slug": "la_paz_la_marka_san_andres_de_machaca",
+    "municipio": "La (Marka) San Andrés de Machaca",
+    "departamento": "La Paz",
+    "manzanos": 29,
+    "poblacion": 1392,
+    "cobertura": 25.0,
+    "size_kb": 27.2
+  },
+  {
+    "slug": "la_paz_la_asunta",
+    "municipio": "La Asunta",
+    "departamento": "La Paz",
+    "manzanos": 287,
+    "poblacion": 12319,
+    "cobertura": 51.5,
+    "size_kb": 274.8
+  },
+  {
+    "slug": "santa_cruz_la_guardia",
+    "municipio": "La Guardia",
+    "departamento": "Santa Cruz",
+    "manzanos": 2152,
+    "poblacion": 143803,
+    "cobertura": 60.8,
+    "size_kb": 2079.6
+  },
+  {
+    "slug": "oruro_la_rivera",
+    "municipio": "La Rivera",
+    "departamento": "Oruro",
+    "manzanos": 7,
+    "poblacion": 372,
+    "cobertura": 15.6,
+    "size_kb": 6.5
+  },
+  {
+    "slug": "santa_cruz_lagunillas",
+    "municipio": "Lagunillas",
+    "departamento": "Santa Cruz",
+    "manzanos": 29,
+    "poblacion": 1729,
+    "cobertura": 25.4,
+    "size_kb": 27.8
+  },
+  {
+    "slug": "la_paz_laja",
+    "municipio": "Laja",
+    "departamento": "La Paz",
+    "manzanos": 371,
+    "poblacion": 15771,
+    "cobertura": 39.2,
+    "size_kb": 350.9
+  },
+  {
+    "slug": "chuquisaca_las_carreras",
+    "municipio": "Las Carreras",
+    "departamento": "Chuquisaca",
+    "manzanos": 23,
+    "poblacion": 1609,
+    "cobertura": 19.5,
+    "size_kb": 22.4
+  },
+  {
+    "slug": "potosi_llallagua",
+    "municipio": "Llallagua",
+    "departamento": "Potosí",
+    "manzanos": 678,
+    "poblacion": 37824,
+    "cobertura": 48.4,
+    "size_kb": 641.4
+  },
+  {
+    "slug": "potosi_llica",
+    "municipio": "Llica",
+    "departamento": "Potosí",
+    "manzanos": 52,
+    "poblacion": 3573,
+    "cobertura": 9.9,
+    "size_kb": 48.4
+  },
+  {
+    "slug": "beni_loreto",
+    "municipio": "Loreto",
+    "departamento": "Beni",
+    "manzanos": 29,
+    "poblacion": 1946,
+    "cobertura": 25.0,
+    "size_kb": 27.4
+  },
+  {
+    "slug": "la_paz_luribay",
+    "municipio": "Luribay",
+    "departamento": "La Paz",
+    "manzanos": 72,
+    "poblacion": 3247,
+    "cobertura": 31.7,
+    "size_kb": 73.8
+  },
+  {
+    "slug": "oruro_machacamarca",
+    "municipio": "Machacamarca",
+    "departamento": "Oruro",
+    "manzanos": 96,
+    "poblacion": 4452,
+    "cobertura": 32.8,
+    "size_kb": 89.9
+  },
+  {
+    "slug": "chuquisaca_machareti",
+    "municipio": "Macharetí",
+    "departamento": "Chuquisaca",
+    "manzanos": 69,
+    "poblacion": 4248,
+    "cobertura": 25.5,
+    "size_kb": 66.0
+  },
+  {
+    "slug": "beni_magdalena",
+    "municipio": "Magdalena                               ",
+    "departamento": "Beni",
+    "manzanos": 152,
+    "poblacion": 10286,
+    "cobertura": 57.1,
+    "size_kb": 141.6
+  },
+  {
+    "slug": "santa_cruz_mairana",
+    "municipio": "Mairana",
+    "departamento": "Santa Cruz",
+    "manzanos": 188,
+    "poblacion": 10090,
+    "cobertura": 52.2,
+    "size_kb": 179.5
+  },
+  {
+    "slug": "la_paz_malla",
+    "municipio": "Malla",
+    "departamento": "La Paz",
+    "manzanos": 49,
+    "poblacion": 2553,
+    "cobertura": 39.5,
+    "size_kb": 47.5
+  },
+  {
+    "slug": "la_paz_mapiri",
+    "municipio": "Mapiri",
+    "departamento": "La Paz",
+    "manzanos": 265,
+    "poblacion": 15545,
+    "cobertura": 60.9,
+    "size_kb": 255.4
+  },
+  {
+    "slug": "la_paz_mecapaca",
+    "municipio": "Mecapaca",
+    "departamento": "La Paz",
+    "manzanos": 216,
+    "poblacion": 12350,
+    "cobertura": 26.0,
+    "size_kb": 233.8
+  },
+  {
+    "slug": "santa_cruz_mineros",
+    "municipio": "Mineros",
+    "departamento": "Santa Cruz",
+    "manzanos": 366,
+    "poblacion": 22702,
+    "cobertura": 52.5,
+    "size_kb": 341.8
+  },
+  {
+    "slug": "cochabamba_mizque",
+    "municipio": "Mizque",
+    "departamento": "Cochabamba",
+    "manzanos": 172,
+    "poblacion": 7477,
+    "cobertura": 45.4,
+    "size_kb": 169.0
+  },
+  {
+    "slug": "la_paz_mocomoco",
+    "municipio": "Mocomoco",
+    "departamento": "La Paz",
+    "manzanos": 60,
+    "poblacion": 2880,
+    "cobertura": 23.2,
+    "size_kb": 60.1
+  },
+  {
+    "slug": "potosi_mojinete",
+    "municipio": "Mojinete",
+    "departamento": "Potosí",
+    "manzanos": 6,
+    "poblacion": 382,
+    "cobertura": 15.4,
+    "size_kb": 5.6
+  },
+  {
+    "slug": "chuquisaca_mojocoya",
+    "municipio": "Mojocoya",
+    "departamento": "Chuquisaca",
+    "manzanos": 65,
+    "poblacion": 3399,
+    "cobertura": 40.1,
+    "size_kb": 63.0
+  },
+  {
+    "slug": "chuquisaca_monteagudo",
+    "municipio": "Monteagudo",
+    "departamento": "Chuquisaca",
+    "manzanos": 278,
+    "poblacion": 15257,
+    "cobertura": 48.7,
+    "size_kb": 266.3
+  },
+  {
+    "slug": "santa_cruz_montero",
+    "municipio": "Montero",
+    "departamento": "Santa Cruz",
+    "manzanos": 1681,
+    "poblacion": 126093,
+    "cobertura": 63.2,
+    "size_kb": 1576.4
+  },
+  {
+    "slug": "cochabamba_morochata",
+    "municipio": "Morochata",
+    "departamento": "Cochabamba",
+    "manzanos": 15,
+    "poblacion": 630,
+    "cobertura": 45.5,
+    "size_kb": 17.1
+  },
+  {
+    "slug": "santa_cruz_moromoro",
+    "municipio": "Moromoro",
+    "departamento": "Santa Cruz",
+    "manzanos": 26,
+    "poblacion": 1246,
+    "cobertura": 24.3,
+    "size_kb": 25.6
+  },
+  {
+    "slug": "la_paz_nazacara_de_pacajes",
+    "municipio": "Nazacara de Pacajes                     ",
+    "departamento": "La Paz",
+    "manzanos": 29,
+    "poblacion": 1421,
+    "cobertura": 33.7,
+    "size_kb": 27.3
+  },
+  {
+    "slug": "la_paz_nuestra_senora_de_la_paz",
+    "municipio": "Nuestra Señora de La Paz",
+    "departamento": "La Paz",
+    "manzanos": 8857,
+    "poblacion": 750225,
+    "cobertura": 69.4,
+    "size_kb": 8634.1
+  },
+  {
+    "slug": "pando_nueva_esperanza",
+    "municipio": "Nueva Esperanza",
+    "departamento": "Pando",
+    "manzanos": 16,
+    "poblacion": 720,
+    "cobertura": 35.6,
+    "size_kb": 15.2
+  },
+  {
+    "slug": "potosi_ocuri",
+    "municipio": "Ocurí",
+    "departamento": "Potosí",
+    "manzanos": 48,
+    "poblacion": 2046,
+    "cobertura": 44.9,
+    "size_kb": 49.9
+  },
+  {
+    "slug": "santa_cruz_okinawa_uno",
+    "municipio": "Okinawa Uno",
+    "departamento": "Santa Cruz",
+    "manzanos": 128,
+    "poblacion": 8945,
+    "cobertura": 35.9,
+    "size_kb": 122.1
+  },
+  {
+    "slug": "cochabamba_omereque",
+    "municipio": "Omereque",
+    "departamento": "Cochabamba",
+    "manzanos": 74,
+    "poblacion": 4515,
+    "cobertura": 29.7,
+    "size_kb": 71.2
+  },
+  {
+    "slug": "oruro_oruro",
+    "municipio": "Oruro",
+    "departamento": "Oruro",
+    "manzanos": 5434,
+    "poblacion": 298133,
+    "cobertura": 53.7,
+    "size_kb": 5062.0
+  },
+  {
+    "slug": "tarija_padcaya",
+    "municipio": "Padcaya",
+    "departamento": "Tarija",
+    "manzanos": 54,
+    "poblacion": 2902,
+    "cobertura": 38.0,
+    "size_kb": 54.1
+  },
+  {
+    "slug": "chuquisaca_padilla",
+    "municipio": "Padilla",
+    "departamento": "Chuquisaca",
+    "manzanos": 87,
+    "poblacion": 4352,
+    "cobertura": 48.1,
+    "size_kb": 82.3
+  },
+  {
+    "slug": "santa_cruz_pailon",
+    "municipio": "Pailón",
+    "departamento": "Santa Cruz",
+    "manzanos": 336,
+    "poblacion": 22555,
+    "cobertura": 41.4,
+    "size_kb": 316.3
+  },
+  {
+    "slug": "la_paz_palca",
+    "municipio": "Palca",
+    "departamento": "La Paz",
+    "manzanos": 104,
+    "poblacion": 4795,
+    "cobertura": 45.6,
+    "size_kb": 107.2
+  },
+  {
+    "slug": "la_paz_palos_blancos",
+    "municipio": "Palos Blancos",
+    "departamento": "La Paz",
+    "manzanos": 335,
+    "poblacion": 14249,
+    "cobertura": 42.3,
+    "size_kb": 319.2
+  },
+  {
+    "slug": "oruro_pampa_aullagas",
+    "municipio": "Pampa Aullagas",
+    "departamento": "Oruro",
+    "manzanos": 25,
+    "poblacion": 1530,
+    "cobertura": 14.0,
+    "size_kb": 24.2
+  },
+  {
+    "slug": "santa_cruz_pampagrande",
+    "municipio": "Pampagrande",
+    "departamento": "Santa Cruz",
+    "manzanos": 157,
+    "poblacion": 7920,
+    "cobertura": 44.1,
+    "size_kb": 155.2
+  },
+  {
+    "slug": "la_paz_papel_pampa",
+    "municipio": "Papel Pampa",
+    "departamento": "La Paz",
+    "manzanos": 11,
+    "poblacion": 763,
+    "cobertura": 6.3,
+    "size_kb": 10.6
+  },
+  {
+    "slug": "oruro_paria",
+    "municipio": "Paria",
+    "departamento": "Oruro",
+    "manzanos": 109,
+    "poblacion": 5734,
+    "cobertura": 16.6,
+    "size_kb": 103.9
+  },
+  {
+    "slug": "cochabamba_pasorapa",
+    "municipio": "Pasorapa",
+    "departamento": "Cochabamba",
+    "manzanos": 49,
+    "poblacion": 2807,
+    "cobertura": 49.0,
+    "size_kb": 46.1
+  },
+  {
+    "slug": "la_paz_patacamaya",
+    "municipio": "Patacamaya",
+    "departamento": "La Paz",
+    "manzanos": 352,
+    "poblacion": 15110,
+    "cobertura": 50.4,
+    "size_kb": 332.6
+  },
+  {
+    "slug": "oruro_pazna",
+    "municipio": "Pazña",
+    "departamento": "Oruro",
+    "manzanos": 50,
+    "poblacion": 2800,
+    "cobertura": 16.9,
+    "size_kb": 47.6
+  },
+  {
+    "slug": "la_paz_pelechuco",
+    "municipio": "Pelechuco",
+    "departamento": "La Paz",
+    "manzanos": 61,
+    "poblacion": 3371,
+    "cobertura": 22.3,
+    "size_kb": 59.2
+  },
+  {
+    "slug": "potosi_pocoata",
+    "municipio": "Pocoata",
+    "departamento": "Potosí",
+    "manzanos": 140,
+    "poblacion": 5668,
+    "cobertura": 35.4,
+    "size_kb": 135.2
+  },
+  {
+    "slug": "cochabamba_pocona",
+    "municipio": "Pocona",
+    "departamento": "Cochabamba",
+    "manzanos": 15,
+    "poblacion": 898,
+    "cobertura": 17.9,
+    "size_kb": 14.8
+  },
+  {
+    "slug": "cochabamba_pojo",
+    "municipio": "Pojo",
+    "departamento": "Cochabamba",
+    "manzanos": 80,
+    "poblacion": 3645,
+    "cobertura": 29.2,
+    "size_kb": 80.7
+  },
+  {
+    "slug": "oruro_poopo",
+    "municipio": "Poopó",
+    "departamento": "Oruro",
+    "manzanos": 77,
+    "poblacion": 5363,
+    "cobertura": 48.7,
+    "size_kb": 74.5
+  },
+  {
+    "slug": "potosi_porco",
+    "municipio": "Porco",
+    "departamento": "Potosí",
+    "manzanos": 172,
+    "poblacion": 11797,
+    "cobertura": 59.1,
+    "size_kb": 162.8
+  },
+  {
+    "slug": "chuquisaca_poroma",
+    "municipio": "Poroma",
+    "departamento": "Chuquisaca",
+    "manzanos": 37,
+    "poblacion": 1523,
+    "cobertura": 34.9,
+    "size_kb": 36.1
+  },
+  {
+    "slug": "santa_cruz_porongo",
+    "municipio": "Porongo",
+    "departamento": "Santa Cruz",
+    "manzanos": 218,
+    "poblacion": 15247,
+    "cobertura": 38.0,
+    "size_kb": 254.7
+  },
+  {
+    "slug": "santa_cruz_portachuelo",
+    "municipio": "Portachuelo",
+    "departamento": "Santa Cruz",
+    "manzanos": 262,
+    "poblacion": 17718,
+    "cobertura": 63.9,
+    "size_kb": 260.6
+  },
+  {
+    "slug": "pando_porvenir",
+    "municipio": "Porvenir",
+    "departamento": "Pando",
+    "manzanos": 116,
+    "poblacion": 7307,
+    "cobertura": 42.5,
+    "size_kb": 109.2
+  },
+  {
+    "slug": "santa_cruz_postrervalle",
+    "municipio": "Postrervalle",
+    "departamento": "Santa Cruz",
+    "manzanos": 21,
+    "poblacion": 949,
+    "cobertura": 50.0,
+    "size_kb": 20.2
+  },
+  {
+    "slug": "potosi_potosi",
+    "municipio": "Potosí",
+    "departamento": "Potosí",
+    "manzanos": 2714,
+    "poblacion": 202943,
+    "cobertura": 63.8,
+    "size_kb": 2558.9
+  },
+  {
+    "slug": "chuquisaca_presto",
+    "municipio": "Presto",
+    "departamento": "Chuquisaca",
+    "manzanos": 69,
+    "poblacion": 5292,
+    "cobertura": 18.9,
+    "size_kb": 64.5
+  },
+  {
+    "slug": "la_paz_pucarani",
+    "municipio": "Pucarani",
+    "departamento": "La Paz",
+    "manzanos": 583,
+    "poblacion": 25062,
+    "cobertura": 31.5,
+    "size_kb": 560.5
+  },
+  {
+    "slug": "santa_cruz_pucara",
+    "municipio": "Pucará",
+    "departamento": "Santa Cruz",
+    "manzanos": 21,
+    "poblacion": 838,
+    "cobertura": 61.8,
+    "size_kb": 20.7
+  },
+  {
+    "slug": "la_paz_puerto_acosta",
+    "municipio": "Puerto Acosta                           ",
+    "departamento": "La Paz",
+    "manzanos": 44,
+    "poblacion": 1679,
+    "cobertura": 34.6,
+    "size_kb": 44.4
+  },
+  {
+    "slug": "pando_puerto_gonzalo_moreno",
+    "municipio": "Puerto Gonzalo Moreno",
+    "departamento": "Pando",
+    "manzanos": 85,
+    "poblacion": 7533,
+    "cobertura": 41.5,
+    "size_kb": 81.4
+  },
+  {
+    "slug": "la_paz_puerto_mayor_de_carabuco",
+    "municipio": "Puerto Mayor de Carabuco",
+    "departamento": "La Paz",
+    "manzanos": 47,
+    "poblacion": 2389,
+    "cobertura": 29.2,
+    "size_kb": 49.8
+  },
+  {
+    "slug": "la_paz_puerto_mayor_de_guaqui",
+    "municipio": "Puerto Mayor de Guaqui",
+    "departamento": "La Paz",
+    "manzanos": 53,
+    "poblacion": 2372,
+    "cobertura": 31.2,
+    "size_kb": 52.2
+  },
+  {
+    "slug": "beni_puerto_menor_de_rurrenabaque",
+    "municipio": "Puerto Menor de Rurrenabaque",
+    "departamento": "Beni",
+    "manzanos": 251,
+    "poblacion": 13806,
+    "cobertura": 69.0,
+    "size_kb": 242.4
+  },
+  {
+    "slug": "la_paz_puerto_perez",
+    "municipio": "Puerto Pérez",
+    "departamento": "La Paz",
+    "manzanos": 87,
+    "poblacion": 4344,
+    "cobertura": 42.2,
+    "size_kb": 91.5
+  },
+  {
+    "slug": "santa_cruz_puerto_quijarro",
+    "municipio": "Puerto Quijarro",
+    "departamento": "Santa Cruz",
+    "manzanos": 293,
+    "poblacion": 17522,
+    "cobertura": 69.9,
+    "size_kb": 283.2
+  },
+  {
+    "slug": "pando_puerto_rico",
+    "municipio": "Puerto Rico",
+    "departamento": "Pando",
+    "manzanos": 83,
+    "poblacion": 4421,
+    "cobertura": 35.2,
+    "size_kb": 77.6
+  },
+  {
+    "slug": "beni_puerto_siles",
+    "municipio": "Puerto Siles",
+    "departamento": "Beni",
+    "manzanos": 7,
+    "poblacion": 335,
+    "cobertura": 35.0,
+    "size_kb": 6.6
+  },
+  {
+    "slug": "santa_cruz_puerto_suarez",
+    "municipio": "Puerto Suarez",
+    "departamento": "Santa Cruz",
+    "manzanos": 278,
+    "poblacion": 14892,
+    "cobertura": 57.2,
+    "size_kb": 271.3
+  },
+  {
+    "slug": "cochabamba_puerto_villarroel",
+    "municipio": "Puerto Villarroel",
+    "departamento": "Cochabamba",
+    "manzanos": 754,
+    "poblacion": 37021,
+    "cobertura": 50.2,
+    "size_kb": 718.6
+  },
+  {
+    "slug": "potosi_puna",
+    "municipio": "Puna",
+    "departamento": "Potosí",
+    "manzanos": 84,
+    "poblacion": 4005,
+    "cobertura": 25.1,
+    "size_kb": 86.1
+  },
+  {
+    "slug": "cochabamba_punata",
+    "municipio": "Punata",
+    "departamento": "Cochabamba",
+    "manzanos": 436,
+    "poblacion": 27983,
+    "cobertura": 54.1,
+    "size_kb": 449.6
+  },
+  {
+    "slug": "la_paz_quiabaya",
+    "municipio": "Quiabaya",
+    "departamento": "La Paz",
+    "manzanos": 11,
+    "poblacion": 549,
+    "cobertura": 50.0,
+    "size_kb": 11.2
+  },
+  {
+    "slug": "cochabamba_quillacollo",
+    "municipio": "Quillacollo",
+    "departamento": "Cochabamba",
+    "manzanos": 1773,
+    "poblacion": 162129,
+    "cobertura": 73.4,
+    "size_kb": 1870.1
+  },
+  {
+    "slug": "la_paz_quime",
+    "municipio": "Quime",
+    "departamento": "La Paz",
+    "manzanos": 131,
+    "poblacion": 7269,
+    "cobertura": 34.1,
+    "size_kb": 127.4
+  },
+  {
+    "slug": "santa_cruz_quirusillas",
+    "municipio": "Quirusillas",
+    "departamento": "Santa Cruz",
+    "manzanos": 19,
+    "poblacion": 1372,
+    "cobertura": 63.3,
+    "size_kb": 19.3
+  },
+  {
+    "slug": "potosi_ravelo",
+    "municipio": "Ravelo",
+    "departamento": "Potosí",
+    "manzanos": 37,
+    "poblacion": 1562,
+    "cobertura": 53.6,
+    "size_kb": 36.0
+  },
+  {
+    "slug": "beni_reyes",
+    "municipio": "Reyes",
+    "departamento": "Beni",
+    "manzanos": 135,
+    "poblacion": 6733,
+    "cobertura": 47.0,
+    "size_kb": 125.0
+  },
+  {
+    "slug": "beni_riberalta",
+    "municipio": "Riberalta",
+    "departamento": "Beni",
+    "manzanos": 1570,
+    "poblacion": 99084,
+    "cobertura": 75.4,
+    "size_kb": 1461.0
+  },
+  {
+    "slug": "santa_cruz_robore",
+    "municipio": "Roboré",
+    "departamento": "Santa Cruz",
+    "manzanos": 347,
+    "poblacion": 15591,
+    "cobertura": 49.2,
+    "size_kb": 327.3
+  },
+  {
+    "slug": "oruro_sabaya",
+    "municipio": "Sabaya",
+    "departamento": "Oruro",
+    "manzanos": 137,
+    "poblacion": 12787,
+    "cobertura": 16.4,
+    "size_kb": 127.6
+  },
+  {
+    "slug": "cochabamba_sacaba",
+    "municipio": "Sacaba",
+    "departamento": "Cochabamba",
+    "manzanos": 3289,
+    "poblacion": 199841,
+    "cobertura": 67.2,
+    "size_kb": 3290.7
+  },
+  {
+    "slug": "cochabamba_sacabamba",
+    "municipio": "Sacabamba",
+    "departamento": "Cochabamba",
+    "manzanos": 38,
+    "poblacion": 1520,
+    "cobertura": 52.1,
+    "size_kb": 36.1
+  },
+  {
+    "slug": "potosi_sacaca",
+    "municipio": "Sacaca",
+    "departamento": "Potosí",
+    "manzanos": 69,
+    "poblacion": 3522,
+    "cobertura": 25.1,
+    "size_kb": 67.3
+  },
+  {
+    "slug": "santa_cruz_saipina",
+    "municipio": "Saipina",
+    "departamento": "Santa Cruz",
+    "manzanos": 105,
+    "poblacion": 4694,
+    "cobertura": 55.3,
+    "size_kb": 99.5
+  },
+  {
+    "slug": "santa_cruz_samaipata",
+    "municipio": "Samaipata",
+    "departamento": "Santa Cruz",
+    "manzanos": 144,
+    "poblacion": 7571,
+    "cobertura": 43.4,
+    "size_kb": 150.4
+  },
+  {
+    "slug": "potosi_san_agustin",
+    "municipio": "San Agustín",
+    "departamento": "Potosí",
+    "manzanos": 13,
+    "poblacion": 1861,
+    "cobertura": 3.2,
+    "size_kb": 12.2
+  },
+  {
+    "slug": "beni_san_andres",
+    "municipio": "San Andrés",
+    "departamento": "Beni",
+    "manzanos": 88,
+    "poblacion": 4272,
+    "cobertura": 36.2,
+    "size_kb": 82.0
+  },
+  {
+    "slug": "potosi_san_antonio_de_esmoruco",
+    "municipio": "San Antonio de Esmoruco",
+    "departamento": "Potosí",
+    "manzanos": 26,
+    "poblacion": 1427,
+    "cobertura": 21.0,
+    "size_kb": 24.5
+  },
+  {
+    "slug": "santa_cruz_san_antonio_de_lomerio",
+    "municipio": "San Antonio de Lomerio",
+    "departamento": "Santa Cruz",
+    "manzanos": 120,
+    "poblacion": 7191,
+    "cobertura": 60.0,
+    "size_kb": 113.1
+  },
+  {
+    "slug": "cochabamba_san_benito",
+    "municipio": "San Benito",
+    "departamento": "Cochabamba",
+    "manzanos": 228,
+    "poblacion": 11760,
+    "cobertura": 38.6,
+    "size_kb": 240.7
+  },
+  {
+    "slug": "beni_san_borja",
+    "municipio": "San Borja                               ",
+    "departamento": "Beni",
+    "manzanos": 483,
+    "poblacion": 24603,
+    "cobertura": 44.0,
+    "size_kb": 449.3
+  },
+  {
+    "slug": "la_paz_san_buenaventura",
+    "municipio": "San Buenaventura",
+    "departamento": "La Paz",
+    "manzanos": 149,
+    "poblacion": 7413,
+    "cobertura": 46.0,
+    "size_kb": 144.8
+  },
+  {
+    "slug": "santa_cruz_san_carlos",
+    "municipio": "San Carlos",
+    "departamento": "Santa Cruz",
+    "manzanos": 283,
+    "poblacion": 16371,
+    "cobertura": 47.2,
+    "size_kb": 274.9
+  },
+  {
+    "slug": "beni_san_ignacio",
+    "municipio": "San Ignacio",
+    "departamento": "Beni",
+    "manzanos": 177,
+    "poblacion": 13105,
+    "cobertura": 34.6,
+    "size_kb": 167.8
+  },
+  {
+    "slug": "santa_cruz_san_ignacio",
+    "municipio": "San Ignacio",
+    "departamento": "Santa Cruz",
+    "manzanos": 738,
+    "poblacion": 48794,
+    "cobertura": 39.1,
+    "size_kb": 697.5
+  },
+  {
+    "slug": "beni_san_javier",
+    "municipio": "San Javier",
+    "departamento": "Beni",
+    "manzanos": 18,
+    "poblacion": 1083,
+    "cobertura": 31.6,
+    "size_kb": 16.6
+  },
+  {
+    "slug": "santa_cruz_san_javier",
+    "municipio": "San Javier                              ",
+    "departamento": "Santa Cruz",
+    "manzanos": 136,
+    "poblacion": 10270,
+    "cobertura": 48.6,
+    "size_kb": 132.0
+  },
+  {
+    "slug": "beni_san_joaquin",
+    "municipio": "San Joaquín",
+    "departamento": "Beni",
+    "manzanos": 79,
+    "poblacion": 5118,
+    "cobertura": 60.8,
+    "size_kb": 73.9
+  },
+  {
+    "slug": "santa_cruz_san_jose",
+    "municipio": "San José                                ",
+    "departamento": "Santa Cruz",
+    "manzanos": 249,
+    "poblacion": 15403,
+    "cobertura": 40.5,
+    "size_kb": 239.6
+  },
+  {
+    "slug": "santa_cruz_san_juan",
+    "municipio": "San Juan",
+    "departamento": "Santa Cruz",
+    "manzanos": 121,
+    "poblacion": 7721,
+    "cobertura": 41.2,
+    "size_kb": 115.7
+  },
+  {
+    "slug": "santa_cruz_san_julian",
+    "municipio": "San Julián",
+    "departamento": "Santa Cruz",
+    "manzanos": 45,
+    "poblacion": 5523,
+    "cobertura": 12.0,
+    "size_kb": 42.5
+  },
+  {
+    "slug": "tarija_san_lorenzo",
+    "municipio": "San Lorenzo",
+    "departamento": "Tarija",
+    "manzanos": 319,
+    "poblacion": 17083,
+    "cobertura": 38.6,
+    "size_kb": 339.3
+  },
+  {
+    "slug": "pando_san_lorenzo",
+    "municipio": "San Lorenzo                             ",
+    "departamento": "Pando",
+    "manzanos": 48,
+    "poblacion": 4501,
+    "cobertura": 27.6,
+    "size_kb": 45.3
+  },
+  {
+    "slug": "chuquisaca_san_lucas",
+    "municipio": "San Lucas",
+    "departamento": "Chuquisaca",
+    "manzanos": 181,
+    "poblacion": 8775,
+    "cobertura": 29.1,
+    "size_kb": 171.1
+  },
+  {
+    "slug": "santa_cruz_san_matias",
+    "municipio": "San Matías",
+    "departamento": "Santa Cruz",
+    "manzanos": 160,
+    "poblacion": 10748,
+    "cobertura": 26.1,
+    "size_kb": 153.9
+  },
+  {
+    "slug": "santa_cruz_san_miguel",
+    "municipio": "San Miguel",
+    "departamento": "Santa Cruz",
+    "manzanos": 136,
+    "poblacion": 6421,
+    "cobertura": 56.2,
+    "size_kb": 126.8
+  },
+  {
+    "slug": "potosi_san_pablo",
+    "municipio": "San Pablo",
+    "departamento": "Potosí",
+    "manzanos": 17,
+    "poblacion": 1646,
+    "cobertura": 6.5,
+    "size_kb": 16.1
+  },
+  {
+    "slug": "potosi_san_pedro",
+    "municipio": "San Pedro",
+    "departamento": "Potosí",
+    "manzanos": 66,
+    "poblacion": 2845,
+    "cobertura": 35.1,
+    "size_kb": 66.7
+  },
+  {
+    "slug": "santa_cruz_san_pedro",
+    "municipio": "San Pedro                               ",
+    "departamento": "Santa Cruz",
+    "manzanos": 240,
+    "poblacion": 12558,
+    "cobertura": 55.7,
+    "size_kb": 225.7
+  },
+  {
+    "slug": "la_paz_san_pedro_de_curahuara",
+    "municipio": "San Pedro de Curahuara",
+    "departamento": "La Paz",
+    "manzanos": 57,
+    "poblacion": 2581,
+    "cobertura": 22.4,
+    "size_kb": 55.0
+  },
+  {
+    "slug": "potosi_san_pedro_de_macha",
+    "municipio": "San Pedro de Macha",
+    "departamento": "Potosí",
+    "manzanos": 73,
+    "poblacion": 3199,
+    "cobertura": 24.8,
+    "size_kb": 71.0
+  },
+  {
+    "slug": "potosi_san_pedro_de_quemes",
+    "municipio": "San Pedro de Quemes",
+    "departamento": "Potosí",
+    "manzanos": 9,
+    "poblacion": 1102,
+    "cobertura": 5.0,
+    "size_kb": 8.4
+  },
+  {
+    "slug": "la_paz_san_pedro_de_tiquina",
+    "municipio": "San Pedro de Tiquina",
+    "departamento": "La Paz",
+    "manzanos": 64,
+    "poblacion": 2959,
+    "cobertura": 50.0,
+    "size_kb": 64.4
+  },
+  {
+    "slug": "santa_cruz_san_rafael",
+    "municipio": "San Rafael",
+    "departamento": "Santa Cruz",
+    "manzanos": 68,
+    "poblacion": 3184,
+    "cobertura": 46.3,
+    "size_kb": 64.3
+  },
+  {
+    "slug": "beni_san_ramon",
+    "municipio": "San Ramón",
+    "departamento": "Beni",
+    "manzanos": 52,
+    "poblacion": 3837,
+    "cobertura": 49.5,
+    "size_kb": 48.4
+  },
+  {
+    "slug": "santa_cruz_san_ramon",
+    "municipio": "San Ramón",
+    "departamento": "Santa Cruz",
+    "manzanos": 699,
+    "poblacion": 33822,
+    "cobertura": 45.6,
+    "size_kb": 656.7
+  },
+  {
+    "slug": "beni_santa_ana",
+    "municipio": "Santa Ana                               ",
+    "departamento": "Beni",
+    "manzanos": 187,
+    "poblacion": 13822,
+    "cobertura": 53.0,
+    "size_kb": 179.2
+  },
+  {
+    "slug": "santa_cruz_santa_cruz_de_la_sierra",
+    "municipio": "Santa Cruz de La Sierra",
+    "departamento": "Santa Cruz",
+    "manzanos": 16791,
+    "poblacion": 1606498,
+    "cobertura": 78.4,
+    "size_kb": 16123.6
+  },
+  {
+    "slug": "beni_santa_rosa",
+    "municipio": "Santa Rosa",
+    "departamento": "Beni",
+    "manzanos": 114,
+    "poblacion": 6037,
+    "cobertura": 48.9,
+    "size_kb": 109.2
+  },
+  {
+    "slug": "pando_santa_rosa",
+    "municipio": "Santa Rosa",
+    "departamento": "Pando",
+    "manzanos": 25,
+    "poblacion": 1311,
+    "cobertura": 25.5,
+    "size_kb": 23.4
+  },
+  {
+    "slug": "santa_cruz_santa_rosa",
+    "municipio": "Santa Rosa",
+    "departamento": "Santa Cruz",
+    "manzanos": 270,
+    "poblacion": 12796,
+    "cobertura": 36.0,
+    "size_kb": 261.2
+  },
+  {
+    "slug": "la_paz_santiago_de_callapa",
+    "municipio": "Santiago de Callapa",
+    "departamento": "La Paz",
+    "manzanos": 9,
+    "poblacion": 565,
+    "cobertura": 10.0,
+    "size_kb": 8.5
+  },
+  {
+    "slug": "oruro_santiago_de_huari",
+    "municipio": "Santiago de Huari",
+    "departamento": "Oruro",
+    "manzanos": 129,
+    "poblacion": 7124,
+    "cobertura": 28.6,
+    "size_kb": 121.9
+  },
+  {
+    "slug": "la_paz_santiago_de_huata",
+    "municipio": "Santiago de Huata                       ",
+    "departamento": "La Paz",
+    "manzanos": 104,
+    "poblacion": 4901,
+    "cobertura": 56.2,
+    "size_kb": 105.7
+  },
+  {
+    "slug": "oruro_santiago_de_huayllamarca",
+    "municipio": "Santiago de Huayllamarca",
+    "departamento": "Oruro",
+    "manzanos": 45,
+    "poblacion": 2128,
+    "cobertura": 17.4,
+    "size_kb": 43.4
+  },
+  {
+    "slug": "la_paz_santiago_de_machaca",
+    "municipio": "Santiago de Machaca",
+    "departamento": "La Paz",
+    "manzanos": 48,
+    "poblacion": 1913,
+    "cobertura": 37.5,
+    "size_kb": 45.9
+  },
+  {
+    "slug": "cochabamba_santivanez",
+    "municipio": "Santivañez",
+    "departamento": "Cochabamba",
+    "manzanos": 79,
+    "poblacion": 3932,
+    "cobertura": 25.5,
+    "size_kb": 85.0
+  },
+  {
+    "slug": "pando_santos_mercado",
+    "municipio": "Santos Mercado                          ",
+    "departamento": "Pando",
+    "manzanos": 6,
+    "poblacion": 461,
+    "cobertura": 22.2,
+    "size_kb": 5.7
+  },
+  {
+    "slug": "oruro_santuario_de_quillacas",
+    "municipio": "Santuario de Quillacas",
+    "departamento": "Oruro",
+    "manzanos": 58,
+    "poblacion": 2584,
+    "cobertura": 24.7,
+    "size_kb": 55.0
+  },
+  {
+    "slug": "la_paz_sapahaqui",
+    "municipio": "Sapahaqui",
+    "departamento": "La Paz",
+    "manzanos": 65,
+    "poblacion": 2800,
+    "cobertura": 36.5,
+    "size_kb": 64.3
+  },
+  {
+    "slug": "pando_sena",
+    "municipio": "Sena",
+    "departamento": "Pando",
+    "manzanos": 101,
+    "poblacion": 4896,
+    "cobertura": 48.8,
+    "size_kb": 94.1
+  },
+  {
+    "slug": "cochabamba_shinahota",
+    "municipio": "Shinahota                               ",
+    "departamento": "Cochabamba",
+    "manzanos": 336,
+    "poblacion": 16630,
+    "cobertura": 49.9,
+    "size_kb": 330.4
+  },
+  {
+    "slug": "la_paz_sicasica",
+    "municipio": "Sicasica",
+    "departamento": "La Paz",
+    "manzanos": 404,
+    "poblacion": 19545,
+    "cobertura": 38.2,
+    "size_kb": 385.2
+  },
+  {
+    "slug": "cochabamba_sicaya",
+    "municipio": "Sicaya",
+    "departamento": "Cochabamba",
+    "manzanos": 42,
+    "poblacion": 2115,
+    "cobertura": 30.4,
+    "size_kb": 40.8
+  },
+  {
+    "slug": "cochabamba_sipesipe",
+    "municipio": "Sipesipe",
+    "departamento": "Cochabamba",
+    "manzanos": 754,
+    "poblacion": 51661,
+    "cobertura": 52.9,
+    "size_kb": 831.3
+  },
+  {
+    "slug": "chuquisaca_sopachuy",
+    "municipio": "Sopachuy",
+    "departamento": "Chuquisaca",
+    "manzanos": 53,
+    "poblacion": 2419,
+    "cobertura": 54.6,
+    "size_kb": 50.6
+  },
+  {
+    "slug": "la_paz_sorata",
+    "municipio": "Sorata",
+    "departamento": "La Paz",
+    "manzanos": 141,
+    "poblacion": 6542,
+    "cobertura": 50.0,
+    "size_kb": 144.6
+  },
+  {
+    "slug": "chuquisaca_sucre",
+    "municipio": "Sucre",
+    "departamento": "Chuquisaca",
+    "manzanos": 4018,
+    "poblacion": 282616,
+    "cobertura": 54.3,
+    "size_kb": 3836.8
+  },
+  {
+    "slug": "chuquisaca_tioc_guarani_chaqueno_de_huacaya",
+    "municipio": "TIOC Guaraní Chaqueño de Huacaya",
+    "departamento": "Chuquisaca",
+    "manzanos": 14,
+    "poblacion": 750,
+    "cobertura": 27.5,
+    "size_kb": 13.5
+  },
+  {
+    "slug": "potosi_tioc_jatun_ayllu_yura",
+    "municipio": "TIOC Jatun Ayllu Yura",
+    "departamento": "Potosí",
+    "manzanos": 34,
+    "poblacion": 1516,
+    "cobertura": 25.2,
+    "size_kb": 33.1
+  },
+  {
+    "slug": "cochabamba_tioc_raqaypampa",
+    "municipio": "TIOC Raqaypampa",
+    "departamento": "Cochabamba",
+    "manzanos": 33,
+    "poblacion": 1215,
+    "cobertura": 26.4,
+    "size_kb": 31.9
+  },
+  {
+    "slug": "cochabamba_tacachi",
+    "municipio": "Tacachi",
+    "departamento": "Cochabamba",
+    "manzanos": 24,
+    "poblacion": 1068,
+    "cobertura": 30.4,
+    "size_kb": 24.9
+  },
+  {
+    "slug": "la_paz_tacacoma",
+    "municipio": "Tacacoma",
+    "departamento": "La Paz",
+    "manzanos": 51,
+    "poblacion": 2495,
+    "cobertura": 41.8,
+    "size_kb": 52.8
+  },
+  {
+    "slug": "potosi_tacobamba",
+    "municipio": "Tacobamba",
+    "departamento": "Potosí",
+    "manzanos": 22,
+    "poblacion": 1115,
+    "cobertura": 15.9,
+    "size_kb": 21.6
+  },
+  {
+    "slug": "cochabamba_tacopaya",
+    "municipio": "Tacopaya",
+    "departamento": "Cochabamba",
+    "manzanos": 32,
+    "poblacion": 1963,
+    "cobertura": 15.5,
+    "size_kb": 31.0
+  },
+  {
+    "slug": "potosi_tahua",
+    "municipio": "Tahua",
+    "departamento": "Potosí",
+    "manzanos": 12,
+    "poblacion": 979,
+    "cobertura": 9.6,
+    "size_kb": 11.3
+  },
+  {
+    "slug": "cochabamba_tapacari",
+    "municipio": "Tapacarí",
+    "departamento": "Cochabamba",
+    "manzanos": 108,
+    "poblacion": 4664,
+    "cobertura": 26.9,
+    "size_kb": 106.5
+  },
+  {
+    "slug": "chuquisaca_tarabuco",
+    "municipio": "Tarabuco",
+    "departamento": "Chuquisaca",
+    "manzanos": 105,
+    "poblacion": 5487,
+    "cobertura": 26.5,
+    "size_kb": 101.3
+  },
+  {
+    "slug": "la_paz_taraco",
+    "municipio": "Taraco",
+    "departamento": "La Paz",
+    "manzanos": 17,
+    "poblacion": 671,
+    "cobertura": 27.0,
+    "size_kb": 15.9
+  },
+  {
+    "slug": "cochabamba_tarata",
+    "municipio": "Tarata",
+    "departamento": "Cochabamba",
+    "manzanos": 155,
+    "poblacion": 7025,
+    "cobertura": 41.3,
+    "size_kb": 165.8
+  },
+  {
+    "slug": "tarija_tarija",
+    "municipio": "Tarija",
+    "departamento": "Tarija",
+    "manzanos": 3121,
+    "poblacion": 218617,
+    "cobertura": 59.1,
+    "size_kb": 2974.4
+  },
+  {
+    "slug": "chuquisaca_tarvita",
+    "municipio": "Tarvita",
+    "departamento": "Chuquisaca",
+    "manzanos": 106,
+    "poblacion": 6955,
+    "cobertura": 38.1,
+    "size_kb": 101.9
+  },
+  {
+    "slug": "la_paz_teoponte",
+    "municipio": "Teoponte",
+    "departamento": "La Paz",
+    "manzanos": 129,
+    "poblacion": 6386,
+    "cobertura": 58.9,
+    "size_kb": 121.6
+  },
+  {
+    "slug": "la_paz_tiahuanacu",
+    "municipio": "Tiahuanacu",
+    "departamento": "La Paz",
+    "manzanos": 62,
+    "poblacion": 2577,
+    "cobertura": 32.5,
+    "size_kb": 58.6
+  },
+  {
+    "slug": "potosi_tinguipaya",
+    "municipio": "Tinguipaya",
+    "departamento": "Potosí",
+    "manzanos": 29,
+    "poblacion": 1409,
+    "cobertura": 25.0,
+    "size_kb": 29.9
+  },
+  {
+    "slug": "la_paz_tipuani",
+    "municipio": "Tipuani",
+    "departamento": "La Paz",
+    "manzanos": 145,
+    "poblacion": 6588,
+    "cobertura": 57.1,
+    "size_kb": 144.4
+  },
+  {
+    "slug": "cochabamba_tiquipaya",
+    "municipio": "Tiquipaya",
+    "departamento": "Cochabamba",
+    "manzanos": 658,
+    "poblacion": 58984,
+    "cobertura": 78.8,
+    "size_kb": 692.1
+  },
+  {
+    "slug": "cochabamba_tiraque",
+    "municipio": "Tiraque",
+    "departamento": "Cochabamba",
+    "manzanos": 68,
+    "poblacion": 3625,
+    "cobertura": 25.6,
+    "size_kb": 66.3
+  },
+  {
+    "slug": "la_paz_tito_yupanqui",
+    "municipio": "Tito Yupanqui                           ",
+    "departamento": "La Paz",
+    "manzanos": 30,
+    "poblacion": 3635,
+    "cobertura": 51.7,
+    "size_kb": 31.1
+  },
+  {
+    "slug": "cochabamba_toco",
+    "municipio": "Toco",
+    "departamento": "Cochabamba",
+    "manzanos": 51,
+    "poblacion": 2280,
+    "cobertura": 33.8,
+    "size_kb": 51.9
+  },
+  {
+    "slug": "oruro_todos_santos",
+    "municipio": "Todos Santos",
+    "departamento": "Oruro",
+    "manzanos": 16,
+    "poblacion": 696,
+    "cobertura": 47.1,
+    "size_kb": 15.2
+  },
+  {
+    "slug": "cochabamba_tolata",
+    "municipio": "Tolata",
+    "departamento": "Cochabamba",
+    "manzanos": 134,
+    "poblacion": 8151,
+    "cobertura": 25.2,
+    "size_kb": 141.7
+  },
+  {
+    "slug": "oruro_toledo",
+    "municipio": "Toledo",
+    "departamento": "Oruro",
+    "manzanos": 89,
+    "poblacion": 4255,
+    "cobertura": 27.1,
+    "size_kb": 83.7
+  },
+  {
+    "slug": "potosi_tomave",
+    "municipio": "Tomave",
+    "departamento": "Potosí",
+    "manzanos": 36,
+    "poblacion": 2535,
+    "cobertura": 10.7,
+    "size_kb": 34.7
+  },
+  {
+    "slug": "chuquisaca_tomina",
+    "municipio": "Tomina",
+    "departamento": "Chuquisaca",
+    "manzanos": 68,
+    "poblacion": 3270,
+    "cobertura": 37.4,
+    "size_kb": 65.0
+  },
+  {
+    "slug": "potosi_toro_toro",
+    "municipio": "Toro Toro",
+    "departamento": "Potosí",
+    "manzanos": 44,
+    "poblacion": 1668,
+    "cobertura": 36.4,
+    "size_kb": 42.8
+  },
+  {
+    "slug": "cochabamba_totora",
+    "municipio": "Totora",
+    "departamento": "Cochabamba",
+    "manzanos": 55,
+    "poblacion": 2445,
+    "cobertura": 24.7,
+    "size_kb": 55.3
+  },
+  {
+    "slug": "oruro_totora",
+    "municipio": "Totora",
+    "departamento": "Oruro",
+    "manzanos": 33,
+    "poblacion": 2205,
+    "cobertura": 8.8,
+    "size_kb": 31.2
+  },
+  {
+    "slug": "santa_cruz_trigal",
+    "municipio": "Trigal",
+    "departamento": "Santa Cruz",
+    "manzanos": 26,
+    "poblacion": 1386,
+    "cobertura": 32.9,
+    "size_kb": 25.2
+  },
+  {
+    "slug": "beni_trinidad",
+    "municipio": "Trinidad",
+    "departamento": "Beni",
+    "manzanos": 1638,
+    "poblacion": 126684,
+    "cobertura": 68.1,
+    "size_kb": 1534.6
+  },
+  {
+    "slug": "potosi_tupiza",
+    "municipio": "Tupiza",
+    "departamento": "Potosí",
+    "manzanos": 507,
+    "poblacion": 34525,
+    "cobertura": 30.1,
+    "size_kb": 489.4
+  },
+  {
+    "slug": "oruro_turco",
+    "municipio": "Turco",
+    "departamento": "Oruro",
+    "manzanos": 21,
+    "poblacion": 2065,
+    "cobertura": 7.5,
+    "size_kb": 19.5
+  },
+  {
+    "slug": "la_paz_umala",
+    "municipio": "Umala",
+    "departamento": "La Paz",
+    "manzanos": 51,
+    "poblacion": 2599,
+    "cobertura": 14.4,
+    "size_kb": 53.2
+  },
+  {
+    "slug": "potosi_uncia",
+    "municipio": "Uncía",
+    "departamento": "Potosí",
+    "manzanos": 240,
+    "poblacion": 11999,
+    "cobertura": 41.0,
+    "size_kb": 230.1
+  },
+  {
+    "slug": "tarija_uriondo",
+    "municipio": "Uriondo",
+    "departamento": "Tarija",
+    "manzanos": 105,
+    "poblacion": 6194,
+    "cobertura": 27.1,
+    "size_kb": 109.3
+  },
+  {
+    "slug": "potosi_urmiri",
+    "municipio": "Urmiri",
+    "departamento": "Potosí",
+    "manzanos": 6,
+    "poblacion": 426,
+    "cobertura": 12.8,
+    "size_kb": 6.2
+  },
+  {
+    "slug": "santa_cruz_urubicha",
+    "municipio": "Urubicha",
+    "departamento": "Santa Cruz",
+    "manzanos": 93,
+    "poblacion": 5874,
+    "cobertura": 49.2,
+    "size_kb": 87.8
+  },
+  {
+    "slug": "potosi_uyuni",
+    "municipio": "Uyuni",
+    "departamento": "Potosí",
+    "manzanos": 506,
+    "poblacion": 29618,
+    "cobertura": 33.3,
+    "size_kb": 469.8
+  },
+  {
+    "slug": "cochabamba_vacas",
+    "municipio": "Vacas",
+    "departamento": "Cochabamba",
+    "manzanos": 38,
+    "poblacion": 1615,
+    "cobertura": 32.8,
+    "size_kb": 37.5
+  },
+  {
+    "slug": "santa_cruz_vallegrande",
+    "municipio": "Vallegrande",
+    "departamento": "Santa Cruz",
+    "manzanos": 217,
+    "poblacion": 11861,
+    "cobertura": 44.4,
+    "size_kb": 212.3
+  },
+  {
+    "slug": "la_paz_viacha",
+    "municipio": "Viacha",
+    "departamento": "La Paz",
+    "manzanos": 2125,
+    "poblacion": 95832,
+    "cobertura": 52.8,
+    "size_kb": 1992.0
+  },
+  {
+    "slug": "cochabamba_vila_vila",
+    "municipio": "Vila Vila",
+    "departamento": "Cochabamba",
+    "manzanos": 36,
+    "poblacion": 1630,
+    "cobertura": 30.5,
+    "size_kb": 34.9
+  },
+  {
+    "slug": "chuquisaca_villa_abecia",
+    "municipio": "Villa Abecia",
+    "departamento": "Chuquisaca",
+    "manzanos": 29,
+    "poblacion": 2256,
+    "cobertura": 34.1,
+    "size_kb": 30.0
+  },
+  {
+    "slug": "la_paz_villa_ancoraimes",
+    "municipio": "Villa Ancoraimes",
+    "departamento": "La Paz",
+    "manzanos": 58,
+    "poblacion": 2475,
+    "cobertura": 48.3,
+    "size_kb": 59.9
+  },
+  {
+    "slug": "chuquisaca_villa_charcas",
+    "municipio": "Villa Charcas                           ",
+    "departamento": "Chuquisaca",
+    "manzanos": 81,
+    "poblacion": 4451,
+    "cobertura": 34.0,
+    "size_kb": 77.6
+  },
+  {
+    "slug": "cochabamba_villa_gualberto_villarroel",
+    "municipio": "Villa Gualberto Villarroel",
+    "departamento": "Cochabamba",
+    "manzanos": 21,
+    "poblacion": 1531,
+    "cobertura": 70.0,
+    "size_kb": 22.8
+  },
+  {
+    "slug": "la_paz_villa_libertad_licoma",
+    "municipio": "Villa Libertad Licoma",
+    "departamento": "La Paz",
+    "manzanos": 41,
+    "poblacion": 3957,
+    "cobertura": 80.4,
+    "size_kb": 39.9
+  },
+  {
+    "slug": "tarija_villa_montes",
+    "municipio": "Villa Montes                            ",
+    "departamento": "Tarija",
+    "manzanos": 780,
+    "poblacion": 35700,
+    "cobertura": 58.0,
+    "size_kb": 733.1
+  },
+  {
+    "slug": "pando_villa_nueva",
+    "municipio": "Villa Nueva                             ",
+    "departamento": "Pando",
+    "manzanos": 15,
+    "poblacion": 717,
+    "cobertura": 39.5,
+    "size_kb": 14.0
+  },
+  {
+    "slug": "cochabamba_villa_rivero",
+    "municipio": "Villa Rivero",
+    "departamento": "Cochabamba",
+    "manzanos": 97,
+    "poblacion": 3720,
+    "cobertura": 42.9,
+    "size_kb": 92.3
+  },
+  {
+    "slug": "chuquisaca_villa_serrano",
+    "municipio": "Villa Serrano                           ",
+    "departamento": "Chuquisaca",
+    "manzanos": 93,
+    "poblacion": 4946,
+    "cobertura": 24.8,
+    "size_kb": 89.1
+  },
+  {
+    "slug": "cochabamba_villa_tunari",
+    "municipio": "Villa Tunari",
+    "departamento": "Cochabamba",
+    "manzanos": 849,
+    "poblacion": 34598,
+    "cobertura": 52.1,
+    "size_kb": 808.8
+  },
+  {
+    "slug": "chuquisaca_villa_vaca_guzman",
+    "municipio": "Villa Vaca Guzmán",
+    "departamento": "Chuquisaca",
+    "manzanos": 66,
+    "poblacion": 6814,
+    "cobertura": 35.1,
+    "size_kb": 63.6
+  },
+  {
+    "slug": "potosi_villazon",
+    "municipio": "Villazón",
+    "departamento": "Potosí",
+    "manzanos": 652,
+    "poblacion": 43547,
+    "cobertura": 50.4,
+    "size_kb": 607.7
+  },
+  {
+    "slug": "cochabamba_vinto",
+    "municipio": "Vinto",
+    "departamento": "Cochabamba",
+    "manzanos": 674,
+    "poblacion": 54118,
+    "cobertura": 67.7,
+    "size_kb": 737.2
+  },
+  {
+    "slug": "potosi_vitiche",
+    "municipio": "Vitiche",
+    "departamento": "Potosí",
+    "manzanos": 37,
+    "poblacion": 2379,
+    "cobertura": 15.9,
+    "size_kb": 38.3
+  },
+  {
+    "slug": "la_paz_waldo_ballivian",
+    "municipio": "Waldo Ballivian                         ",
+    "departamento": "La Paz",
+    "manzanos": 30,
+    "poblacion": 2006,
+    "cobertura": 35.3,
+    "size_kb": 28.1
+  },
+  {
+    "slug": "santa_cruz_warnes",
+    "municipio": "Warnes",
+    "departamento": "Santa Cruz",
+    "manzanos": 2216,
+    "poblacion": 147650,
+    "cobertura": 47.9,
+    "size_kb": 2090.0
+  },
+  {
+    "slug": "la_paz_yaco",
+    "municipio": "Yaco",
+    "departamento": "La Paz",
+    "manzanos": 117,
+    "poblacion": 6920,
+    "cobertura": 39.5,
+    "size_kb": 113.6
+  },
+  {
+    "slug": "tarija_yacuiba",
+    "municipio": "Yacuiba",
+    "departamento": "Tarija",
+    "manzanos": 1302,
+    "poblacion": 83427,
+    "cobertura": 61.6,
+    "size_kb": 1235.4
+  },
+  {
+    "slug": "chuquisaca_yamparaez",
+    "municipio": "Yamparáez",
+    "departamento": "Chuquisaca",
+    "manzanos": 79,
+    "poblacion": 3469,
+    "cobertura": 30.4,
+    "size_kb": 76.6
+  },
+  {
+    "slug": "la_paz_yanacachi",
+    "municipio": "Yanacachi",
+    "departamento": "La Paz",
+    "manzanos": 36,
+    "poblacion": 1685,
+    "cobertura": 34.3,
+    "size_kb": 37.0
+  },
+  {
+    "slug": "santa_cruz_yapacani",
+    "municipio": "Yapacaní                                ",
+    "departamento": "Santa Cruz",
+    "manzanos": 788,
+    "poblacion": 43884,
+    "cobertura": 44.7,
+    "size_kb": 759.7
+  },
+  {
+    "slug": "potosi_yocalla",
+    "municipio": "Yocalla",
+    "departamento": "Potosí",
+    "manzanos": 91,
+    "poblacion": 4852,
+    "cobertura": 25.3,
+    "size_kb": 89.6
+  },
+  {
+    "slug": "chuquisaca_yotala",
+    "municipio": "Yotala",
+    "departamento": "Chuquisaca",
+    "manzanos": 106,
+    "poblacion": 5771,
+    "cobertura": 19.1,
+    "size_kb": 108.6
+  },
+  {
+    "slug": "tarija_yunchara",
+    "municipio": "Yunchará",
+    "departamento": "Tarija",
+    "manzanos": 13,
+    "poblacion": 964,
+    "cobertura": 11.5,
+    "size_kb": 12.8
+  },
+  {
+    "slug": "oruro_yunguyo_del_litoral",
+    "municipio": "Yunguyo del Litoral",
+    "departamento": "Oruro",
+    "manzanos": 8,
+    "poblacion": 875,
+    "cobertura": 16.0,
+    "size_kb": 7.8
+  },
+  {
+    "slug": "chuquisaca_zudanez",
+    "municipio": "Zudañez",
+    "departamento": "Chuquisaca",
+    "manzanos": 67,
+    "poblacion": 5166,
+    "cobertura": 46.9,
+    "size_kb": 64.5
+  }
+]

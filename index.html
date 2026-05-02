@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Retrato Censal Bolivia · CPV 2024</title>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --top: 46px; --side: 270px;
+  --bg: #0d1117; --bg2: #161b22; --bg3: #21262d;
+  --border: #30363d; --text: #e6edf3; --text2: #8b949e; --text3: #656d76;
+  --accent: #58a6ff; --accent2: #1f6feb;
+  --green: #3fb950; --red: #f85149; --yellow: #d29922;
+  --font: system-ui, -apple-system, sans-serif;
+  --r: 6px;
+}
+body { font-family: var(--font); background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; font-size: 13px; }
+/* ── Footer ─────────────────────────────────── */
+#footer {
+  height: 30px; flex-shrink: 0;
+  background: var(--bg2); border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 14px; gap: 12px; z-index: 20;
+}
+.footer-org { display: flex; align-items: center; gap: 10px; }
+.footer-sep { width: 1px; height: 12px; background: var(--border); }
+.footer-name { font-size: 11px; font-weight: 600; color: var(--text2); letter-spacing: .2px; }
+.footer-name:hover { color: var(--text); }
+.footer-right { font-size: 10px; color: var(--text3); }
+
+/* ── Credits panel ──────────────────────────── */
+#cred-btn {
+  background: none; border: 1px solid var(--border); border-radius: 20px;
+  padding: 2px 10px; font-size: 11px; color: var(--text2); cursor: pointer;
+  display: flex; align-items: center; gap: 5px; transition: border-color .15s, color .15s;
+  white-space: nowrap;
+}
+#cred-btn:hover { border-color: var(--accent2); color: var(--accent); }
+#cred-btn .chevron { font-size: 9px; transition: transform .2s; display: inline-block; }
+#cred-btn.open .chevron { transform: rotate(180deg); }
+
+#cred-panel {
+  display: none; position: absolute; top: var(--top); right: 14px;
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 14px 16px; width: 320px; z-index: 200;
+  box-shadow: 0 8px 28px rgba(0,0,0,.55); animation: slideDown .2s ease;
+}
+#cred-panel.open { display: block; }
+@keyframes slideDown { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+
+.cred-title { font-size: 12px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+.cred-body { font-size: 12px; color: var(--text2); line-height: 1.55; }
+.cred-body a { color: var(--accent); text-decoration: none; }
+.cred-body a:hover { text-decoration: underline; }
+.cred-link-row {
+  margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+}
+.cred-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--bg3); border: 1px solid var(--border); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 14px;
+}
+.cred-link-info { display: flex; flex-direction: column; gap: 2px; }
+.cred-link-name { font-size: 12px; font-weight: 600; color: var(--text); }
+.cred-link-url  { font-size: 11px; color: var(--text3); }
+
+/* ── Topbar ─────────────────────────────────── */
+#topbar {
+  height: var(--top); background: var(--bg2); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; padding: 0 14px; gap: 10px; flex-shrink: 0; z-index: 20;
+}
+#topbar .title { font-weight: 700; font-size: 14px; letter-spacing: -.3px; }
+#topbar .pipe  { width: 1px; height: 18px; background: var(--border); }
+#topbar .sub   { font-size: 12px; color: var(--text2); }
+#topbar .src   { margin-left: auto; font-size: 11px; color: var(--text3); background: var(--bg3); padding: 2px 9px; border-radius: 20px; border: 1px solid var(--border); }
+
+/* ── Layout ─────────────────────────────────── */
+#main { display: flex; flex: 1; overflow: hidden; }
+
+/* ── Sidebar ─────────────────────────────────── */
+#sidebar {
+  width: var(--side); background: var(--bg2); border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; overflow: hidden; flex-shrink: 0;
+}
+
+/* Ciudad selector */
+.s-block { padding: 12px; border-bottom: 1px solid var(--border); }
+.s-label { font-size: 10px; font-weight: 600; letter-spacing: .7px; text-transform: uppercase; color: var(--text3); margin-bottom: 6px; }
+#ciudad-wrap { position: relative; }
+#ciudad-input {
+  width: 100%; background: var(--bg3); border: 1px solid var(--border); border-radius: var(--r);
+  padding: 7px 10px; color: var(--text); font-size: 12.5px; outline: none; transition: border-color .15s;
+}
+#ciudad-input:focus { border-color: var(--accent2); }
+#ciudad-dd {
+  display: none; position: absolute; top: calc(100% + 3px); left: 0; right: 0;
+  background: var(--bg3); border: 1px solid var(--border); border-radius: var(--r);
+  max-height: 200px; overflow-y: auto; z-index: 100; box-shadow: 0 8px 24px rgba(0,0,0,.5);
+}
+#ciudad-dd.open { display: block; }
+.dd-row { padding: 7px 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+.dd-row:hover, .dd-row.focus { background: var(--border); }
+.dd-dep { font-size: 10px; color: var(--text3); white-space: nowrap; }
+
+/* Stats card */
+#stats-card {
+  padding: 10px 12px; border-bottom: 1px solid var(--border);
+  display: none; flex-direction: column; gap: 5px;
+}
+#stats-card.visible { display: flex; }
+.stats-city { font-weight: 600; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.stats-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.stat-pill {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 11px; color: var(--text2); background: var(--bg3);
+  padding: 2px 7px; border-radius: 20px; border: 1px solid var(--border);
+}
+.stat-pill b { color: var(--text); font-weight: 600; }
+.cob-bar-wrap { display: flex; align-items: center; gap: 6px; }
+.cob-label { font-size: 10px; color: var(--text3); }
+.cob-bar { flex: 1; height: 4px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
+.cob-fill { height: 100%; border-radius: 2px; background: var(--green); transition: width .4s; }
+
+/* Indicadores */
+.ind-scroll { flex: 1; overflow-y: auto; padding: 4px 0 8px; }
+.grp-label { padding: 10px 12px 3px; font-size: 10px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase; color: var(--text3); }
+.ind-row {
+  display: flex; align-items: center; gap: 0;
+  padding: 0 8px 0 12px; border-radius: 0;
+}
+.ind-btn {
+  flex: 1; text-align: left; background: none; border: none;
+  padding: 6px 4px 6px 0; font-size: 12.5px; color: var(--text); cursor: pointer;
+  border-radius: var(--r); transition: color .1s;
+}
+.ind-btn:hover { color: var(--accent); }
+.ind-row.selected .ind-btn { color: var(--accent); font-weight: 600; }
+.ind-row.selected { background: rgba(31,111,235,.1); border-left: 2px solid var(--accent2); padding-left: 10px; }
+.info-btn {
+  flex-shrink: 0; background: none; border: none; color: var(--text3); cursor: pointer;
+  font-size: 12px; padding: 3px 4px; border-radius: 3px; line-height: 1;
+}
+.info-btn:hover { color: var(--text2); background: var(--bg3); }
+
+/* Tooltip ayuda */
+.ayuda-box {
+  display: none; margin: 0 10px 6px 12px; padding: 7px 9px;
+  background: var(--bg3); border: 1px solid var(--border); border-radius: var(--r);
+  font-size: 11px; color: var(--text2); line-height: 1.5;
+}
+.ayuda-box.open { display: block; }
+
+/* ── Mapa ─────────────────────────────────────── */
+#map-wrap { flex: 1; position: relative; }
+#map { width: 100%; height: 100%; }
+
+/* ── Leyenda ─────────────────────────────────── */
+#legend {
+  position: absolute; bottom: 30px; right: 12px;
+  background: rgba(13,17,23,.92); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 12px; min-width: 190px; pointer-events: none;
+  backdrop-filter: blur(8px); box-shadow: 0 4px 16px rgba(0,0,0,.5);
+}
+#leg-title { font-size: 11px; font-weight: 600; color: var(--text2); margin-bottom: 7px; }
+#leg-bar   { height: 8px; border-radius: 4px; margin-bottom: 5px; }
+#leg-marks { display: flex; justify-content: space-between; font-size: 10px; color: var(--text3); margin-bottom: 4px; }
+#leg-unit  { font-size: 10px; color: var(--text3); text-align: right; }
+.leg-na    { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--text3); }
+.na-box    { width: 12px; height: 8px; border-radius: 2px; background: repeating-linear-gradient(45deg,#30363d 0,#30363d 2px,transparent 2px,transparent 4px); border: 1px solid var(--border); }
+
+/* ── Popup ─────────────────────────────────────── */
+.mpopup .maplibregl-popup-content {
+  background: rgba(13,17,23,.97); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 12px; color: var(--text); min-width: 180px; max-width: 240px;
+  box-shadow: 0 4px 20px rgba(0,0,0,.6); font-size: 12px;
+}
+.mpopup .maplibregl-popup-tip { display: none; }
+.pop-name { font-weight: 700; font-size: 12.5px; margin-bottom: 7px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+.pop-grid { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; }
+.pop-k    { color: var(--text2); align-self: center; }
+.pop-v    { font-weight: 600; text-align: right; align-self: center; }
+.pop-sep  { grid-column: 1/-1; border-top: 1px solid var(--border); margin: 5px 0 3px; }
+
+/* Barra de percentil */
+.pct-wrap  { grid-column: 1/-1; margin-top: 4px; }
+.pct-label { font-size: 10px; color: var(--text3); margin-bottom: 3px; display: flex; justify-content: space-between; }
+.pct-track { position: relative; height: 6px; background: var(--bg3); border-radius: 3px; border: 1px solid var(--border); }
+.pct-fill  { position: absolute; left: 0; top: 0; height: 100%; border-radius: 3px; background: var(--accent2); }
+.pct-dot   { position: absolute; top: 50%; transform: translate(-50%, -50%); width: 10px; height: 10px; background: var(--accent); border: 2px solid var(--bg); border-radius: 50%; }
+
+/* ── Loading ─────────────────────────────────── */
+#loading {
+  display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 18px; font-size: 12px; color: var(--text2); pointer-events: none; z-index: 50;
+}
+#loading.on { display: block; }
+
+/* ── Scrollbar ─────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <span class="title">Retrato Censal Bolivia</span>
+  <div class="pipe"></div>
+  <span class="sub">CPV 2024 · escala de manzana</span>
+  <div style="margin-left:auto;position:relative;">
+    <button id="cred-btn">Agradecimientos <span class="chevron">▼</span></button>
+    <div id="cred-panel">
+      <div class="cred-title">Datos procesados por Mauricio Foronda</div>
+      <div class="cred-body">
+        Este visualizador se apoya en la metodología y los datos preparados por
+        <strong>Mauricio Foronda</strong> en su <em>Atlas Urbano de Bolivia</em>,
+        quien extrajo y estructuró la información del Geoportal del INE (CPV 2024)
+        a nivel de manzana para todo el país.<br><br>
+        Sin ese trabajo previo de acceso abierto, este retrato no existiría.
+        <div class="cred-link-row">
+          <div class="cred-avatar">🗺️</div>
+          <div class="cred-link-info">
+            <span class="cred-link-name">Atlas Urbano · Mauricio Foronda</span>
+            <a class="cred-link-url" href="https://mauforonda.github.io/atlasurbano/" target="_blank">
+              mauforonda.github.io/atlasurbano ↗
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="main" style="flex:1;overflow:hidden;">
+  <div id="sidebar">
+
+    <!-- Ciudad -->
+    <div class="s-block">
+      <div class="s-label">Ciudad</div>
+      <div id="ciudad-wrap">
+        <input id="ciudad-input" type="text" placeholder="Buscar municipio…" autocomplete="off" spellcheck="false">
+        <div id="ciudad-dd"></div>
+      </div>
+    </div>
+
+    <!-- Stats card -->
+    <div id="stats-card">
+      <div class="stats-city" id="sc-nombre"></div>
+      <div class="stats-row">
+        <div class="stat-pill"><b id="sc-manz">—</b> manzanos</div>
+        <div class="stat-pill"><b id="sc-pob">—</b> hab.</div>
+      </div>
+      <div class="cob-bar-wrap">
+        <span class="cob-label">Cobertura</span>
+        <div class="cob-bar"><div class="cob-fill" id="sc-cobfill"></div></div>
+        <span class="cob-label" id="sc-cobpct">—%</span>
+      </div>
+      <div class="stat-pill" id="sc-avg" style="width:fit-content"></div>
+    </div>
+
+    <!-- Indicadores -->
+    <div class="ind-scroll" id="ind-list"></div>
+
+  </div>
+
+  <div id="map-wrap">
+    <div id="map"></div>
+    <div id="loading">Cargando…</div>
+    <div id="legend">
+      <div id="leg-title">—</div>
+      <div id="leg-bar"></div>
+      <div id="leg-marks"><span id="leg-min">—</span><span id="leg-mid">—</span><span id="leg-max">—</span></div>
+      <div id="leg-unit"></div>
+      <div class="leg-na"><div class="na-box"></div>Sin datos</div>
+    </div>
+  </div>
+</div><!-- /main -->
+
+<div id="footer">
+  <div class="footer-org">
+    <span class="footer-name">POPULI</span>
+    <div class="footer-sep"></div>
+    <span class="footer-name">CCTD</span>
+    <div class="footer-sep"></div>
+    <span class="footer-name">UPSA</span>
+  </div>
+  <span class="footer-right">Fuente: INE · Censo de Población y Vivienda 2024</span>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════════════════
+// DEFINICIÓN DE INDICADORES
+// ══════════════════════════════════════════════════════════════════════════════
+const GRUPOS = [
+  {
+    grupo: "Demografía",
+    inds: [
+      { key:"personas_x_ha",      label:"Densidad poblacional",        unidad:"hab/ha",  fmt: v=>(v/10).toFixed(1),
+        ayuda:"Habitantes por hectárea de superficie del manzano. Valor almacenado ×10 para mantener un decimal con enteros. Alta densidad puede indicar hacinamiento o desarrollo en altura.",
+        colores:["#f7fbff","#c6dbef","#6baed6","#2171b5","#08306b"] },
+      { key:"masculinidad",        label:"Índice de masculinidad",      unidad:"hombres/100 muj.", fmt: v=>v,
+        ayuda:"Número de hombres por cada 100 mujeres. Por encima de 100: más hombres; por debajo: más mujeres. Valores muy altos suelen reflejar migración laboral masculina.",
+        colores:["#2166ac","#92c5de","#f7f7f7","#f4a582","#d6604d"], divergente:true, centro:100 },
+      { key:"pct_menor20",         label:"% menores de 20 años",        unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Proporción de la población de 0 a 19 años sobre el total censado. Valores altos indican alta dependencia demográfica y mayor demanda de servicios educativos.",
+        colores:["#ffffd9","#edf8b1","#7fcdbb","#2c7fb8","#253494"] },
+      { key:"pct_60mas",           label:"% de 60 años o más",          unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Proporción de adultos mayores (60+). Indica envejecimiento poblacional y mayor demanda de servicios de salud y pensiones.",
+        colores:["#fff7ec","#fdd49e","#fc8d59","#d7301f","#7f0000"] },
+      { key:"pct_migrante",        label:"% población migrante",        unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Personas nacidas en otro municipio o país, sobre el total. Refleja dinámicas de urbanización, periurbanización e inmigración internacional.",
+        colores:["#f7f7f7","#d9d9d9","#969696","#525252","#252525"] },
+    ]
+  },
+  {
+    grupo: "Economía",
+    inds: [
+      { key:"dependencia_econ",    label:"Dependencia económica",       unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Ratio (residentes-no-ocupados / ocupados) ×100. Cuántas personas dependen económicamente de cada trabajador activo. Mayor valor = mayor presión sobre los ocupados.",
+        colores:["#006837","#78c679","#ffffcc","#fd8d3c","#800026"], divergente:true, centro:100 },
+      { key:"pct_empleados",       label:"% empleados u obreros",       unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Ocupados en relación de dependencia laboral (empleado u obrero) sobre el total de ocupados. Indica formalización del mercado de trabajo.",
+        colores:["#f7fbff","#c6dbef","#6baed6","#2171b5","#08306b"] },
+      { key:"pct_cuentapropia",    label:"% trabajadores por cuenta propia", unidad:"%", fmt: v=>v+"%",
+        ayuda:"Ocupados que trabajan de forma independiente. Puede reflejar tanto emprendimiento como informalidad laboral. Muy común en Bolivia urbana.",
+        colores:["#fff7fb","#ece2f0","#a6bddb","#1c9099","#016450"] },
+      { key:"pct_agricultura",     label:"% en agricultura",            unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Ocupados en agricultura, ganadería, silvicultura y pesca. Permite ver la ruralidad residual dentro de áreas amanzanadas.",
+        colores:["#ffffe5","#f7fcb9","#78c679","#238443","#004529"] },
+      { key:"pct_comercio",        label:"% en comercio",               unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Ocupados en venta al por mayor y menor, incluyendo reparación de vehículos. Sector dominante en muchas zonas periurbanas bolivianas.",
+        colores:["#fff5eb","#fdd0a2","#fd8d3c","#d94801","#7f2704"] },
+      { key:"pct_manufactura",     label:"% en manufactura",            unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Ocupados en industrias manufactureras. Indicador de tejido productivo urbano.",
+        colores:["#fcfbfd","#dadaeb","#9e9ac8","#6a51a3","#3f007d"] },
+      { key:"pct_construccion",    label:"% en construcción",           unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Ocupados en construcción. Sector muy masculinizado y asociado a migración temporal interna.",
+        colores:["#fff5eb","#fdd0a2","#fd8d3c","#d94801","#7f2704"] },
+      { key:"pct_transporte",      label:"% en transporte",             unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Ocupados en transporte y almacenamiento. El transporte informal es muy relevante en ciudades bolivianas.",
+        colores:["#f7f7f7","#d9d9d9","#969696","#525252","#252525"] },
+      { key:"pct_alojamiento",     label:"% en alojamiento y comida",   unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Ocupados en hoteles, restaurantes y servicios de comida. Concentrado en zonas turísticas y comerciales.",
+        colores:["#f7fbff","#c6dbef","#6baed6","#2171b5","#08306b"] },
+    ]
+  },
+  {
+    grupo: "Educación",
+    inds: [
+      { key:"pct_educ_superior",   label:"% con educación superior",    unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Población de 19 años o más con nivel de instrucción superior (universitaria o técnica). Indicador de capital humano y acceso a oportunidades.",
+        colores:["#fff7f3","#fde0dd","#fc9272","#de2d26","#67000d"] },
+      { key:"brecha_educ",         label:"Brecha de género (educación)", unidad:"pp", fmt: v=>(v>0?"+":"")+v+"pp",
+        ayuda:"Diferencia (mujeres − hombres) en el porcentaje con secundaria o superior. Positivo = mayor logro femenino. En Bolivia las mujeres han superado a los hombres en muchas ciudades.",
+        colores:["#b2182b","#ef8a62","#f7f7f7","#67a9cf","#2166ac"], divergente:true, centro:0 },
+    ]
+  },
+  {
+    grupo: "Salud · Cobertura",
+    inds: [
+      { key:"pct_sin_seguro",      label:"% sin ningún seguro de salud", unidad:"%", fmt: v=>v+"%",
+        ayuda:"Personas sin SUS, caja de salud ni seguro privado. Indicador directo de vulnerabilidad sanitaria. Alto valor = alta desprotección.",
+        colores:["#ffffcc","#fed976","#fd8d3c","#e31a1c","#800026"], invertido:true },
+      { key:"pct_seguro_privado",  label:"% con seguro privado",        unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Afiliados a seguros de salud privados. Indicador indirecto de ingresos y empleo formal de calidad.",
+        colores:["#f7fbff","#c6dbef","#6baed6","#2171b5","#08306b"] },
+      { key:"brecha_seguro",       label:"Brecha de género (seguro)",   unidad:"pp", fmt: v=>(v>0?"+":"")+v+"pp",
+        ayuda:"Diferencia (mujeres − hombres) en cobertura de cualquier seguro (SUS, caja, privado). Positivo = mayor cobertura femenina.",
+        colores:["#b2182b","#ef8a62","#f7f7f7","#67a9cf","#2166ac"], divergente:true, centro:0 },
+    ]
+  },
+  {
+    grupo: "Salud · Atención",
+    inds: [
+      { key:"pct_med_tradicional", label:"% usa medicina tradicional",  unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Personas que acuden a médico/a tradicional ancestral cuando enferman, sobre el total que declaró su forma de atención. Refleja identidad cultural y/o barreras de acceso al sistema formal.",
+        colores:["#f7f7f7","#d9d9d9","#969696","#525252","#252525"] },
+      { key:"pct_automedicacion",  label:"% se automedica (farmacia)",  unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Personas que acuden a farmacia sin receta médica. Puede reflejar barreras económicas o geográficas al sistema de salud, o bajo nivel de confianza en él.",
+        colores:["#fff5eb","#fdd0a2","#fd8d3c","#d94801","#7f2704"] },
+      { key:"pct_remedios_caseros",label:"% usa remedios caseros",      unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Personas que utilizan preparados o hierbas medicinales caseras. Indicador de ruralidad, tradición y/o precariedad de acceso sanitario.",
+        colores:["#f7f7f7","#d9d9d9","#969696","#525252","#252525"] },
+    ]
+  },
+  {
+    grupo: "Vivienda",
+    inds: [
+      { key:"pct_viv_desocupada",  label:"% viviendas desocupadas",     unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Viviendas particulares desocupadas sobre el total de viviendas particulares. Puede señalar especulación inmobiliaria, segundas residencias o abandono.",
+        colores:["#f7f7f7","#d9d9d9","#969696","#525252","#252525"] },
+      { key:"pct_alquiler",        label:"% alquiler o anticrético",    unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Viviendas en alquiler o anticrético sobre el total de viviendas ocupadas. El anticrético es una forma de alquiler sin renta mensual característica de Bolivia.",
+        colores:["#fff7ec","#fdd49e","#fc8d59","#d7301f","#7f0000"] },
+    ]
+  },
+  {
+    grupo: "Servicios básicos",
+    inds: [
+      { key:"pct_electricidad",    label:"% electricidad red pública",  unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Viviendas con servicio público de energía eléctrica sobre el total de viviendas ocupadas.",
+        colores:["#ffffcc","#a1dab4","#41b6c4","#2c7fb8","#253494"] },
+      { key:"pct_agua_red",        label:"% agua por cañería",          unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Viviendas con acceso a agua potable por cañería de red domiciliaria. Indicador básico de saneamiento.",
+        colores:["#ffffcc","#a1dab4","#41b6c4","#2c7fb8","#253494"] },
+      { key:"pct_alcantarillado",  label:"% alcantarillado",            unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Viviendas cuyo desagüe va a la red de alcantarillado. Diferencia significativa entre ciudades capitales y periferias.",
+        colores:["#ffffcc","#a1dab4","#41b6c4","#2c7fb8","#253494"] },
+    ]
+  },
+  {
+    grupo: "Energía de cocción",
+    inds: [
+      { key:"pct_gas_red",         label:"% gas por cañería",           unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Viviendas con gas natural a domicilio por red de cañerías. En Bolivia solo disponible en ciudades con infraestructura instalada (La Paz, Cochabamba, Santa Cruz, Tarija y algunas otras).",
+        colores:["#ffffcc","#a1dab4","#41b6c4","#2c7fb8","#253494"] },
+      { key:"pct_gas_garrafa",     label:"% gas en garrafa (GLP)",      unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Viviendas que usan gas licuado de petróleo (GLP) en garrafa. La fuente de energía más extendida en Bolivia, subsidiada por el Estado. Su alta presencia indica ausencia de red de gas.",
+        colores:["#ffffd9","#edf8b1","#7fcdbb","#2c7fb8","#253494"] },
+      { key:"pct_lena_guano",      label:"% leña o guano/bosta",        unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Viviendas que usan leña, guano o bosta para cocinar. Indicador de pobreza energética. Asociado a riesgo de enfermedades respiratorias por combustión en espacios cerrados.",
+        colores:["#ffffcc","#fed976","#fd8d3c","#e31a1c","#800026"], invertido:true },
+    ]
+  },
+  {
+    grupo: "Gestión de residuos",
+    inds: [
+      { key:"pct_basura_formal",   label:"% recolección formal",        unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Viviendas cuya basura es recogida por carro basurero o depositada en contenedor público. Indica cobertura del servicio municipal de limpieza.",
+        colores:["#ffffcc","#a1dab4","#41b6c4","#2c7fb8","#253494"] },
+      { key:"pct_basura_quema",    label:"% quema de basura",           unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Viviendas que eliminan sus residuos quemándolos. Indica ausencia de servicio de recolección y es un indicador de contaminación del aire.",
+        colores:["#ffffcc","#fed976","#fd8d3c","#e31a1c","#800026"], invertido:true },
+      { key:"pct_basura_informal", label:"% basura a calle o río",      unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Viviendas que botan la basura al terreno baldío, calle o río. Saneamiento ambiental crítico. Alta correlación con zonas de expansión urbana sin planificación.",
+        colores:["#ffffcc","#fed976","#fd8d3c","#e31a1c","#800026"], invertido:true },
+    ]
+  },
+  {
+    grupo: "TICs",
+    inds: [
+      { key:"pct_internet",        label:"% hogares con internet",      unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Hogares con acceso a internet fijo o móvil. Indicador de conectividad digital e inclusión en la economía digital.",
+        colores:["#ffffcc","#a1dab4","#41b6c4","#2c7fb8","#253494"] },
+      { key:"pct_celular",         label:"% hogares con celular",        unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Hogares con al menos un teléfono celular. Indicador de conectividad base. En Bolivia el celular es la principal puerta de entrada a servicios digitales.",
+        colores:["#ffffcc","#a1dab4","#41b6c4","#2c7fb8","#253494"] },
+      { key:"pct_televisor",       label:"% hogares con televisor",      unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Hogares con televisor. En Bolivia, el televisor sigue siendo el principal medio de información masiva, especialmente en zonas periurbanas.",
+        colores:["#ffffcc","#a1dab4","#41b6c4","#2c7fb8","#253494"] },
+    ]
+  },
+];
+
+// Flatten
+const INDS = GRUPOS.flatMap(g => g.inds.filter(d => !d.oculto));
+const IND  = Object.fromEntries(INDS.map(d => [d.key, d]));
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ESTADO
+// ══════════════════════════════════════════════════════════════════════════════
+let ciudades = [], currentInd = "pct_internet", currentData = null, cityStats = {};
+
+// ══════════════════════════════════════════════════════════════════════════════
+// MAPA
+// ══════════════════════════════════════════════════════════════════════════════
+const map = new maplibregl.Map({
+  container: "map",
+  style: {
+    version: 8,
+    glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
+    sources: { osm: { type:"raster", tiles:["https://tile.openstreetmap.org/{z}/{x}/{y}.png"], tileSize:256, maxzoom:19 } },
+    layers:  [{ id:"osm", type:"raster", source:"osm", paint:{"raster-opacity":0.3} }]
+  },
+  center: [-65, -16.5], zoom: 5,
+  attributionControl: false
+});
+map.addControl(new maplibregl.NavigationControl({ showCompass:false }), "bottom-left");
+map.addControl(new maplibregl.AttributionControl({ compact:true }), "bottom-right");
+
+// ── Popup ───────────────────────────────────────────────────────────────────
+const popup = new maplibregl.Popup({ closeButton:false, closeOnClick:false, className:"mpopup", maxWidth:"250px" });
+
+function pctBar(val, key) {
+  const s = cityStats[key];
+  if (!s || val == null) return "";
+  const pct = Math.round((s.vals.filter(v => v <= val).length / s.vals.length) * 100);
+  const ind = IND[key];
+  return `<div class="pct-wrap">
+    <div class="pct-label"><span>Percentil en la ciudad</span><span>${pct}°</span></div>
+    <div class="pct-track">
+      <div class="pct-fill" style="width:${pct}%"></div>
+      <div class="pct-dot"  style="left:${pct}%"></div>
+    </div>
+    <div class="pct-label"><span>${ind.fmt(s.min)}</span><span>${ind.fmt(s.max)}</span></div>
+  </div>`;
+}
+
+function popupHTML(props) {
+  const ind  = IND[currentInd];
+  const val  = props[currentInd];
+  const fval = val != null ? ind.fmt(val) : "Sin datos";
+  const avg  = cityStats[currentInd] ? ind.fmt(Math.round(cityStats[currentInd].mean)) : "—";
+  return `
+    <div class="pop-name">${props.n || "—"}</div>
+    <div class="pop-grid">
+      <span class="pop-k">Personas</span><span class="pop-v">${(props.p||0).toLocaleString("es")}</span>
+      <div class="pop-sep"></div>
+      <span class="pop-k">${ind.label}</span><span class="pop-v">${fval}</span>
+      <span class="pop-k">Promedio ciudad</span><span class="pop-v">${avg}</span>
+      ${val != null ? pctBar(val, currentInd) : ""}
+    </div>`;
+}
+
+map.on("mousemove", "mz-fill", e => {
+  map.getCanvas().style.cursor = "pointer";
+  popup.setLngLat(e.lngLat).setHTML(popupHTML(e.features[0].properties)).addTo(map);
+});
+map.on("mouseleave", "mz-fill", () => { map.getCanvas().style.cursor=""; popup.remove(); });
+
+// ── Color / Leyenda ──────────────────────────────────────────────────────────
+function buildColorExpr(ind, data) {
+  const vals = data.features.map(f => f.properties[ind.key]).filter(v => v != null && isFinite(v));
+  if (!vals.length) return "#444";
+  vals.sort((a, b) => a - b);
+  const n = vals.length;
+  const mn = vals[0], mx = vals[n - 1];
+  const c = ind.colores;
+
+  // Si todos los valores son iguales → color central
+  if (mn === mx) return c[Math.floor(c.length / 2)];
+
+  // Candidatos a breaks por cuantiles
+  const q = p => vals[Math.min(Math.floor(p * n), n - 1)];
+  const candidates = [q(.2), q(.4), q(.6), q(.8)];
+
+  // Mantener solo breaks estrictamente crecientes (evita duplicados que rompen Maplibre)
+  const breaks = [];
+  let prev = mn;
+  for (const b of candidates) {
+    if (b > prev && b < mx) { breaks.push(b); prev = b; }
+  }
+
+  // Si no quedó ningún break útil (p.ej. 94% zeros) usar el p50 de valores no-cero
+  if (!breaks.length) {
+    const nonZero = vals.filter(v => v > 0);
+    if (nonZero.length) breaks.push(nonZero[Math.floor(nonZero.length / 2)]);
+    else return c[0];
+  }
+
+  // Mapear colores de la paleta a los N+1 bandas disponibles
+  const nb = breaks.length + 1;
+  const colors = Array.from({ length: nb }, (_, i) =>
+    c[Math.round(i * (c.length - 1) / (nb - 1))]
+  );
+
+  const expr = ["step", ["get", ind.key], colors[0]];
+  breaks.forEach((b, i) => expr.push(b, colors[i + 1]));
+  return expr;
+}
+
+function buildStats(data) {
+  cityStats = {};
+  INDS.forEach(ind => {
+    const vals = data.features.map(f => f.properties[ind.key]).filter(v => v != null && isFinite(v));
+    if (!vals.length) return;
+    vals.sort((a,b) => a-b);
+    const n = vals.length;
+    const mean = vals.reduce((s,v) => s+v, 0) / n;
+    cityStats[ind.key] = { vals, min:vals[0], max:vals[n-1], median:vals[Math.floor(n/2)], mean };
+  });
+}
+
+function updateLegend(ind, data) {
+  const s = cityStats[ind.key];
+  if (!s) return;
+  const n = s.vals.length;
+  const q = p => s.vals[Math.min(Math.floor(p*n), n-1)];
+  document.getElementById("leg-title").textContent = ind.label;
+  document.getElementById("leg-bar").style.background = `linear-gradient(to right,${ind.colores.join(",")})`;
+  document.getElementById("leg-min").textContent = ind.fmt(s.min);
+  document.getElementById("leg-mid").textContent = ind.fmt(q(.5));
+  document.getElementById("leg-max").textContent = ind.fmt(s.max);
+  document.getElementById("leg-unit").textContent = ind.unidad ? `Unidad: ${ind.unidad}` : "";
+}
+
+function applyIndicator() {
+  if (!currentData) return;
+  const ind = IND[currentInd];
+  const ce  = buildColorExpr(ind, currentData);
+  const oe  = ["case",["==",["get",currentInd],null],0.07,0.78];
+  if (map.getLayer("mz-fill")) {
+    map.setPaintProperty("mz-fill","fill-color", ce);
+    map.setPaintProperty("mz-fill","fill-opacity", oe);
+  }
+  updateLegend(ind, currentData);
+  updateStatsAvg();
+}
+
+function updateStatsAvg() {
+  const ind = IND[currentInd];
+  const s   = cityStats[currentInd];
+  const el  = document.getElementById("sc-avg");
+  if (s) el.innerHTML = `Promedio <b>${ind.label.toLowerCase()}</b>: <b>${ind.fmt(Math.round(s.mean))}</b>`;
+  else el.textContent = "";
+}
+
+// ── Carga ciudad ─────────────────────────────────────────────────────────────
+function loadCiudad(c) {
+  document.getElementById("loading").classList.add("on");
+  fetch(`data/${c.slug}.geojson`)
+    .then(r => r.json())
+    .then(data => {
+      currentData = data;
+      buildStats(data);
+
+      const ind = IND[currentInd];
+      const ce  = buildColorExpr(ind, data);
+      const oe  = ["case",["==",["get",currentInd],null],0.07,0.78];
+
+      if (map.getSource("mz")) {
+        map.getSource("mz").setData(data);
+        map.setPaintProperty("mz-fill","fill-color", ce);
+        map.setPaintProperty("mz-fill","fill-opacity", oe);
+      } else {
+        map.addSource("mz",{ type:"geojson", data, tolerance:0.5 });
+        map.addLayer({ id:"mz-fill", type:"fill", source:"mz",
+          paint:{ "fill-color":ce, "fill-opacity":oe, "fill-outline-color":"rgba(0,0,0,0.2)" } });
+      }
+
+      // Zoom bbox
+      const lngs=[], lats=[];
+      data.features.forEach(f => {
+        const g = f.geometry;
+        const pts = g.type==="MultiPolygon" ? g.coordinates.flat(2) : g.coordinates.flat(1);
+        pts.forEach(p => { lngs.push(p[0]); lats.push(p[1]); });
+      });
+      if (lngs.length) map.fitBounds([[Math.min(...lngs),Math.min(...lats)],[Math.max(...lngs),Math.max(...lats)]],{padding:40,duration:600});
+
+      updateLegend(ind, data);
+      updateStatsCard(c);
+    })
+    .catch(e => console.error(e))
+    .finally(() => document.getElementById("loading").classList.remove("on"));
+}
+
+function updateStatsCard(c) {
+  document.getElementById("sc-nombre").textContent  = `${c.municipio}`;
+  document.getElementById("sc-manz").textContent    = c.manzanos.toLocaleString("es");
+  document.getElementById("sc-pob").textContent     = c.poblacion ? c.poblacion.toLocaleString("es") : "—";
+  document.getElementById("sc-cobfill").style.width = c.cobertura + "%";
+  document.getElementById("sc-cobpct").textContent  = c.cobertura + "%";
+  document.getElementById("stats-card").classList.add("visible");
+  updateStatsAvg();
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SIDEBAR — INDICADORES
+// ══════════════════════════════════════════════════════════════════════════════
+function renderIndicadores() {
+  const list = document.getElementById("ind-list");
+  let openAyuda = null;
+
+  GRUPOS.forEach(g => {
+    const inds = g.inds.filter(d => !d.oculto);
+    if (!inds.length) return;
+
+    const gl = document.createElement("div");
+    gl.className = "grp-label";
+    gl.textContent = g.grupo;
+    list.appendChild(gl);
+
+    inds.forEach(ind => {
+      const row = document.createElement("div");
+      row.className = "ind-row" + (ind.key === currentInd ? " selected" : "");
+      row.dataset.key = ind.key;
+
+      const btn = document.createElement("button");
+      btn.className = "ind-btn";
+      btn.textContent = ind.label;
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".ind-row").forEach(r => r.classList.remove("selected"));
+        row.classList.add("selected");
+        currentInd = ind.key;
+        applyIndicator();
+      });
+
+      const iBtn = document.createElement("button");
+      iBtn.className = "info-btn";
+      iBtn.textContent = "ⓘ";
+      iBtn.title = "Ver descripción";
+
+      const ayuda = document.createElement("div");
+      ayuda.className = "ayuda-box";
+      ayuda.textContent = ind.ayuda;
+
+      iBtn.addEventListener("click", e => {
+        e.stopPropagation();
+        const isOpen = ayuda.classList.contains("open");
+        if (openAyuda && openAyuda !== ayuda) openAyuda.classList.remove("open");
+        ayuda.classList.toggle("open", !isOpen);
+        openAyuda = !isOpen ? ayuda : null;
+      });
+
+      row.appendChild(btn);
+      row.appendChild(iBtn);
+      list.appendChild(row);
+      list.appendChild(ayuda);
+    });
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SIDEBAR — CIUDAD AUTOCOMPLETE
+// ══════════════════════════════════════════════════════════════════════════════
+function norm(s) { return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,""); }
+
+function renderDD(items) {
+  const dd = document.getElementById("ciudad-dd");
+  dd.innerHTML = "";
+  if (!items.length) { dd.classList.remove("open"); return; }
+  items.slice(0,80).forEach(c => {
+    const d = document.createElement("div");
+    d.className = "dd-row";
+    d.innerHTML = `<span>${c.municipio}</span><span class="dd-dep">${c.departamento}</span>`;
+    d.addEventListener("mousedown", e => { e.preventDefault(); pickCiudad(c); });
+    dd.appendChild(d);
+  });
+  dd.classList.add("open");
+}
+
+function pickCiudad(c) {
+  document.getElementById("ciudad-input").value = c.municipio;
+  document.getElementById("ciudad-dd").classList.remove("open");
+  loadCiudad(c);
+}
+
+document.getElementById("ciudad-input").addEventListener("input", e => {
+  const q = norm(e.target.value);
+  if (!q) { document.getElementById("ciudad-dd").classList.remove("open"); return; }
+  renderDD(ciudades.filter(c => norm(c.municipio).includes(q) || norm(c.departamento).includes(q)));
+});
+document.getElementById("ciudad-input").addEventListener("focus", e => {
+  if (e.target.value) e.target.dispatchEvent(new Event("input"));
+});
+document.addEventListener("click", e => {
+  if (!document.getElementById("ciudad-wrap").contains(e.target))
+    document.getElementById("ciudad-dd").classList.remove("open");
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════════════════════
+renderIndicadores();
+
+fetch("data/ciudades.json")
+  .then(r => r.json())
+  .then(data => {
+    ciudades = data;
+    const scz = data.find(c => c.slug.includes("santa_cruz_de_la_sierra")) || data[0];
+    if (scz) {
+      document.getElementById("ciudad-input").value = scz.municipio;
+      map.on("load", () => loadCiudad(scz));
+    }
+  });
+
+// ── Panel de agradecimientos ──────────────────────────────────────────────────
+const credBtn   = document.getElementById("cred-btn");
+const credPanel = document.getElementById("cred-panel");
+
+credBtn.addEventListener("click", e => {
+  e.stopPropagation();
+  const open = credPanel.classList.toggle("open");
+  credBtn.classList.toggle("open", open);
+});
+
+document.addEventListener("click", e => {
+  if (!credBtn.contains(e.target) && !credPanel.contains(e.target)) {
+    credPanel.classList.remove("open");
+    credBtn.classList.remove("open");
+  }
+});
+</script>
+</body>
+</html>
