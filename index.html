@@ -1,41 +1,97 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0d1117" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f6f8fa" media="(prefers-color-scheme: light)">
 <title>Retrato Censal Bolivia · CPV 2024</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%231f6feb'/%3E%3Ctext x='8' y='12' text-anchor='middle' font-family='system-ui' font-size='10' font-weight='700' fill='white'%3ER%3C/text%3E%3C/svg%3E">
 <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Tema oscuro (default) ─────────────────────── */
 :root {
-  --top: 46px; --side: 270px;
+  --top: 46px; --side: 280px;
   --bg: #0d1117; --bg2: #161b22; --bg3: #21262d;
-  --border: #30363d; --text: #e6edf3; --text2: #8b949e; --text3: #656d76;
-  --accent: #58a6ff; --accent2: #1f6feb;
+  --border: #30363d; --border2: #3d444d;
+  --text: #e6edf3; --text2: #8b949e; --text3: #656d76;
+  --accent: #58a6ff; --accent2: #1f6feb; --accent-soft: rgba(31,111,235,.12);
   --green: #3fb950; --red: #f85149; --yellow: #d29922;
-  --font: system-ui, -apple-system, sans-serif;
+  --shadow: 0 8px 28px rgba(0,0,0,.55);
+  --shadow-soft: 0 4px 16px rgba(0,0,0,.5);
+  --pop-bg: rgba(13,17,23,.97);
+  --leg-bg: rgba(13,17,23,.92);
+  --basemap-opacity: 0.32;
+  --na-stripe: #30363d;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --r: 6px;
 }
-body { font-family: var(--font); background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; font-size: 13px; }
-/* ── Footer ─────────────────────────────────── */
-#footer {
-  height: 30px; flex-shrink: 0;
-  background: var(--bg2); border-top: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 14px; gap: 12px; z-index: 20;
-}
-.footer-org { display: flex; align-items: center; gap: 10px; }
-.footer-sep { width: 1px; height: 12px; background: var(--border); }
-.footer-name { font-size: 11px; font-weight: 600; color: var(--text2); letter-spacing: .2px; }
-.footer-name:hover { color: var(--text); }
-.footer-right { font-size: 10px; color: var(--text3); }
 
-/* ── Credits panel ──────────────────────────── */
+/* ── Tema claro ─────────────────────────────────── */
+:root[data-theme="light"] {
+  --bg: #ffffff; --bg2: #f6f8fa; --bg3: #eaeef2;
+  --border: #d0d7de; --border2: #afb8c1;
+  --text: #1f2328; --text2: #59636e; --text3: #818b98;
+  --accent: #0969da; --accent2: #0550ae; --accent-soft: rgba(9,105,218,.10);
+  --green: #1a7f37; --red: #cf222e; --yellow: #9a6700;
+  --shadow: 0 8px 24px rgba(31,35,40,.12);
+  --shadow-soft: 0 4px 14px rgba(31,35,40,.08);
+  --pop-bg: rgba(255,255,255,.97);
+  --leg-bg: rgba(255,255,255,.94);
+  --basemap-opacity: 0.85;
+  --na-stripe: #afb8c1;
+}
+
+html, body { height: 100%; }
+body {
+  font-family: var(--font); background: var(--bg); color: var(--text);
+  height: 100dvh; display: flex; flex-direction: column; overflow: hidden;
+  font-size: 13px; -webkit-font-smoothing: antialiased;
+  transition: background-color .2s, color .2s;
+}
+
+/* ── Topbar ─────────────────────────────────── */
+#topbar {
+  height: var(--top); background: var(--bg2); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; padding: 0 12px; gap: 10px; flex-shrink: 0; z-index: 30;
+  transition: background-color .2s, border-color .2s;
+}
+#topbar .title { font-weight: 700; font-size: 14px; letter-spacing: -.3px; }
+#topbar .pipe  { width: 1px; height: 18px; background: var(--border); }
+#topbar .sub   { font-size: 12px; color: var(--text2); }
+.topbar-right  { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+#topbar .src   { font-size: 11px; color: var(--text3); background: var(--bg3); padding: 2px 9px; border-radius: 20px; border: 1px solid var(--border); }
+
+/* Hamburger (sólo móvil) */
+#burger {
+  display: none; background: none; border: 1px solid var(--border); border-radius: var(--r);
+  width: 32px; height: 32px; padding: 0; cursor: pointer; color: var(--text);
+  align-items: center; justify-content: center; flex-shrink: 0;
+}
+#burger svg { width: 16px; height: 16px; stroke: currentColor; }
+#burger:hover { border-color: var(--accent2); color: var(--accent); }
+
+/* Theme toggle */
+#theme-btn {
+  background: none; border: 1px solid var(--border); border-radius: 20px;
+  width: 30px; height: 28px; padding: 0; cursor: pointer; color: var(--text2);
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: border-color .15s, color .15s;
+}
+#theme-btn:hover { border-color: var(--accent2); color: var(--accent); }
+#theme-btn svg { width: 14px; height: 14px; }
+#theme-btn .ico-sun { display: none; }
+:root[data-theme="light"] #theme-btn .ico-sun { display: inline; }
+:root[data-theme="light"] #theme-btn .ico-moon { display: none; }
+
+/* Credits panel */
 #cred-btn {
   background: none; border: 1px solid var(--border); border-radius: 20px;
-  padding: 2px 10px; font-size: 11px; color: var(--text2); cursor: pointer;
-  display: flex; align-items: center; gap: 5px; transition: border-color .15s, color .15s;
+  padding: 3px 10px; font-size: 11px; color: var(--text2); cursor: pointer;
+  display: inline-flex; align-items: center; gap: 5px; transition: border-color .15s, color .15s;
   white-space: nowrap;
 }
 #cred-btn:hover { border-color: var(--accent2); color: var(--accent); }
@@ -43,10 +99,10 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); heig
 #cred-btn.open .chevron { transform: rotate(180deg); }
 
 #cred-panel {
-  display: none; position: absolute; top: var(--top); right: 14px;
+  display: none; position: absolute; top: var(--top); right: 12px;
   background: var(--bg2); border: 1px solid var(--border); border-radius: 8px;
-  padding: 14px 16px; width: 320px; z-index: 200;
-  box-shadow: 0 8px 28px rgba(0,0,0,.55); animation: slideDown .2s ease;
+  padding: 14px 16px; width: 320px; max-width: calc(100vw - 24px); z-index: 200;
+  box-shadow: var(--shadow); animation: slideDown .2s ease;
 }
 #cred-panel.open { display: block; }
 @keyframes slideDown { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
@@ -68,45 +124,40 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); heig
 .cred-link-name { font-size: 12px; font-weight: 600; color: var(--text); }
 .cred-link-url  { font-size: 11px; color: var(--text3); }
 
-/* ── Topbar ─────────────────────────────────── */
-#topbar {
-  height: var(--top); background: var(--bg2); border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; padding: 0 14px; gap: 10px; flex-shrink: 0; z-index: 20;
-}
-#topbar .title { font-weight: 700; font-size: 14px; letter-spacing: -.3px; }
-#topbar .pipe  { width: 1px; height: 18px; background: var(--border); }
-#topbar .sub   { font-size: 12px; color: var(--text2); }
-#topbar .src   { margin-left: auto; font-size: 11px; color: var(--text3); background: var(--bg3); padding: 2px 9px; border-radius: 20px; border: 1px solid var(--border); }
-
 /* ── Layout ─────────────────────────────────── */
-#main { display: flex; flex: 1; overflow: hidden; }
+#main { display: flex; flex: 1; overflow: hidden; position: relative; }
+#scrim {
+  display: none; position: absolute; inset: 0; background: rgba(0,0,0,.45);
+  z-index: 25; backdrop-filter: blur(2px);
+}
+#scrim.show { display: block; }
 
 /* ── Sidebar ─────────────────────────────────── */
 #sidebar {
   width: var(--side); background: var(--bg2); border-right: 1px solid var(--border);
   display: flex; flex-direction: column; overflow: hidden; flex-shrink: 0;
+  transition: background-color .2s, border-color .2s, transform .25s ease;
+  z-index: 26;
 }
 
-/* Ciudad selector */
 .s-block { padding: 12px; border-bottom: 1px solid var(--border); }
 .s-label { font-size: 10px; font-weight: 600; letter-spacing: .7px; text-transform: uppercase; color: var(--text3); margin-bottom: 6px; }
 #ciudad-wrap { position: relative; }
 #ciudad-input {
   width: 100%; background: var(--bg3); border: 1px solid var(--border); border-radius: var(--r);
-  padding: 7px 10px; color: var(--text); font-size: 12.5px; outline: none; transition: border-color .15s;
+  padding: 8px 10px; color: var(--text); font-size: 13px; outline: none; transition: border-color .15s;
 }
 #ciudad-input:focus { border-color: var(--accent2); }
 #ciudad-dd {
   display: none; position: absolute; top: calc(100% + 3px); left: 0; right: 0;
   background: var(--bg3); border: 1px solid var(--border); border-radius: var(--r);
-  max-height: 200px; overflow-y: auto; z-index: 100; box-shadow: 0 8px 24px rgba(0,0,0,.5);
+  max-height: 220px; overflow-y: auto; z-index: 100; box-shadow: var(--shadow-soft);
 }
 #ciudad-dd.open { display: block; }
-.dd-row { padding: 7px 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+.dd-row { padding: 8px 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 6px; }
 .dd-row:hover, .dd-row.focus { background: var(--border); }
 .dd-dep { font-size: 10px; color: var(--text3); white-space: nowrap; }
 
-/* Stats card */
 #stats-card {
   padding: 10px 12px; border-bottom: 1px solid var(--border);
   display: none; flex-direction: column; gap: 5px;
@@ -117,7 +168,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); heig
 .stat-pill {
   display: flex; align-items: center; gap: 4px;
   font-size: 11px; color: var(--text2); background: var(--bg3);
-  padding: 2px 7px; border-radius: 20px; border: 1px solid var(--border);
+  padding: 2px 8px; border-radius: 20px; border: 1px solid var(--border);
 }
 .stat-pill b { color: var(--text); font-weight: 600; }
 .cob-bar-wrap { display: flex; align-items: center; gap: 6px; }
@@ -125,8 +176,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); heig
 .cob-bar { flex: 1; height: 4px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
 .cob-fill { height: 100%; border-radius: 2px; background: var(--green); transition: width .4s; }
 
-/* Indicadores */
-.ind-scroll { flex: 1; overflow-y: auto; padding: 4px 0 8px; }
+.ind-scroll { flex: 1; overflow-y: auto; padding: 4px 0 8px; -webkit-overflow-scrolling: touch; }
 .grp-label { padding: 10px 12px 3px; font-size: 10px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase; color: var(--text3); }
 .ind-row {
   display: flex; align-items: center; gap: 0;
@@ -134,19 +184,18 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); heig
 }
 .ind-btn {
   flex: 1; text-align: left; background: none; border: none;
-  padding: 6px 4px 6px 0; font-size: 12.5px; color: var(--text); cursor: pointer;
+  padding: 8px 4px 8px 0; font-size: 13px; color: var(--text); cursor: pointer;
   border-radius: var(--r); transition: color .1s;
 }
 .ind-btn:hover { color: var(--accent); }
 .ind-row.selected .ind-btn { color: var(--accent); font-weight: 600; }
-.ind-row.selected { background: rgba(31,111,235,.1); border-left: 2px solid var(--accent2); padding-left: 10px; }
+.ind-row.selected { background: var(--accent-soft); border-left: 2px solid var(--accent2); padding-left: 10px; }
 .info-btn {
   flex-shrink: 0; background: none; border: none; color: var(--text3); cursor: pointer;
-  font-size: 12px; padding: 3px 4px; border-radius: 3px; line-height: 1;
+  font-size: 13px; padding: 6px 6px; border-radius: 3px; line-height: 1;
 }
 .info-btn:hover { color: var(--text2); background: var(--bg3); }
 
-/* Tooltip ayuda */
 .ayuda-box {
   display: none; margin: 0 10px 6px 12px; padding: 7px 9px;
   background: var(--bg3); border: 1px solid var(--border); border-radius: var(--r);
@@ -155,28 +204,38 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); heig
 .ayuda-box.open { display: block; }
 
 /* ── Mapa ─────────────────────────────────────── */
-#map-wrap { flex: 1; position: relative; }
+#map-wrap { flex: 1; position: relative; min-width: 0; }
 #map { width: 100%; height: 100%; }
+
+/* MapLibre controls (tematizables) */
+.maplibregl-ctrl-group { background: var(--bg2) !important; border: 1px solid var(--border) !important; }
+.maplibregl-ctrl-group button { background-color: transparent !important; }
+.maplibregl-ctrl-group button + button { border-top-color: var(--border) !important; }
+:root[data-theme="dark"] .maplibregl-ctrl-icon { filter: invert(.85) hue-rotate(180deg); }
+.maplibregl-ctrl-attrib { background: var(--bg2) !important; color: var(--text2) !important; }
+.maplibregl-ctrl-attrib a { color: var(--text2) !important; }
 
 /* ── Leyenda ─────────────────────────────────── */
 #legend {
-  position: absolute; bottom: 30px; right: 12px;
-  background: rgba(13,17,23,.92); border: 1px solid var(--border); border-radius: 8px;
+  position: absolute; bottom: 38px; right: 12px;
+  background: var(--leg-bg); border: 1px solid var(--border); border-radius: 8px;
   padding: 10px 12px; min-width: 190px; pointer-events: none;
-  backdrop-filter: blur(8px); box-shadow: 0 4px 16px rgba(0,0,0,.5);
+  backdrop-filter: blur(8px); box-shadow: var(--shadow-soft);
+  z-index: 5;
 }
 #leg-title { font-size: 11px; font-weight: 600; color: var(--text2); margin-bottom: 7px; }
 #leg-bar   { height: 8px; border-radius: 4px; margin-bottom: 5px; }
 #leg-marks { display: flex; justify-content: space-between; font-size: 10px; color: var(--text3); margin-bottom: 4px; }
 #leg-unit  { font-size: 10px; color: var(--text3); text-align: right; }
 .leg-na    { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--text3); }
-.na-box    { width: 12px; height: 8px; border-radius: 2px; background: repeating-linear-gradient(45deg,#30363d 0,#30363d 2px,transparent 2px,transparent 4px); border: 1px solid var(--border); }
+.na-box    { width: 12px; height: 8px; border-radius: 2px; background: repeating-linear-gradient(45deg, var(--na-stripe) 0, var(--na-stripe) 2px, transparent 2px, transparent 4px); border: 1px solid var(--border); }
 
 /* ── Popup ─────────────────────────────────────── */
 .mpopup .maplibregl-popup-content {
-  background: rgba(13,17,23,.97); border: 1px solid var(--border); border-radius: 8px;
+  background: var(--pop-bg); border: 1px solid var(--border); border-radius: 8px;
   padding: 10px 12px; color: var(--text); min-width: 180px; max-width: 240px;
-  box-shadow: 0 4px 20px rgba(0,0,0,.6); font-size: 12px;
+  box-shadow: var(--shadow-soft); font-size: 12px;
+  backdrop-filter: blur(6px);
 }
 .mpopup .maplibregl-popup-tip { display: none; }
 .pop-name { font-weight: 700; font-size: 12.5px; margin-bottom: 7px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
@@ -185,7 +244,6 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); heig
 .pop-v    { font-weight: 600; text-align: right; align-self: center; }
 .pop-sep  { grid-column: 1/-1; border-top: 1px solid var(--border); margin: 5px 0 3px; }
 
-/* Barra de percentil */
 .pct-wrap  { grid-column: 1/-1; margin-top: 4px; }
 .pct-label { font-size: 10px; color: var(--text3); margin-bottom: 3px; display: flex; justify-content: space-between; }
 .pct-track { position: relative; height: 6px; background: var(--bg3); border-radius: 3px; border: 1px solid var(--border); }
@@ -197,38 +255,101 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); heig
   display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
   background: var(--bg2); border: 1px solid var(--border); border-radius: 8px;
   padding: 10px 18px; font-size: 12px; color: var(--text2); pointer-events: none; z-index: 50;
+  box-shadow: var(--shadow-soft);
 }
 #loading.on { display: block; }
 
+/* ── Footer ─────────────────────────────────── */
+#footer {
+  height: 30px; flex-shrink: 0;
+  background: var(--bg2); border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 14px; gap: 12px; z-index: 20;
+  transition: background-color .2s, border-color .2s;
+}
+.footer-org { display: flex; align-items: center; gap: 10px; }
+.footer-sep { width: 1px; height: 12px; background: var(--border); }
+.footer-name { font-size: 11px; font-weight: 600; color: var(--text2); letter-spacing: .2px; }
+.footer-name:hover { color: var(--text); }
+.footer-right { font-size: 10px; color: var(--text3); }
+
 /* ── Scrollbar ─────────────────────────────────── */
-::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border2); }
+
+/* ── Responsive: tablet ─────────────────────── */
+@media (max-width: 900px) {
+  :root { --side: 250px; }
+}
+
+/* ── Responsive: móvil ──────────────────────── */
+@media (max-width: 768px) {
+  :root { --top: 50px; }
+  #burger { display: inline-flex; }
+  #topbar .sub { display: none; }
+  #topbar .pipe { display: none; }
+  #topbar .title { font-size: 13px; }
+  #cred-btn { display: none; }
+
+  #sidebar {
+    position: absolute; top: 0; bottom: 0; left: 0;
+    width: min(86vw, 320px);
+    transform: translateX(-100%);
+    box-shadow: var(--shadow);
+  }
+  #sidebar.open { transform: translateX(0); }
+
+  #legend {
+    bottom: 12px; right: 8px; min-width: 150px;
+    padding: 8px 10px; font-size: 11px;
+  }
+  #leg-title { font-size: 10px; margin-bottom: 5px; }
+
+  .footer-right { display: none; }
+  #footer { padding: 0 12px; }
+
+  /* Popup más generoso en táctil */
+  .mpopup .maplibregl-popup-content { max-width: 260px; min-width: 200px; }
+
+  /* MapLibre controls reposición */
+  .maplibregl-ctrl-bottom-left { bottom: 38px !important; }
+}
 </style>
 </head>
 <body>
 
 <div id="topbar">
+  <button id="burger" aria-label="Mostrar indicadores" type="button">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+  </button>
   <span class="title">Retrato Censal Bolivia</span>
   <div class="pipe"></div>
   <span class="sub">CPV 2024 · escala de manzana</span>
-  <div style="margin-left:auto;position:relative;">
-    <button id="cred-btn">Agradecimientos <span class="chevron">▼</span></button>
-    <div id="cred-panel">
-      <div class="cred-title">Datos procesados por Mauricio Foronda</div>
-      <div class="cred-body">
-        Este visualizador se apoya en la metodología y los datos preparados por
-        <strong>Mauricio Foronda</strong> en su <em>Atlas Urbano de Bolivia</em>,
-        quien extrajo y estructuró la información del Geoportal del INE (CPV 2024)
-        a nivel de manzana para todo el país.<br><br>
-        Sin ese trabajo previo de acceso abierto, este retrato no existiría.
-        <div class="cred-link-row">
-          <div class="cred-avatar">🗺️</div>
-          <div class="cred-link-info">
-            <span class="cred-link-name">Atlas Urbano · Mauricio Foronda</span>
-            <a class="cred-link-url" href="https://mauforonda.github.io/atlasurbano/" target="_blank">
-              mauforonda.github.io/atlasurbano ↗
-            </a>
+  <div class="topbar-right">
+    <button id="theme-btn" aria-label="Cambiar tema" type="button" title="Cambiar tema claro/oscuro">
+      <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+    </button>
+    <div style="position:relative;">
+      <button id="cred-btn" type="button">Agradecimientos <span class="chevron">▼</span></button>
+      <div id="cred-panel">
+        <div class="cred-title">Datos procesados por Mauricio Foronda</div>
+        <div class="cred-body">
+          Este visualizador se apoya en la metodología y los datos preparados por
+          <strong>Mauricio Foronda</strong> en su <em>Atlas Urbano de Bolivia</em>,
+          quien extrajo y estructuró la información del Geoportal del INE (CPV 2024)
+          a nivel de manzana para todo el país.<br><br>
+          Sin ese trabajo previo de acceso abierto, este retrato no existiría.
+          <div class="cred-link-row">
+            <div class="cred-avatar">🗺️</div>
+            <div class="cred-link-info">
+              <span class="cred-link-name">Atlas Urbano · Mauricio Foronda</span>
+              <a class="cred-link-url" href="https://mauforonda.github.io/atlasurbano/" target="_blank" rel="noopener">
+                mauforonda.github.io/atlasurbano ↗
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -236,19 +357,17 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); heig
   </div>
 </div>
 
-<div id="main" style="flex:1;overflow:hidden;">
+<div id="main">
   <div id="sidebar">
 
-    <!-- Ciudad -->
     <div class="s-block">
       <div class="s-label">Ciudad</div>
       <div id="ciudad-wrap">
-        <input id="ciudad-input" type="text" placeholder="Buscar municipio…" autocomplete="off" spellcheck="false">
+        <input id="ciudad-input" type="text" placeholder="Buscar municipio…" autocomplete="off" spellcheck="false" inputmode="search">
         <div id="ciudad-dd"></div>
       </div>
     </div>
 
-    <!-- Stats card -->
     <div id="stats-card">
       <div class="stats-city" id="sc-nombre"></div>
       <div class="stats-row">
@@ -263,10 +382,11 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); heig
       <div class="stat-pill" id="sc-avg" style="width:fit-content"></div>
     </div>
 
-    <!-- Indicadores -->
     <div class="ind-scroll" id="ind-list"></div>
 
   </div>
+
+  <div id="scrim"></div>
 
   <div id="map-wrap">
     <div id="map"></div>
@@ -279,7 +399,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); heig
       <div class="leg-na"><div class="na-box"></div>Sin datos</div>
     </div>
   </div>
-</div><!-- /main -->
+</div>
 
 <div id="footer">
   <div class="footer-org">
@@ -457,7 +577,6 @@ const GRUPOS = [
   },
 ];
 
-// Flatten
 const INDS = GRUPOS.flatMap(g => g.inds.filter(d => !d.oculto));
 const IND  = Object.fromEntries(INDS.map(d => [d.key, d]));
 
@@ -465,6 +584,31 @@ const IND  = Object.fromEntries(INDS.map(d => [d.key, d]));
 // ESTADO
 // ══════════════════════════════════════════════════════════════════════════════
 let ciudades = [], currentInd = "pct_internet", currentData = null, cityStats = {};
+let loadController = null;
+const isMobile = () => window.matchMedia("(max-width: 768px)").matches;
+const isTouch  = () => window.matchMedia("(hover: none), (pointer: coarse)").matches;
+
+// ══════════════════════════════════════════════════════════════════════════════
+// TEMA
+// ══════════════════════════════════════════════════════════════════════════════
+function getInitialTheme() {
+  const saved = localStorage.getItem("rc-theme");
+  if (saved === "light" || saved === "dark") return saved;
+  return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+}
+function applyTheme(t) {
+  document.documentElement.setAttribute("data-theme", t);
+  localStorage.setItem("rc-theme", t);
+  const m = window.map;
+  if (m && typeof m.getStyle === "function" && m.getStyle()) {
+    try {
+      const op = t === "light" ? 0.85 : 0.32;
+      if (m.getLayer("osm")) m.setPaintProperty("osm", "raster-opacity", op);
+    } catch (e) { /* mapa aún no listo */ }
+  }
+}
+let currentTheme = getInitialTheme();
+applyTheme(currentTheme);
 
 // ══════════════════════════════════════════════════════════════════════════════
 // MAPA
@@ -474,22 +618,34 @@ const map = new maplibregl.Map({
   style: {
     version: 8,
     glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
-    sources: { osm: { type:"raster", tiles:["https://tile.openstreetmap.org/{z}/{x}/{y}.png"], tileSize:256, maxzoom:19 } },
-    layers:  [{ id:"osm", type:"raster", source:"osm", paint:{"raster-opacity":0.3} }]
+    sources: { osm: { type:"raster", tiles:["https://tile.openstreetmap.org/{z}/{x}/{y}.png"], tileSize:256, maxzoom:19, attribution:"© OpenStreetMap" } },
+    layers:  [{ id:"osm", type:"raster", source:"osm", paint:{"raster-opacity": currentTheme === "light" ? 0.85 : 0.32 } }]
   },
   center: [-65, -16.5], zoom: 5,
   attributionControl: false
 });
+window.map = map;
 map.addControl(new maplibregl.NavigationControl({ showCompass:false }), "bottom-left");
 map.addControl(new maplibregl.AttributionControl({ compact:true }), "bottom-right");
 
 // ── Popup ───────────────────────────────────────────────────────────────────
-const popup = new maplibregl.Popup({ closeButton:false, closeOnClick:false, className:"mpopup", maxWidth:"250px" });
+const popup = new maplibregl.Popup({ closeButton:false, closeOnClick:false, className:"mpopup", maxWidth:"260px" });
+
+// Binary search: cuenta cuántos elementos en arr ordenado son <= val
+function countLE(arr, val) {
+  let lo = 0, hi = arr.length;
+  while (lo < hi) {
+    const mid = (lo + hi) >>> 1;
+    if (arr[mid] <= val) lo = mid + 1;
+    else hi = mid;
+  }
+  return lo;
+}
 
 function pctBar(val, key) {
   const s = cityStats[key];
   if (!s || val == null) return "";
-  const pct = Math.round((s.vals.filter(v => v <= val).length / s.vals.length) * 100);
+  const pct = Math.round((countLE(s.vals, val) / s.vals.length) * 100);
   const ind = IND[key];
   return `<div class="pct-wrap">
     <div class="pct-label"><span>Percentil en la ciudad</span><span>${pct}°</span></div>
@@ -517,66 +673,92 @@ function popupHTML(props) {
     </div>`;
 }
 
+// Hover (escritorio): muestra popup siguiendo el cursor
 map.on("mousemove", "mz-fill", e => {
+  if (isTouch()) return;
   map.getCanvas().style.cursor = "pointer";
   popup.setLngLat(e.lngLat).setHTML(popupHTML(e.features[0].properties)).addTo(map);
 });
-map.on("mouseleave", "mz-fill", () => { map.getCanvas().style.cursor=""; popup.remove(); });
+map.on("mouseleave", "mz-fill", () => {
+  if (isTouch()) return;
+  map.getCanvas().style.cursor = "";
+  popup.remove();
+});
 
-// ── Color / Leyenda ──────────────────────────────────────────────────────────
-function buildColorExpr(ind, data) {
-  const vals = data.features.map(f => f.properties[ind.key]).filter(v => v != null && isFinite(v));
-  if (!vals.length) return "#444";
-  vals.sort((a, b) => a - b);
-  const n = vals.length;
-  const mn = vals[0], mx = vals[n - 1];
+// Tap (táctil): muestra popup en el punto tocado
+map.on("click", "mz-fill", e => {
+  if (!isTouch()) return;
+  popup.setLngLat(e.lngLat).setHTML(popupHTML(e.features[0].properties)).addTo(map);
+});
+map.on("click", e => {
+  if (!isTouch()) return;
+  const features = map.queryRenderedFeatures(e.point, { layers: ["mz-fill"] });
+  if (!features.length) popup.remove();
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// COLOR / LEYENDA / STATS
+// ══════════════════════════════════════════════════════════════════════════════
+function buildStats(data) {
+  cityStats = {};
+  // Una sola pasada por features, agrupando por indicador
+  const acc = {};
+  INDS.forEach(ind => { acc[ind.key] = []; });
+  for (const f of data.features) {
+    const p = f.properties;
+    for (const ind of INDS) {
+      const v = p[ind.key];
+      if (v != null && Number.isFinite(v)) acc[ind.key].push(v);
+    }
+  }
+  for (const key in acc) {
+    const vals = acc[key];
+    if (!vals.length) continue;
+    vals.sort((a, b) => a - b);
+    const n = vals.length;
+    let sum = 0;
+    for (let i = 0; i < n; i++) sum += vals[i];
+    cityStats[key] = { vals, min: vals[0], max: vals[n-1], median: vals[n>>1], mean: sum / n };
+  }
+}
+
+// Reusa cityStats (ya ordenado) — sin re-sort ni re-filter
+function buildColorExpr(ind) {
+  const s = cityStats[ind.key];
   const c = ind.colores;
+  if (!s) return "#888";
+  const { vals, min, max } = s;
+  if (min === max) return c[Math.floor(c.length / 2)];
 
-  // Si todos los valores son iguales → color central
-  if (mn === mx) return c[Math.floor(c.length / 2)];
-
-  // Candidatos a breaks por cuantiles
+  const n = vals.length;
   const q = p => vals[Math.min(Math.floor(p * n), n - 1)];
   const candidates = [q(.2), q(.4), q(.6), q(.8)];
 
-  // Mantener solo breaks estrictamente crecientes (evita duplicados que rompen Maplibre)
   const breaks = [];
-  let prev = mn;
+  let prev = min;
   for (const b of candidates) {
-    if (b > prev && b < mx) { breaks.push(b); prev = b; }
+    if (b > prev && b < max) { breaks.push(b); prev = b; }
   }
 
-  // Si no quedó ningún break útil (p.ej. 94% zeros) usar el p50 de valores no-cero
   if (!breaks.length) {
-    const nonZero = vals.filter(v => v > 0);
-    if (nonZero.length) breaks.push(nonZero[Math.floor(nonZero.length / 2)]);
+    // Mayoría de ceros: mediana de no-cero (vals está ordenado, así que el primer >0 es búsqueda lineal corta)
+    let i = 0;
+    while (i < n && vals[i] === 0) i++;
+    if (i < n) breaks.push(vals[i + ((n - i) >> 1)]);
     else return c[0];
   }
 
-  // Mapear colores de la paleta a los N+1 bandas disponibles
   const nb = breaks.length + 1;
   const colors = Array.from({ length: nb }, (_, i) =>
     c[Math.round(i * (c.length - 1) / (nb - 1))]
   );
 
   const expr = ["step", ["get", ind.key], colors[0]];
-  breaks.forEach((b, i) => expr.push(b, colors[i + 1]));
+  for (let i = 0; i < breaks.length; i++) expr.push(breaks[i], colors[i + 1]);
   return expr;
 }
 
-function buildStats(data) {
-  cityStats = {};
-  INDS.forEach(ind => {
-    const vals = data.features.map(f => f.properties[ind.key]).filter(v => v != null && isFinite(v));
-    if (!vals.length) return;
-    vals.sort((a,b) => a-b);
-    const n = vals.length;
-    const mean = vals.reduce((s,v) => s+v, 0) / n;
-    cityStats[ind.key] = { vals, min:vals[0], max:vals[n-1], median:vals[Math.floor(n/2)], mean };
-  });
-}
-
-function updateLegend(ind, data) {
+function updateLegend(ind) {
   const s = cityStats[ind.key];
   if (!s) return;
   const n = s.vals.length;
@@ -592,13 +774,13 @@ function updateLegend(ind, data) {
 function applyIndicator() {
   if (!currentData) return;
   const ind = IND[currentInd];
-  const ce  = buildColorExpr(ind, currentData);
-  const oe  = ["case",["==",["get",currentInd],null],0.07,0.78];
+  const ce  = buildColorExpr(ind);
+  const oe  = ["case", ["==", ["get", currentInd], null], 0.07, 0.78];
   if (map.getLayer("mz-fill")) {
-    map.setPaintProperty("mz-fill","fill-color", ce);
-    map.setPaintProperty("mz-fill","fill-opacity", oe);
+    map.setPaintProperty("mz-fill", "fill-color", ce);
+    map.setPaintProperty("mz-fill", "fill-opacity", oe);
   }
-  updateLegend(ind, currentData);
+  updateLegend(ind);
   updateStatsAvg();
 }
 
@@ -610,43 +792,77 @@ function updateStatsAvg() {
   else el.textContent = "";
 }
 
+// ── Bbox sin spread (evita stack overflow en ciudades grandes) ─────────────
+function computeBbox(data) {
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  for (const f of data.features) {
+    const g = f.geometry;
+    if (!g) continue;
+    const polys = g.type === "MultiPolygon" ? g.coordinates : [g.coordinates];
+    for (const rings of polys) {
+      for (const ring of rings) {
+        for (let i = 0; i < ring.length; i++) {
+          const x = ring[i][0], y = ring[i][1];
+          if (x < minX) minX = x; if (x > maxX) maxX = x;
+          if (y < minY) minY = y; if (y > maxY) maxY = y;
+        }
+      }
+    }
+  }
+  return Number.isFinite(minX) ? [[minX, minY], [maxX, maxY]] : null;
+}
+
 // ── Carga ciudad ─────────────────────────────────────────────────────────────
 function loadCiudad(c) {
+  // Cancela carga previa si existe
+  if (loadController) loadController.abort();
+  loadController = new AbortController();
+  const ctrl = loadController;
+
   document.getElementById("loading").classList.add("on");
-  fetch(`data/${c.slug}.geojson`)
+  fetch(`data/${c.slug}.geojson`, { signal: ctrl.signal })
     .then(r => r.json())
     .then(data => {
+      if (ctrl.signal.aborted) return;
       currentData = data;
       buildStats(data);
 
       const ind = IND[currentInd];
-      const ce  = buildColorExpr(ind, data);
-      const oe  = ["case",["==",["get",currentInd],null],0.07,0.78];
+      const ce  = buildColorExpr(ind);
+      const oe  = ["case", ["==", ["get", currentInd], null], 0.07, 0.78];
 
       if (map.getSource("mz")) {
         map.getSource("mz").setData(data);
-        map.setPaintProperty("mz-fill","fill-color", ce);
-        map.setPaintProperty("mz-fill","fill-opacity", oe);
+        map.setPaintProperty("mz-fill", "fill-color", ce);
+        map.setPaintProperty("mz-fill", "fill-opacity", oe);
       } else {
-        map.addSource("mz",{ type:"geojson", data, tolerance:0.5 });
-        map.addLayer({ id:"mz-fill", type:"fill", source:"mz",
-          paint:{ "fill-color":ce, "fill-opacity":oe, "fill-outline-color":"rgba(0,0,0,0.2)" } });
+        map.addSource("mz", { type:"geojson", data, tolerance:0.5 });
+        map.addLayer({
+          id: "mz-fill", type: "fill", source: "mz",
+          paint: { "fill-color": ce, "fill-opacity": oe }
+        });
+        // Línea separada con minzoom — más liviana que fill-outline-color
+        map.addLayer({
+          id: "mz-line", type: "line", source: "mz", minzoom: 13,
+          paint: {
+            "line-color": "rgba(0,0,0,0.22)",
+            "line-width": ["interpolate", ["linear"], ["zoom"], 13, 0.2, 17, 0.7]
+          }
+        });
       }
 
-      // Zoom bbox
-      const lngs=[], lats=[];
-      data.features.forEach(f => {
-        const g = f.geometry;
-        const pts = g.type==="MultiPolygon" ? g.coordinates.flat(2) : g.coordinates.flat(1);
-        pts.forEach(p => { lngs.push(p[0]); lats.push(p[1]); });
-      });
-      if (lngs.length) map.fitBounds([[Math.min(...lngs),Math.min(...lats)],[Math.max(...lngs),Math.max(...lats)]],{padding:40,duration:600});
+      const bb = computeBbox(data);
+      if (bb) map.fitBounds(bb, { padding: isMobile() ? 24 : 40, duration: 600 });
 
-      updateLegend(ind, data);
+      updateLegend(ind);
       updateStatsCard(c);
     })
-    .catch(e => console.error(e))
-    .finally(() => document.getElementById("loading").classList.remove("on"));
+    .catch(e => {
+      if (e.name !== "AbortError") console.error(e);
+    })
+    .finally(() => {
+      if (!ctrl.signal.aborted) document.getElementById("loading").classList.remove("on");
+    });
 }
 
 function updateStatsCard(c) {
@@ -688,12 +904,14 @@ function renderIndicadores() {
         row.classList.add("selected");
         currentInd = ind.key;
         applyIndicator();
+        if (isMobile()) closeSidebar();
       });
 
       const iBtn = document.createElement("button");
       iBtn.className = "info-btn";
       iBtn.textContent = "ⓘ";
       iBtn.title = "Ver descripción";
+      iBtn.setAttribute("aria-label", "Ver descripción del indicador");
 
       const ayuda = document.createElement("div");
       ayuda.className = "ayuda-box";
@@ -718,13 +936,13 @@ function renderIndicadores() {
 // ══════════════════════════════════════════════════════════════════════════════
 // SIDEBAR — CIUDAD AUTOCOMPLETE
 // ══════════════════════════════════════════════════════════════════════════════
-function norm(s) { return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,""); }
+function norm(s) { return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, ""); }
 
 function renderDD(items) {
   const dd = document.getElementById("ciudad-dd");
   dd.innerHTML = "";
   if (!items.length) { dd.classList.remove("open"); return; }
-  items.slice(0,80).forEach(c => {
+  items.slice(0, 80).forEach(c => {
     const d = document.createElement("div");
     d.className = "dd-row";
     d.innerHTML = `<span>${c.municipio}</span><span class="dd-dep">${c.departamento}</span>`;
@@ -738,6 +956,7 @@ function pickCiudad(c) {
   document.getElementById("ciudad-input").value = c.municipio;
   document.getElementById("ciudad-dd").classList.remove("open");
   loadCiudad(c);
+  if (isMobile()) closeSidebar();
 }
 
 document.getElementById("ciudad-input").addEventListener("input", e => {
@@ -754,22 +973,41 @@ document.addEventListener("click", e => {
 });
 
 // ══════════════════════════════════════════════════════════════════════════════
-// INIT
+// MOBILE — drawer sidebar
 // ══════════════════════════════════════════════════════════════════════════════
-renderIndicadores();
+const sidebar = document.getElementById("sidebar");
+const scrim   = document.getElementById("scrim");
+const burger  = document.getElementById("burger");
 
-fetch("data/ciudades.json")
-  .then(r => r.json())
-  .then(data => {
-    ciudades = data;
-    const scz = data.find(c => c.slug.includes("santa_cruz_de_la_sierra")) || data[0];
-    if (scz) {
-      document.getElementById("ciudad-input").value = scz.municipio;
-      map.on("load", () => loadCiudad(scz));
-    }
-  });
+function openSidebar()  { sidebar.classList.add("open");  scrim.classList.add("show"); }
+function closeSidebar() { sidebar.classList.remove("open"); scrim.classList.remove("show"); }
 
-// ── Panel de agradecimientos ──────────────────────────────────────────────────
+burger.addEventListener("click", () => {
+  if (sidebar.classList.contains("open")) closeSidebar(); else openSidebar();
+});
+scrim.addEventListener("click", closeSidebar);
+
+// Si el usuario rota a desktop, cerrar drawer
+window.matchMedia("(min-width: 769px)").addEventListener("change", e => {
+  if (e.matches) closeSidebar();
+});
+
+// Al elegir ciudad en móvil, cerrar drawer
+document.getElementById("ciudad-input").addEventListener("change", () => {
+  if (isMobile()) closeSidebar();
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// THEME TOGGLE
+// ══════════════════════════════════════════════════════════════════════════════
+document.getElementById("theme-btn").addEventListener("click", () => {
+  currentTheme = currentTheme === "dark" ? "light" : "dark";
+  applyTheme(currentTheme);
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// CREDITS PANEL
+// ══════════════════════════════════════════════════════════════════════════════
 const credBtn   = document.getElementById("cred-btn");
 const credPanel = document.getElementById("cred-panel");
 
@@ -785,6 +1023,23 @@ document.addEventListener("click", e => {
     credBtn.classList.remove("open");
   }
 });
+
+// ══════════════════════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════════════════════
+renderIndicadores();
+
+fetch("data/ciudades.json")
+  .then(r => r.json())
+  .then(data => {
+    ciudades = data;
+    const scz = data.find(c => c.slug.includes("santa_cruz_de_la_sierra")) || data[0];
+    if (scz) {
+      document.getElementById("ciudad-input").value = scz.municipio;
+      if (map.loaded()) loadCiudad(scz);
+      else map.on("load", () => loadCiudad(scz));
+    }
+  });
 </script>
 </body>
 </html>
