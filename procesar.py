@@ -98,9 +98,19 @@ salud_total = f[["salud_centropublico_hombre","salud_cajadesalud_hombre","salud_
 
 viv         = f["viviendatipo_personaspresentes"]
 
-agua_col    = next(c for c in f.columns if c.startswith("agua") and "ca" in c and "r" in c)
-gas_red_col = next(c for c in f.columns if c.startswith("combustible") and "ca" in c and "r" in c)
-basura_pub  = next(c for c in f.columns if "basurero" in c.lower() and c.startswith("basura"))
+# Nombres exactos de columnas del parquet de Foronda. Antes se usaban lookups
+# con filtros laxos (next(c for c in ... if "le" in c)) que matcheaban varias
+# columnas y elegían la primera del orden — generaban bugs silenciosos: el
+# indicador "% leña o guano" sumaba "% gas garrafa" (factor 26x sobrestimado),
+# y "% basura calle o río" sumaba "% calle" dos veces (max 200%).
+COL_AGUA_RED      = "agua_cañería"
+COL_GAS_RED       = "combustible_gascañería"
+COL_BASURA_PUB    = "basura_basureropúblico"
+COL_LENA          = "combustible_leña"
+COL_GUANO         = "combustible_guano"
+COL_BASURA_CALLE  = "basura_calle"
+COL_BASURA_RIO    = "basura_río"
+COL_CAMARA_SEPT   = "desague_camaraséptica"
 
 # ── Indicadores ───────────────────────────────────────────────────────────────
 print("Calculando indicadores...")
@@ -158,28 +168,23 @@ ind["pct_electricidad"]     = calc(safe_div(f["energiaelectrica_serviciopublico"
 ind["pct_sin_electricidad"] = calc(safe_div(f["energiaelectrica_notiene"].values, viv.values))
 
 # Servicios básicos — agua
-ind["pct_agua_red"]         = calc(safe_div(f[agua_col].values, viv.values))
+ind["pct_agua_red"]         = calc(safe_div(f[COL_AGUA_RED].values, viv.values))
 
 # Servicios básicos — saneamiento (desagüe)
-camara_col = next(c for c in f.columns if c.startswith("desague_camara"))
 ind["pct_alcantarillado"]   = calc(safe_div(f["desague_alcantarillado"].values, viv.values))
-ind["pct_camara_septica"]   = calc(safe_div(f[camara_col].values, viv.values))
+ind["pct_camara_septica"]   = calc(safe_div(f[COL_CAMARA_SEPT].values, viv.values))
 ind["pct_pozo_ciego"]       = calc(safe_div(f["desague_pozociego"].values, viv.values))
 ind["pct_sin_desague"]      = calc(safe_div(f["desague_notiene"].values, viv.values))
 
-# Energía de cocción (NUEVO)
-ind["pct_gas_red"]          = calc(safe_div(f[gas_red_col].values, viv.values))
+# Energía de cocción
+ind["pct_gas_red"]          = calc(safe_div(f[COL_GAS_RED].values, viv.values))
 ind["pct_gas_garrafa"]      = calc(safe_div(f["combustible_gasgarrafa"].values, viv.values))
-lena_col = next(c for c in f.columns if "le" in c.lower() and c.startswith("combustible"))
-guano_col = next(c for c in f.columns if "guano" in c.lower())
-ind["pct_lena_guano"]       = calc(safe_div((f[lena_col]+f[guano_col]).values, viv.values))
+ind["pct_lena_guano"]       = calc(safe_div((f[COL_LENA]+f[COL_GUANO]).values, viv.values))
 
-# Residuos (NUEVO)
-ind["pct_basura_formal"]    = calc(safe_div((f["basura_carrobasurero"]+f[basura_pub]).values, viv.values))
+# Residuos
+ind["pct_basura_formal"]    = calc(safe_div((f["basura_carrobasurero"]+f[COL_BASURA_PUB]).values, viv.values))
 ind["pct_basura_quema"]     = calc(safe_div(f["basura_quema"].values, viv.values))
-basura_calle = next(c for c in f.columns if "calle" in c.lower() and c.startswith("basura"))
-basura_rio   = next(c for c in f.columns if "r" in c.lower() and c.startswith("basura") and len(c) < 15)
-ind["pct_basura_informal"]  = calc(safe_div((f[basura_calle]+f[basura_rio]).values, viv.values))
+ind["pct_basura_informal"]  = calc(safe_div((f[COL_BASURA_CALLE]+f[COL_BASURA_RIO]).values, viv.values))
 
 # TICs (NUEVO)
 ind["pct_internet"]         = calc(safe_div(f["tics_internet"].values, viv.values))

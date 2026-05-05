@@ -15,7 +15,7 @@
     "manzanos": 44,
     "poblacion": 2429,
     "cobertura": 29.3,
-    "size_kb": 50.2
+    "size_kb": 50.1
   },
   {
     "slug": "oruro_aioc_uru_chipaya",
@@ -24,7 +24,7 @@
     "manzanos": 26,
     "poblacion": 1567,
     "cobertura": 11.9,
-    "size_kb": 27.8
+    "size_kb": 27.7
   },
   {
     "slug": "oruro_aioc_de_salinas",
@@ -33,7 +33,7 @@
     "manzanos": 96,
     "poblacion": 7922,
     "cobertura": 8.5,
-    "size_kb": 103.5
+    "size_kb": 103.4
   },
   {
     "slug": "potosi_acasio",
@@ -51,7 +51,7 @@
     "manzanos": 300,
     "poblacion": 14998,
     "cobertura": 46.0,
-    "size_kb": 339.1
+    "size_kb": 338.9
   },
   {
     "slug": "la_paz_achocalla",
@@ -60,7 +60,7 @@
     "manzanos": 872,
     "poblacion": 42029,
     "cobertura": 29.4,
-    "size_kb": 1002.7
+    "size_kb": 1001.7
   },
   {
     "slug": "cochabamba_aiquile",
@@ -69,7 +69,7 @@
     "manzanos": 220,
     "poblacion": 10952,
     "cobertura": 53.0,
-    "size_kb": 240.5
+    "size_kb": 240.3
   },
   {
     "slug": "chuquisaca_alcala",
@@ -87,7 +87,7 @@
     "manzanos": 39,
     "poblacion": 1815,
     "cobertura": 23.1,
-    "size_kb": 42.3
+    "size_kb": 42.2
   },
   {
     "slug": "oruro_andamarca",
@@ -105,7 +105,7 @@
     "manzanos": 50,
     "poblacion": 2335,
     "cobertura": 25.9,
-    "size_kb": 55.9
+    "size_kb": 55.8
   },
   {
     "slug": "cochabamba_anzaldo",
@@ -123,7 +123,7 @@
     "manzanos": 133,
     "poblacion": 6360,
     "cobertura": 27.8,
-    "size_kb": 144.6
+    "size_kb": 144.5
   },
   {
     "slug": "potosi_arampampa",
@@ -141,7 +141,7 @@
     "manzanos": 113,
     "poblacion": 5677,
     "cobertura": 54.3,
-    "size_kb": 132.2
+    "size_kb": 132.1
   },
   {
     "slug": "cochabamba_arbieto",
@@ -150,7 +150,7 @@
     "manzanos": 629,
     "poblacion": 28031,
     "cobertura": 30.7,
-    "size_kb": 705.9
+    "size_kb": 705.5
   },
   {
     "slug": "cochabamba_arque",
@@ -168,7 +168,7 @@
     "manzanos": 471,
     "poblacion": 27838,
     "cobertura": 51.5,
-    "size_kb": 515.5
+    "size_kb": 515.2
   },
   {
     "slug": "potosi_atocha",
@@ -177,7 +177,7 @@
     "manzanos": 186,
     "poblacion": 8622,
     "cobertura": 30.9,
-    "size_kb": 206.1
+    "size_kb": 205.8
   },
   {
     "slug": "la_paz_aucapata",
@@ -186,7 +186,7 @@
     "manzanos": 37,
     "poblacion": 1396,
     "cobertura": 38.9,
-    "size_kb": 41.8
+    "size_kb": 41.7
   },
   {
     "slug": "la_paz_ayata",
@@ -204,7 +204,7 @@
     "manzanos": 70,
     "poblacion": 2738,
     "cobertura": 34.1,
-    "size_kb": 75.8
+    "size_kb": 75.7
   },
   {
     "slug": "cochabamba_ayopaya",
@@ -213,7 +213,7 @@
     "manzanos": 122,
     "poblacion": 5417,
     "cobertura": 31.2,
-    "size_kb": 142.8
+    "size_kb": 142.6
   },
   {
     "slug": "chuquisaca_azurduy",
@@ -222,7 +222,7 @@
     "manzanos": 30,
     "poblacion": 1398,
     "cobertura": 31.6,
-    "size_kb": 34.1
+    "size_kb": 34.0
   },
   {
     "slug": "la_paz_batallas",
@@ -231,7 +231,7 @@
     "manzanos": 155,
     "poblacion": 7186,
     "cobertura": 33.0,
-    "size_kb": 167.8
+    "size_kb": 167.6
   },
   {
     "slug": "beni_baures",
@@ -249,7 +249,7 @@
     "manzanos": 14,
     "poblacion": 1122,
     "cobertura": 20.6,
-    "size_kb": 15.6
+    "size_kb": 15.5
   },
   {
     "slug": "oruro_belen_de_andamarca",
@@ -267,7 +267,7 @@
     "manzanos": 472,
     "poblacion": 34453,
     "cobertura": 62.0,
-    "size_kb": 512.9
+    "size_kb": 512.4
   },
   {
     "slug": "potosi_betanzos",
@@ -276,7 +276,7 @@
     "manzanos": 221,
     "poblacion": 10988,
     "cobertura": 29.0,
-    "size_kb": 248.9
+    "size_kb": 248.7
   },
   {
     "slug": "cochabamba_bolivar",
@@ -294,7 +294,7 @@
     "manzanos": 75,
     "poblacion": 3877,
     "cobertura": 48.7,
-    "size_kb": 81.9
+    "size_kb": 81.8
   },
   {
     "slug": "santa_cruz_buena_vista",
@@ -303,7 +303,7 @@
     "manzanos": 138,
     "poblacion": 7767,
     "cobertura": 55.0,
-    "size_kb": 155.7
+    "size_kb": 155.6
   },
   {
     "slug": "santa_cruz_cabezas",
@@ -312,7 +312,7 @@
     "manzanos": 288,
     "poblacion": 15312,
     "cobertura": 40.1,
-    "size_kb": 315.3
+    "size_kb": 315.1
   },
   {
     "slug": "la_paz_cairoma",
@@ -321,7 +321,7 @@
     "manzanos": 71,
     "poblacion": 3396,
     "cobertura": 38.6,
-    "size_kb": 81.4
+    "size_kb": 81.3
   },
   {
     "slug": "potosi_caiza_d",
@@ -330,7 +330,7 @@
     "manzanos": 132,
     "poblacion": 6658,
     "cobertura": 28.6,
-    "size_kb": 146.5
+    "size_kb": 146.4
   },
   {
     "slug": "la_paz_cajuata",
@@ -339,7 +339,7 @@
     "manzanos": 163,
     "poblacion": 9323,
     "cobertura": 52.2,
-    "size_kb": 182.6
+    "size_kb": 182.4
   },
   {
     "slug": "la_paz_calacoto",
@@ -357,7 +357,7 @@
     "manzanos": 128,
     "poblacion": 6529,
     "cobertura": 27.4,
-    "size_kb": 139.3
+    "size_kb": 139.2
   },
   {
     "slug": "chuquisaca_camargo",
@@ -366,7 +366,7 @@
     "manzanos": 121,
     "poblacion": 7021,
     "cobertura": 31.8,
-    "size_kb": 135.5
+    "size_kb": 135.4
   },
   {
     "slug": "santa_cruz_camiri",
@@ -375,7 +375,7 @@
     "manzanos": 451,
     "poblacion": 27666,
     "cobertura": 65.9,
-    "size_kb": 510.9
+    "size_kb": 510.5
   },
   {
     "slug": "cochabamba_capinota",
@@ -384,7 +384,7 @@
     "manzanos": 268,
     "poblacion": 15240,
     "cobertura": 34.6,
-    "size_kb": 313.6
+    "size_kb": 313.4
   },
   {
     "slug": "la_paz_caquiaviri",
@@ -402,7 +402,7 @@
     "manzanos": 263,
     "poblacion": 12693,
     "cobertura": 36.0,
-    "size_kb": 283.9
+    "size_kb": 283.7
   },
   {
     "slug": "la_paz_caranavi",
@@ -411,7 +411,7 @@
     "manzanos": 502,
     "poblacion": 23735,
     "cobertura": 55.7,
-    "size_kb": 550.5
+    "size_kb": 550.0
   },
   {
     "slug": "oruro_carangas",
@@ -429,7 +429,7 @@
     "manzanos": 107,
     "poblacion": 6001,
     "cobertura": 39.5,
-    "size_kb": 123.3
+    "size_kb": 123.2
   },
   {
     "slug": "potosi_caripuyo",
@@ -456,7 +456,7 @@
     "manzanos": 393,
     "poblacion": 17450,
     "cobertura": 34.6,
-    "size_kb": 425.4
+    "size_kb": 425.0
   },
   {
     "slug": "potosi_chaqui",
@@ -483,7 +483,7 @@
     "manzanos": 33,
     "poblacion": 1694,
     "cobertura": 20.6,
-    "size_kb": 35.3
+    "size_kb": 35.2
   },
   {
     "slug": "potosi_chayanta",
@@ -492,7 +492,7 @@
     "manzanos": 196,
     "poblacion": 9609,
     "cobertura": 34.6,
-    "size_kb": 216.1
+    "size_kb": 215.9
   },
   {
     "slug": "cochabamba_chimore",
@@ -501,7 +501,7 @@
     "manzanos": 350,
     "poblacion": 16960,
     "cobertura": 45.6,
-    "size_kb": 385.8
+    "size_kb": 385.4
   },
   {
     "slug": "oruro_choquecota",
@@ -519,7 +519,7 @@
     "manzanos": 54,
     "poblacion": 1943,
     "cobertura": 41.9,
-    "size_kb": 59.2
+    "size_kb": 59.1
   },
   {
     "slug": "la_paz_chulumani",
@@ -528,7 +528,7 @@
     "manzanos": 127,
     "poblacion": 7005,
     "cobertura": 58.5,
-    "size_kb": 158.5
+    "size_kb": 158.3
   },
   {
     "slug": "la_paz_chuma",
@@ -564,7 +564,7 @@
     "manzanos": 291,
     "poblacion": 17502,
     "cobertura": 49.8,
-    "size_kb": 334.8
+    "size_kb": 334.5
   },
   {
     "slug": "pando_cobija",
@@ -573,7 +573,7 @@
     "manzanos": 975,
     "poblacion": 53688,
     "cobertura": 59.5,
-    "size_kb": 1067.5
+    "size_kb": 1066.2
   },
   {
     "slug": "cochabamba_cocapata",
@@ -591,7 +591,7 @@
     "manzanos": 9278,
     "poblacion": 665482,
     "cobertura": 74.4,
-    "size_kb": 10270.9
+    "size_kb": 10261.6
   },
   {
     "slug": "oruro_coipasa",
@@ -609,7 +609,7 @@
     "manzanos": 740,
     "poblacion": 66505,
     "cobertura": 81.6,
-    "size_kb": 873.7
+    "size_kb": 872.9
   },
   {
     "slug": "potosi_colcha_k",
@@ -618,7 +618,7 @@
     "manzanos": 126,
     "poblacion": 10811,
     "cobertura": 10.5,
-    "size_kb": 136.7
+    "size_kb": 136.5
   },
   {
     "slug": "la_paz_collana",
@@ -636,7 +636,7 @@
     "manzanos": 146,
     "poblacion": 7766,
     "cobertura": 66.7,
-    "size_kb": 185.4
+    "size_kb": 185.3
   },
   {
     "slug": "santa_cruz_colpa_belgica",
@@ -645,7 +645,7 @@
     "manzanos": 73,
     "poblacion": 4945,
     "cobertura": 51.8,
-    "size_kb": 85.2
+    "size_kb": 85.1
   },
   {
     "slug": "potosi_colquechaca",
@@ -654,7 +654,7 @@
     "manzanos": 98,
     "poblacion": 5755,
     "cobertura": 54.4,
-    "size_kb": 110.3
+    "size_kb": 110.2
   },
   {
     "slug": "la_paz_colquencha",
@@ -663,7 +663,7 @@
     "manzanos": 209,
     "poblacion": 9721,
     "cobertura": 40.3,
-    "size_kb": 230.7
+    "size_kb": 230.4
   },
   {
     "slug": "la_paz_colquiri",
@@ -672,7 +672,7 @@
     "manzanos": 172,
     "poblacion": 8776,
     "cobertura": 21.4,
-    "size_kb": 190.1
+    "size_kb": 189.8
   },
   {
     "slug": "la_paz_comanche",
@@ -690,7 +690,7 @@
     "manzanos": 231,
     "poblacion": 11434,
     "cobertura": 47.3,
-    "size_kb": 256.8
+    "size_kb": 256.5
   },
   {
     "slug": "la_paz_combaya",
@@ -708,7 +708,7 @@
     "manzanos": 345,
     "poblacion": 21326,
     "cobertura": 34.9,
-    "size_kb": 375.5
+    "size_kb": 375.3
   },
   {
     "slug": "la_paz_copacabana",
@@ -717,7 +717,7 @@
     "manzanos": 187,
     "poblacion": 7847,
     "cobertura": 47.6,
-    "size_kb": 221.6
+    "size_kb": 221.4
   },
   {
     "slug": "la_paz_coripata",
@@ -726,7 +726,7 @@
     "manzanos": 157,
     "poblacion": 9216,
     "cobertura": 54.1,
-    "size_kb": 184.6
+    "size_kb": 184.4
   },
   {
     "slug": "la_paz_corocoro",
@@ -735,7 +735,7 @@
     "manzanos": 66,
     "poblacion": 3662,
     "cobertura": 19.4,
-    "size_kb": 72.7
+    "size_kb": 72.6
   },
   {
     "slug": "la_paz_coroico",
@@ -744,7 +744,7 @@
     "manzanos": 69,
     "poblacion": 3551,
     "cobertura": 41.3,
-    "size_kb": 82.1
+    "size_kb": 82.0
   },
   {
     "slug": "oruro_corque",
@@ -753,7 +753,7 @@
     "manzanos": 111,
     "poblacion": 5612,
     "cobertura": 20.6,
-    "size_kb": 121.4
+    "size_kb": 121.3
   },
   {
     "slug": "potosi_cotagaita",
@@ -762,7 +762,7 @@
     "manzanos": 255,
     "poblacion": 13054,
     "cobertura": 25.0,
-    "size_kb": 281.4
+    "size_kb": 281.1
   },
   {
     "slug": "santa_cruz_cotoca",
@@ -771,7 +771,7 @@
     "manzanos": 1494,
     "poblacion": 101549,
     "cobertura": 38.6,
-    "size_kb": 1654.6
+    "size_kb": 1652.8
   },
   {
     "slug": "oruro_cruz_de_machacamarca",
@@ -789,7 +789,7 @@
     "manzanos": 315,
     "poblacion": 16709,
     "cobertura": 50.3,
-    "size_kb": 343.5
+    "size_kb": 343.1
   },
   {
     "slug": "santa_cruz_cuevo",
@@ -807,7 +807,7 @@
     "manzanos": 80,
     "poblacion": 4184,
     "cobertura": 22.5,
-    "size_kb": 89.3
+    "size_kb": 89.2
   },
   {
     "slug": "oruro_curahuara_de_carangas",
@@ -834,7 +834,7 @@
     "manzanos": 83,
     "poblacion": 5041,
     "cobertura": 47.4,
-    "size_kb": 89.9
+    "size_kb": 89.8
   },
   {
     "slug": "la_paz_el_alto",
@@ -843,7 +843,7 @@
     "manzanos": 15442,
     "poblacion": 885210,
     "cobertura": 76.9,
-    "size_kb": 16568.8
+    "size_kb": 16551.7
   },
   {
     "slug": "santa_cruz_el_carmen_rivero_torrez",
@@ -870,7 +870,7 @@
     "manzanos": 146,
     "poblacion": 7878,
     "cobertura": 27.8,
-    "size_kb": 158.9
+    "size_kb": 158.8
   },
   {
     "slug": "tarija_el_puente",
@@ -879,7 +879,7 @@
     "manzanos": 44,
     "poblacion": 2803,
     "cobertura": 17.5,
-    "size_kb": 49.4
+    "size_kb": 49.3
   },
   {
     "slug": "santa_cruz_el_torno",
@@ -888,7 +888,7 @@
     "manzanos": 737,
     "poblacion": 47579,
     "cobertura": 58.4,
-    "size_kb": 823.1
+    "size_kb": 822.3
   },
   {
     "slug": "chuquisaca_el_villar",
@@ -906,7 +906,7 @@
     "manzanos": 716,
     "poblacion": 31501,
     "cobertura": 56.6,
-    "size_kb": 778.1
+    "size_kb": 777.3
   },
   {
     "slug": "tarija_entre_rios",
@@ -915,7 +915,7 @@
     "manzanos": 94,
     "poblacion": 5041,
     "cobertura": 48.2,
-    "size_kb": 103.5
+    "size_kb": 103.4
   },
   {
     "slug": "oruro_escara",
@@ -951,7 +951,7 @@
     "manzanos": 104,
     "poblacion": 4225,
     "cobertura": 50.0,
-    "size_kb": 112.9
+    "size_kb": 112.8
   },
   {
     "slug": "beni_exaltacion",
@@ -969,7 +969,7 @@
     "manzanos": 244,
     "poblacion": 12046,
     "cobertura": 58.8,
-    "size_kb": 263.8
+    "size_kb": 263.4
   },
   {
     "slug": "pando_filadelfia",
@@ -978,7 +978,7 @@
     "manzanos": 36,
     "poblacion": 1677,
     "cobertura": 32.1,
-    "size_kb": 39.5
+    "size_kb": 39.4
   },
   {
     "slug": "santa_cruz_general_saavedra",
@@ -987,7 +987,7 @@
     "manzanos": 229,
     "poblacion": 13872,
     "cobertura": 42.6,
-    "size_kb": 249.3
+    "size_kb": 249.0
   },
   {
     "slug": "la_paz_guanay",
@@ -996,7 +996,7 @@
     "manzanos": 138,
     "poblacion": 7849,
     "cobertura": 54.3,
-    "size_kb": 150.9
+    "size_kb": 150.8
   },
   {
     "slug": "beni_guayaramerin",
@@ -1005,7 +1005,7 @@
     "manzanos": 586,
     "poblacion": 37072,
     "cobertura": 59.7,
-    "size_kb": 631.9
+    "size_kb": 631.3
   },
   {
     "slug": "beni_huacaraje",
@@ -1014,7 +1014,7 @@
     "manzanos": 42,
     "poblacion": 3702,
     "cobertura": 32.6,
-    "size_kb": 45.2
+    "size_kb": 45.1
   },
   {
     "slug": "chuquisaca_huacareta",
@@ -1023,7 +1023,7 @@
     "manzanos": 56,
     "poblacion": 2473,
     "cobertura": 30.8,
-    "size_kb": 60.5
+    "size_kb": 60.4
   },
   {
     "slug": "oruro_huachacalla",
@@ -1032,7 +1032,7 @@
     "manzanos": 57,
     "poblacion": 3874,
     "cobertura": 42.2,
-    "size_kb": 61.8
+    "size_kb": 61.7
   },
   {
     "slug": "oruro_huanuni",
@@ -1041,7 +1041,7 @@
     "manzanos": 296,
     "poblacion": 18487,
     "cobertura": 30.1,
-    "size_kb": 327.5
+    "size_kb": 327.2
   },
   {
     "slug": "la_paz_huarina",
@@ -1095,7 +1095,7 @@
     "manzanos": 50,
     "poblacion": 3781,
     "cobertura": 37.3,
-    "size_kb": 54.7
+    "size_kb": 54.6
   },
   {
     "slug": "pando_ingavi",
@@ -1113,7 +1113,7 @@
     "manzanos": 52,
     "poblacion": 2150,
     "cobertura": 36.4,
-    "size_kb": 60.2
+    "size_kb": 60.1
   },
   {
     "slug": "la_paz_irupana",
@@ -1122,7 +1122,7 @@
     "manzanos": 174,
     "poblacion": 7455,
     "cobertura": 42.2,
-    "size_kb": 198.2
+    "size_kb": 198.0
   },
   {
     "slug": "la_paz_ixiamas",
@@ -1131,7 +1131,7 @@
     "manzanos": 100,
     "poblacion": 5363,
     "cobertura": 26.6,
-    "size_kb": 108.1
+    "size_kb": 108.0
   },
   {
     "slug": "la_paz_jesus_de_machaka",
@@ -1140,7 +1140,7 @@
     "manzanos": 81,
     "poblacion": 3236,
     "cobertura": 27.5,
-    "size_kb": 89.3
+    "size_kb": 89.2
   },
   {
     "slug": "la_paz_la_marka_san_andres_de_machaca",
@@ -1158,7 +1158,7 @@
     "manzanos": 287,
     "poblacion": 12319,
     "cobertura": 51.5,
-    "size_kb": 315.7
+    "size_kb": 315.3
   },
   {
     "slug": "santa_cruz_la_guardia",
@@ -1167,7 +1167,7 @@
     "manzanos": 2152,
     "poblacion": 143803,
     "cobertura": 60.8,
-    "size_kb": 2387.8
+    "size_kb": 2385.2
   },
   {
     "slug": "oruro_la_rivera",
@@ -1194,7 +1194,7 @@
     "manzanos": 371,
     "poblacion": 15771,
     "cobertura": 39.2,
-    "size_kb": 404.1
+    "size_kb": 403.6
   },
   {
     "slug": "chuquisaca_las_carreras",
@@ -1212,7 +1212,7 @@
     "manzanos": 678,
     "poblacion": 37824,
     "cobertura": 48.4,
-    "size_kb": 738.1
+    "size_kb": 737.4
   },
   {
     "slug": "potosi_llica",
@@ -1221,7 +1221,7 @@
     "manzanos": 52,
     "poblacion": 3573,
     "cobertura": 9.9,
-    "size_kb": 55.9
+    "size_kb": 55.8
   },
   {
     "slug": "beni_loreto",
@@ -1248,7 +1248,7 @@
     "manzanos": 96,
     "poblacion": 4452,
     "cobertura": 32.8,
-    "size_kb": 103.6
+    "size_kb": 103.4
   },
   {
     "slug": "chuquisaca_machareti",
@@ -1257,7 +1257,7 @@
     "manzanos": 69,
     "poblacion": 4248,
     "cobertura": 25.5,
-    "size_kb": 75.9
+    "size_kb": 75.8
   },
   {
     "slug": "beni_magdalena",
@@ -1275,7 +1275,7 @@
     "manzanos": 188,
     "poblacion": 10090,
     "cobertura": 52.2,
-    "size_kb": 206.4
+    "size_kb": 206.2
   },
   {
     "slug": "la_paz_malla",
@@ -1293,7 +1293,7 @@
     "manzanos": 265,
     "poblacion": 15545,
     "cobertura": 60.9,
-    "size_kb": 293.2
+    "size_kb": 292.8
   },
   {
     "slug": "la_paz_mecapaca",
@@ -1302,7 +1302,7 @@
     "manzanos": 216,
     "poblacion": 12350,
     "cobertura": 26.0,
-    "size_kb": 264.8
+    "size_kb": 264.5
   },
   {
     "slug": "santa_cruz_mineros",
@@ -1311,7 +1311,7 @@
     "manzanos": 366,
     "poblacion": 22702,
     "cobertura": 52.5,
-    "size_kb": 394.2
+    "size_kb": 393.7
   },
   {
     "slug": "cochabamba_mizque",
@@ -1320,7 +1320,7 @@
     "manzanos": 172,
     "poblacion": 7477,
     "cobertura": 45.4,
-    "size_kb": 193.6
+    "size_kb": 193.4
   },
   {
     "slug": "la_paz_mocomoco",
@@ -1347,7 +1347,7 @@
     "manzanos": 65,
     "poblacion": 3399,
     "cobertura": 40.1,
-    "size_kb": 72.3
+    "size_kb": 72.2
   },
   {
     "slug": "chuquisaca_monteagudo",
@@ -1356,7 +1356,7 @@
     "manzanos": 278,
     "poblacion": 15257,
     "cobertura": 48.7,
-    "size_kb": 305.8
+    "size_kb": 305.6
   },
   {
     "slug": "santa_cruz_montero",
@@ -1365,7 +1365,7 @@
     "manzanos": 1681,
     "poblacion": 126093,
     "cobertura": 63.2,
-    "size_kb": 1816.5
+    "size_kb": 1814.6
   },
   {
     "slug": "cochabamba_morochata",
@@ -1392,7 +1392,7 @@
     "manzanos": 29,
     "poblacion": 1421,
     "cobertura": 33.7,
-    "size_kb": 31.5
+    "size_kb": 31.4
   },
   {
     "slug": "la_paz_nuestra_senora_de_la_paz",
@@ -1401,7 +1401,7 @@
     "manzanos": 8857,
     "poblacion": 750225,
     "cobertura": 69.4,
-    "size_kb": 9888.0
+    "size_kb": 9878.7
   },
   {
     "slug": "pando_nueva_esperanza",
@@ -1419,7 +1419,7 @@
     "manzanos": 48,
     "poblacion": 2046,
     "cobertura": 44.9,
-    "size_kb": 56.8
+    "size_kb": 56.7
   },
   {
     "slug": "santa_cruz_okinawa_uno",
@@ -1428,7 +1428,7 @@
     "manzanos": 128,
     "poblacion": 8945,
     "cobertura": 35.9,
-    "size_kb": 140.4
+    "size_kb": 140.2
   },
   {
     "slug": "cochabamba_omereque",
@@ -1437,7 +1437,7 @@
     "manzanos": 74,
     "poblacion": 4515,
     "cobertura": 29.7,
-    "size_kb": 81.9
+    "size_kb": 81.8
   },
   {
     "slug": "oruro_oruro",
@@ -1446,7 +1446,7 @@
     "manzanos": 5434,
     "poblacion": 298133,
     "cobertura": 53.7,
-    "size_kb": 5835.8
+    "size_kb": 5829.6
   },
   {
     "slug": "tarija_padcaya",
@@ -1455,7 +1455,7 @@
     "manzanos": 54,
     "poblacion": 2902,
     "cobertura": 38.0,
-    "size_kb": 61.8
+    "size_kb": 61.7
   },
   {
     "slug": "chuquisaca_padilla",
@@ -1464,7 +1464,7 @@
     "manzanos": 87,
     "poblacion": 4352,
     "cobertura": 48.1,
-    "size_kb": 94.7
+    "size_kb": 94.6
   },
   {
     "slug": "santa_cruz_pailon",
@@ -1473,7 +1473,7 @@
     "manzanos": 336,
     "poblacion": 22555,
     "cobertura": 41.4,
-    "size_kb": 364.5
+    "size_kb": 364.1
   },
   {
     "slug": "la_paz_palca",
@@ -1482,7 +1482,7 @@
     "manzanos": 104,
     "poblacion": 4795,
     "cobertura": 45.6,
-    "size_kb": 122.1
+    "size_kb": 122.0
   },
   {
     "slug": "la_paz_palos_blancos",
@@ -1491,7 +1491,7 @@
     "manzanos": 335,
     "poblacion": 14249,
     "cobertura": 42.3,
-    "size_kb": 367.3
+    "size_kb": 366.9
   },
   {
     "slug": "oruro_pampa_aullagas",
@@ -1509,7 +1509,7 @@
     "manzanos": 157,
     "poblacion": 7920,
     "cobertura": 44.1,
-    "size_kb": 177.6
+    "size_kb": 177.4
   },
   {
     "slug": "la_paz_papel_pampa",
@@ -1527,7 +1527,7 @@
     "manzanos": 109,
     "poblacion": 5734,
     "cobertura": 16.6,
-    "size_kb": 119.6
+    "size_kb": 119.4
   },
   {
     "slug": "cochabamba_pasorapa",
@@ -1545,7 +1545,7 @@
     "manzanos": 352,
     "poblacion": 15110,
     "cobertura": 50.4,
-    "size_kb": 383.1
+    "size_kb": 382.8
   },
   {
     "slug": "oruro_pazna",
@@ -1554,7 +1554,7 @@
     "manzanos": 50,
     "poblacion": 2800,
     "cobertura": 16.9,
-    "size_kb": 54.7
+    "size_kb": 54.6
   },
   {
     "slug": "la_paz_pelechuco",
@@ -1563,7 +1563,7 @@
     "manzanos": 61,
     "poblacion": 3371,
     "cobertura": 22.3,
-    "size_kb": 68.0
+    "size_kb": 67.9
   },
   {
     "slug": "potosi_pocoata",
@@ -1572,7 +1572,7 @@
     "manzanos": 140,
     "poblacion": 5668,
     "cobertura": 35.4,
-    "size_kb": 155.4
+    "size_kb": 155.3
   },
   {
     "slug": "cochabamba_pocona",
@@ -1590,7 +1590,7 @@
     "manzanos": 80,
     "poblacion": 3645,
     "cobertura": 29.2,
-    "size_kb": 92.2
+    "size_kb": 92.1
   },
   {
     "slug": "oruro_poopo",
@@ -1599,7 +1599,7 @@
     "manzanos": 77,
     "poblacion": 5363,
     "cobertura": 48.7,
-    "size_kb": 85.5
+    "size_kb": 85.3
   },
   {
     "slug": "potosi_porco",
@@ -1608,7 +1608,7 @@
     "manzanos": 172,
     "poblacion": 11797,
     "cobertura": 59.1,
-    "size_kb": 187.2
+    "size_kb": 186.9
   },
   {
     "slug": "chuquisaca_poroma",
@@ -1626,7 +1626,7 @@
     "manzanos": 218,
     "poblacion": 15247,
     "cobertura": 38.0,
-    "size_kb": 285.7
+    "size_kb": 285.5
   },
   {
     "slug": "santa_cruz_portachuelo",
@@ -1635,7 +1635,7 @@
     "manzanos": 262,
     "poblacion": 17718,
     "cobertura": 63.9,
-    "size_kb": 297.8
+    "size_kb": 297.5
   },
   {
     "slug": "pando_porvenir",
@@ -1644,7 +1644,7 @@
     "manzanos": 116,
     "poblacion": 7307,
     "cobertura": 42.5,
-    "size_kb": 125.8
+    "size_kb": 125.6
   },
   {
     "slug": "santa_cruz_postrervalle",
@@ -1653,7 +1653,7 @@
     "manzanos": 21,
     "poblacion": 949,
     "cobertura": 50.0,
-    "size_kb": 23.2
+    "size_kb": 23.1
   },
   {
     "slug": "potosi_potosi",
@@ -1662,7 +1662,7 @@
     "manzanos": 2714,
     "poblacion": 202943,
     "cobertura": 63.8,
-    "size_kb": 2944.3
+    "size_kb": 2941.5
   },
   {
     "slug": "chuquisaca_presto",
@@ -1680,7 +1680,7 @@
     "manzanos": 583,
     "poblacion": 25062,
     "cobertura": 31.5,
-    "size_kb": 644.4
+    "size_kb": 643.7
   },
   {
     "slug": "santa_cruz_pucara",
@@ -1725,7 +1725,7 @@
     "manzanos": 53,
     "poblacion": 2372,
     "cobertura": 31.2,
-    "size_kb": 59.8
+    "size_kb": 59.7
   },
   {
     "slug": "beni_puerto_menor_de_rurrenabaque",
@@ -1734,7 +1734,7 @@
     "manzanos": 251,
     "poblacion": 13806,
     "cobertura": 69.0,
-    "size_kb": 278.3
+    "size_kb": 278.0
   },
   {
     "slug": "la_paz_puerto_perez",
@@ -1743,7 +1743,7 @@
     "manzanos": 87,
     "poblacion": 4344,
     "cobertura": 42.2,
-    "size_kb": 104.1
+    "size_kb": 104.0
   },
   {
     "slug": "santa_cruz_puerto_quijarro",
@@ -1752,7 +1752,7 @@
     "manzanos": 293,
     "poblacion": 17522,
     "cobertura": 69.9,
-    "size_kb": 325.1
+    "size_kb": 324.7
   },
   {
     "slug": "pando_puerto_rico",
@@ -1761,7 +1761,7 @@
     "manzanos": 83,
     "poblacion": 4421,
     "cobertura": 35.2,
-    "size_kb": 89.5
+    "size_kb": 89.4
   },
   {
     "slug": "beni_puerto_siles",
@@ -1779,7 +1779,7 @@
     "manzanos": 278,
     "poblacion": 14892,
     "cobertura": 57.2,
-    "size_kb": 311.1
+    "size_kb": 310.8
   },
   {
     "slug": "cochabamba_puerto_villarroel",
@@ -1788,7 +1788,7 @@
     "manzanos": 754,
     "poblacion": 37021,
     "cobertura": 50.2,
-    "size_kb": 826.7
+    "size_kb": 825.7
   },
   {
     "slug": "potosi_puna",
@@ -1797,7 +1797,7 @@
     "manzanos": 84,
     "poblacion": 4005,
     "cobertura": 25.1,
-    "size_kb": 98.1
+    "size_kb": 98.0
   },
   {
     "slug": "cochabamba_punata",
@@ -1806,7 +1806,7 @@
     "manzanos": 436,
     "poblacion": 27983,
     "cobertura": 54.1,
-    "size_kb": 511.8
+    "size_kb": 511.3
   },
   {
     "slug": "la_paz_quiabaya",
@@ -1824,7 +1824,7 @@
     "manzanos": 1773,
     "poblacion": 162129,
     "cobertura": 73.4,
-    "size_kb": 2122.7
+    "size_kb": 2120.6
   },
   {
     "slug": "la_paz_quime",
@@ -1833,7 +1833,7 @@
     "manzanos": 131,
     "poblacion": 7269,
     "cobertura": 34.1,
-    "size_kb": 146.1
+    "size_kb": 146.0
   },
   {
     "slug": "santa_cruz_quirusillas",
@@ -1842,7 +1842,7 @@
     "manzanos": 19,
     "poblacion": 1372,
     "cobertura": 63.3,
-    "size_kb": 22.1
+    "size_kb": 22.0
   },
   {
     "slug": "potosi_ravelo",
@@ -1860,7 +1860,7 @@
     "manzanos": 135,
     "poblacion": 6733,
     "cobertura": 47.0,
-    "size_kb": 144.4
+    "size_kb": 144.3
   },
   {
     "slug": "beni_riberalta",
@@ -1869,7 +1869,7 @@
     "manzanos": 1570,
     "poblacion": 99084,
     "cobertura": 75.4,
-    "size_kb": 1685.4
+    "size_kb": 1684.0
   },
   {
     "slug": "santa_cruz_robore",
@@ -1878,7 +1878,7 @@
     "manzanos": 347,
     "poblacion": 15591,
     "cobertura": 49.2,
-    "size_kb": 376.9
+    "size_kb": 376.6
   },
   {
     "slug": "oruro_sabaya",
@@ -1887,7 +1887,7 @@
     "manzanos": 137,
     "poblacion": 12787,
     "cobertura": 16.4,
-    "size_kb": 147.2
+    "size_kb": 147.1
   },
   {
     "slug": "cochabamba_sacaba",
@@ -1896,7 +1896,7 @@
     "manzanos": 3289,
     "poblacion": 199841,
     "cobertura": 67.2,
-    "size_kb": 3759.6
+    "size_kb": 3756.0
   },
   {
     "slug": "cochabamba_sacabamba",
@@ -1914,7 +1914,7 @@
     "manzanos": 69,
     "poblacion": 3522,
     "cobertura": 25.1,
-    "size_kb": 77.2
+    "size_kb": 77.1
   },
   {
     "slug": "santa_cruz_saipina",
@@ -1923,7 +1923,7 @@
     "manzanos": 105,
     "poblacion": 4694,
     "cobertura": 55.3,
-    "size_kb": 114.5
+    "size_kb": 114.4
   },
   {
     "slug": "santa_cruz_samaipata",
@@ -1932,7 +1932,7 @@
     "manzanos": 144,
     "poblacion": 7571,
     "cobertura": 43.4,
-    "size_kb": 170.9
+    "size_kb": 170.8
   },
   {
     "slug": "potosi_san_agustin",
@@ -1950,7 +1950,7 @@
     "manzanos": 88,
     "poblacion": 4272,
     "cobertura": 36.2,
-    "size_kb": 94.6
+    "size_kb": 94.5
   },
   {
     "slug": "potosi_san_antonio_de_esmoruco",
@@ -1968,7 +1968,7 @@
     "manzanos": 120,
     "poblacion": 7191,
     "cobertura": 60.0,
-    "size_kb": 130.4
+    "size_kb": 130.2
   },
   {
     "slug": "cochabamba_san_benito",
@@ -1977,7 +1977,7 @@
     "manzanos": 228,
     "poblacion": 11760,
     "cobertura": 38.6,
-    "size_kb": 273.4
+    "size_kb": 273.1
   },
   {
     "slug": "beni_san_borja",
@@ -1986,7 +1986,7 @@
     "manzanos": 483,
     "poblacion": 24603,
     "cobertura": 44.0,
-    "size_kb": 518.6
+    "size_kb": 518.1
   },
   {
     "slug": "la_paz_san_buenaventura",
@@ -1995,7 +1995,7 @@
     "manzanos": 149,
     "poblacion": 7413,
     "cobertura": 46.0,
-    "size_kb": 166.1
+    "size_kb": 166.0
   },
   {
     "slug": "santa_cruz_san_carlos",
@@ -2004,7 +2004,7 @@
     "manzanos": 283,
     "poblacion": 16371,
     "cobertura": 47.2,
-    "size_kb": 315.6
+    "size_kb": 315.2
   },
   {
     "slug": "beni_san_ignacio",
@@ -2013,7 +2013,7 @@
     "manzanos": 177,
     "poblacion": 13105,
     "cobertura": 34.6,
-    "size_kb": 193.2
+    "size_kb": 193.0
   },
   {
     "slug": "santa_cruz_san_ignacio",
@@ -2022,7 +2022,7 @@
     "manzanos": 738,
     "poblacion": 48794,
     "cobertura": 39.1,
-    "size_kb": 803.1
+    "size_kb": 802.9
   },
   {
     "slug": "beni_san_javier",
@@ -2040,7 +2040,7 @@
     "manzanos": 136,
     "poblacion": 10270,
     "cobertura": 48.6,
-    "size_kb": 151.5
+    "size_kb": 151.3
   },
   {
     "slug": "beni_san_joaquin",
@@ -2049,7 +2049,7 @@
     "manzanos": 79,
     "poblacion": 5118,
     "cobertura": 60.8,
-    "size_kb": 85.2
+    "size_kb": 85.1
   },
   {
     "slug": "santa_cruz_san_jose",
@@ -2058,7 +2058,7 @@
     "manzanos": 249,
     "poblacion": 15403,
     "cobertura": 40.5,
-    "size_kb": 275.0
+    "size_kb": 274.7
   },
   {
     "slug": "santa_cruz_san_juan",
@@ -2067,7 +2067,7 @@
     "manzanos": 121,
     "poblacion": 7721,
     "cobertura": 41.2,
-    "size_kb": 133.0
+    "size_kb": 132.9
   },
   {
     "slug": "santa_cruz_san_julian",
@@ -2085,7 +2085,7 @@
     "manzanos": 319,
     "poblacion": 17083,
     "cobertura": 38.6,
-    "size_kb": 385.0
+    "size_kb": 384.7
   },
   {
     "slug": "pando_san_lorenzo",
@@ -2103,7 +2103,7 @@
     "manzanos": 181,
     "poblacion": 8775,
     "cobertura": 29.1,
-    "size_kb": 197.0
+    "size_kb": 196.8
   },
   {
     "slug": "santa_cruz_san_matias",
@@ -2112,7 +2112,7 @@
     "manzanos": 160,
     "poblacion": 10748,
     "cobertura": 26.1,
-    "size_kb": 176.8
+    "size_kb": 176.7
   },
   {
     "slug": "santa_cruz_san_miguel",
@@ -2121,7 +2121,7 @@
     "manzanos": 136,
     "poblacion": 6421,
     "cobertura": 56.2,
-    "size_kb": 146.2
+    "size_kb": 146.1
   },
   {
     "slug": "potosi_san_pablo",
@@ -2139,7 +2139,7 @@
     "manzanos": 66,
     "poblacion": 2845,
     "cobertura": 35.1,
-    "size_kb": 76.2
+    "size_kb": 76.1
   },
   {
     "slug": "santa_cruz_san_pedro",
@@ -2148,7 +2148,7 @@
     "manzanos": 240,
     "poblacion": 12558,
     "cobertura": 55.7,
-    "size_kb": 260.2
+    "size_kb": 259.8
   },
   {
     "slug": "la_paz_san_pedro_de_curahuara",
@@ -2202,7 +2202,7 @@
     "manzanos": 52,
     "poblacion": 3837,
     "cobertura": 49.5,
-    "size_kb": 55.9
+    "size_kb": 55.8
   },
   {
     "slug": "santa_cruz_san_ramon",
@@ -2211,7 +2211,7 @@
     "manzanos": 699,
     "poblacion": 33822,
     "cobertura": 45.6,
-    "size_kb": 757.1
+    "size_kb": 756.4
   },
   {
     "slug": "beni_santa_ana",
@@ -2220,7 +2220,7 @@
     "manzanos": 187,
     "poblacion": 13822,
     "cobertura": 53.0,
-    "size_kb": 205.9
+    "size_kb": 205.7
   },
   {
     "slug": "santa_cruz_santa_cruz_de_la_sierra",
@@ -2229,7 +2229,7 @@
     "manzanos": 16791,
     "poblacion": 1606498,
     "cobertura": 78.4,
-    "size_kb": 18509.3
+    "size_kb": 18491.5
   },
   {
     "slug": "beni_santa_rosa",
@@ -2238,7 +2238,7 @@
     "manzanos": 114,
     "poblacion": 6037,
     "cobertura": 48.9,
-    "size_kb": 125.5
+    "size_kb": 125.4
   },
   {
     "slug": "pando_santa_rosa",
@@ -2256,7 +2256,7 @@
     "manzanos": 270,
     "poblacion": 12796,
     "cobertura": 36.0,
-    "size_kb": 300.0
+    "size_kb": 299.8
   },
   {
     "slug": "la_paz_santiago_de_callapa",
@@ -2274,7 +2274,7 @@
     "manzanos": 129,
     "poblacion": 7124,
     "cobertura": 28.6,
-    "size_kb": 140.3
+    "size_kb": 140.2
   },
   {
     "slug": "la_paz_santiago_de_huata",
@@ -2310,7 +2310,7 @@
     "manzanos": 79,
     "poblacion": 3932,
     "cobertura": 25.5,
-    "size_kb": 96.4
+    "size_kb": 96.3
   },
   {
     "slug": "pando_santos_mercado",
@@ -2346,7 +2346,7 @@
     "manzanos": 101,
     "poblacion": 4896,
     "cobertura": 48.8,
-    "size_kb": 108.6
+    "size_kb": 108.4
   },
   {
     "slug": "cochabamba_shinahota",
@@ -2355,7 +2355,7 @@
     "manzanos": 336,
     "poblacion": 16630,
     "cobertura": 49.9,
-    "size_kb": 378.5
+    "size_kb": 378.1
   },
   {
     "slug": "la_paz_sicasica",
@@ -2364,7 +2364,7 @@
     "manzanos": 404,
     "poblacion": 19545,
     "cobertura": 38.2,
-    "size_kb": 443.2
+    "size_kb": 442.9
   },
   {
     "slug": "cochabamba_sicaya",
@@ -2373,7 +2373,7 @@
     "manzanos": 42,
     "poblacion": 2115,
     "cobertura": 30.4,
-    "size_kb": 46.9
+    "size_kb": 46.8
   },
   {
     "slug": "cochabamba_sipesipe",
@@ -2382,7 +2382,7 @@
     "manzanos": 754,
     "poblacion": 51661,
     "cobertura": 52.9,
-    "size_kb": 939.7
+    "size_kb": 938.7
   },
   {
     "slug": "chuquisaca_sopachuy",
@@ -2400,7 +2400,7 @@
     "manzanos": 141,
     "poblacion": 6542,
     "cobertura": 50.0,
-    "size_kb": 164.7
+    "size_kb": 164.6
   },
   {
     "slug": "chuquisaca_sucre",
@@ -2409,7 +2409,7 @@
     "manzanos": 4018,
     "poblacion": 282616,
     "cobertura": 54.3,
-    "size_kb": 4407.1
+    "size_kb": 4403.1
   },
   {
     "slug": "chuquisaca_tioc_guarani_chaqueno_de_huacaya",
@@ -2427,7 +2427,7 @@
     "manzanos": 34,
     "poblacion": 1516,
     "cobertura": 25.2,
-    "size_kb": 38.0
+    "size_kb": 37.9
   },
   {
     "slug": "cochabamba_tioc_raqaypampa",
@@ -2517,7 +2517,7 @@
     "manzanos": 155,
     "poblacion": 7025,
     "cobertura": 41.3,
-    "size_kb": 188.0
+    "size_kb": 187.8
   },
   {
     "slug": "tarija_tarija",
@@ -2526,7 +2526,7 @@
     "manzanos": 3121,
     "poblacion": 218617,
     "cobertura": 59.1,
-    "size_kb": 3417.8
+    "size_kb": 3414.5
   },
   {
     "slug": "chuquisaca_tarvita",
@@ -2544,7 +2544,7 @@
     "manzanos": 129,
     "poblacion": 6386,
     "cobertura": 58.9,
-    "size_kb": 140.1
+    "size_kb": 139.9
   },
   {
     "slug": "la_paz_tiahuanacu",
@@ -2562,7 +2562,7 @@
     "manzanos": 29,
     "poblacion": 1409,
     "cobertura": 25.0,
-    "size_kb": 34.1
+    "size_kb": 34.0
   },
   {
     "slug": "la_paz_tipuani",
@@ -2571,7 +2571,7 @@
     "manzanos": 145,
     "poblacion": 6588,
     "cobertura": 57.1,
-    "size_kb": 165.1
+    "size_kb": 165.0
   },
   {
     "slug": "cochabamba_tiquipaya",
@@ -2580,7 +2580,7 @@
     "manzanos": 658,
     "poblacion": 58984,
     "cobertura": 78.8,
-    "size_kb": 785.9
+    "size_kb": 785.2
   },
   {
     "slug": "cochabamba_tiraque",
@@ -2589,7 +2589,7 @@
     "manzanos": 68,
     "poblacion": 3625,
     "cobertura": 25.6,
-    "size_kb": 76.0
+    "size_kb": 75.9
   },
   {
     "slug": "la_paz_tito_yupanqui",
@@ -2607,7 +2607,7 @@
     "manzanos": 51,
     "poblacion": 2280,
     "cobertura": 33.8,
-    "size_kb": 59.2
+    "size_kb": 59.1
   },
   {
     "slug": "oruro_todos_santos",
@@ -2625,7 +2625,7 @@
     "manzanos": 134,
     "poblacion": 8151,
     "cobertura": 25.2,
-    "size_kb": 160.9
+    "size_kb": 160.8
   },
   {
     "slug": "oruro_toledo",
@@ -2634,7 +2634,7 @@
     "manzanos": 89,
     "poblacion": 4255,
     "cobertura": 27.1,
-    "size_kb": 96.5
+    "size_kb": 96.4
   },
   {
     "slug": "potosi_tomave",
@@ -2697,7 +2697,7 @@
     "manzanos": 1638,
     "poblacion": 126684,
     "cobertura": 68.1,
-    "size_kb": 1768.7
+    "size_kb": 1766.6
   },
   {
     "slug": "potosi_tupiza",
@@ -2706,7 +2706,7 @@
     "manzanos": 507,
     "poblacion": 34525,
     "cobertura": 30.1,
-    "size_kb": 561.5
+    "size_kb": 561.0
   },
   {
     "slug": "oruro_turco",
@@ -2724,7 +2724,7 @@
     "manzanos": 51,
     "poblacion": 2599,
     "cobertura": 14.4,
-    "size_kb": 60.6
+    "size_kb": 60.5
   },
   {
     "slug": "potosi_uncia",
@@ -2733,7 +2733,7 @@
     "manzanos": 240,
     "poblacion": 11999,
     "cobertura": 41.0,
-    "size_kb": 264.4
+    "size_kb": 264.1
   },
   {
     "slug": "tarija_uriondo",
@@ -2742,7 +2742,7 @@
     "manzanos": 105,
     "poblacion": 6194,
     "cobertura": 27.1,
-    "size_kb": 124.3
+    "size_kb": 124.2
   },
   {
     "slug": "potosi_urmiri",
@@ -2769,7 +2769,7 @@
     "manzanos": 506,
     "poblacion": 29618,
     "cobertura": 33.3,
-    "size_kb": 542.3
+    "size_kb": 541.6
   },
   {
     "slug": "cochabamba_vacas",
@@ -2778,7 +2778,7 @@
     "manzanos": 38,
     "poblacion": 1615,
     "cobertura": 32.8,
-    "size_kb": 43.0
+    "size_kb": 42.9
   },
   {
     "slug": "santa_cruz_vallegrande",
@@ -2787,7 +2787,7 @@
     "manzanos": 217,
     "poblacion": 11861,
     "cobertura": 44.4,
-    "size_kb": 243.1
+    "size_kb": 242.8
   },
   {
     "slug": "la_paz_viacha",
@@ -2796,7 +2796,7 @@
     "manzanos": 2125,
     "poblacion": 95832,
     "cobertura": 52.8,
-    "size_kb": 2296.1
+    "size_kb": 2293.5
   },
   {
     "slug": "cochabamba_vila_vila",
@@ -2832,7 +2832,7 @@
     "manzanos": 81,
     "poblacion": 4451,
     "cobertura": 34.0,
-    "size_kb": 89.2
+    "size_kb": 89.1
   },
   {
     "slug": "cochabamba_villa_gualberto_villarroel",
@@ -2850,7 +2850,7 @@
     "manzanos": 41,
     "poblacion": 3957,
     "cobertura": 80.4,
-    "size_kb": 45.8
+    "size_kb": 45.7
   },
   {
     "slug": "tarija_villa_montes",
@@ -2859,7 +2859,7 @@
     "manzanos": 780,
     "poblacion": 35700,
     "cobertura": 58.0,
-    "size_kb": 844.3
+    "size_kb": 843.6
   },
   {
     "slug": "pando_villa_nueva",
@@ -2886,7 +2886,7 @@
     "manzanos": 93,
     "poblacion": 4946,
     "cobertura": 24.8,
-    "size_kb": 102.3
+    "size_kb": 102.2
   },
   {
     "slug": "cochabamba_villa_tunari",
@@ -2895,7 +2895,7 @@
     "manzanos": 849,
     "poblacion": 34598,
     "cobertura": 52.1,
-    "size_kb": 930.4
+    "size_kb": 929.3
   },
   {
     "slug": "chuquisaca_villa_vaca_guzman",
@@ -2904,7 +2904,7 @@
     "manzanos": 66,
     "poblacion": 6814,
     "cobertura": 35.1,
-    "size_kb": 73.0
+    "size_kb": 72.9
   },
   {
     "slug": "potosi_villazon",
@@ -2913,7 +2913,7 @@
     "manzanos": 652,
     "poblacion": 43547,
     "cobertura": 50.4,
-    "size_kb": 700.4
+    "size_kb": 699.7
   },
   {
     "slug": "cochabamba_vinto",
@@ -2922,7 +2922,7 @@
     "manzanos": 674,
     "poblacion": 54118,
     "cobertura": 67.7,
-    "size_kb": 833.7
+    "size_kb": 832.9
   },
   {
     "slug": "potosi_vitiche",
@@ -2949,7 +2949,7 @@
     "manzanos": 2216,
     "poblacion": 147650,
     "cobertura": 47.9,
-    "size_kb": 2407.3
+    "size_kb": 2404.4
   },
   {
     "slug": "la_paz_yaco",
@@ -2967,7 +2967,7 @@
     "manzanos": 1302,
     "poblacion": 83427,
     "cobertura": 61.6,
-    "size_kb": 1420.5
+    "size_kb": 1419.2
   },
   {
     "slug": "chuquisaca_yamparaez",
@@ -2994,7 +2994,7 @@
     "manzanos": 788,
     "poblacion": 43884,
     "cobertura": 44.7,
-    "size_kb": 872.7
+    "size_kb": 871.7
   },
   {
     "slug": "potosi_yocalla",
@@ -3003,7 +3003,7 @@
     "manzanos": 91,
     "poblacion": 4852,
     "cobertura": 25.3,
-    "size_kb": 102.7
+    "size_kb": 102.6
   },
   {
     "slug": "chuquisaca_yotala",
