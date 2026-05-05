@@ -65,8 +65,14 @@ res_h       = f[["residencia_aqui_hombre","residencia_otromunicipio_hombre"]].su
 res_m       = f[["residencia_aqui_mujer","residencia_otromunicipio_mujer"]].sum(axis=1)
 residente   = res_h + res_m
 
-ocup_h      = f[["ocupacion_empleado_hombre","ocupacion_cuentapropia_hombre","ocupacion_otros_hombre"]].sum(axis=1)
-ocup_m      = f[["ocupacion_empleado_mujer","ocupacion_cuentapropia_mujer","ocupacion_otros_mujer"]].sum(axis=1)
+# Ocupados: incluye sinespecificar para que coincida con el universo de las
+# columnas actividad_*, que sí contabilizan a esas personas. Sin esto, los
+# indicadores pct_<actividad> pueden superar el 100% (ratio = numerador
+# completo / denominador truncado).
+ocup_h      = f[["ocupacion_empleado_hombre","ocupacion_cuentapropia_hombre",
+                  "ocupacion_otros_hombre","ocupacion_sinespecificar_hombre"]].sum(axis=1)
+ocup_m      = f[["ocupacion_empleado_mujer","ocupacion_cuentapropia_mujer",
+                  "ocupacion_otros_mujer","ocupacion_sinespecificar_mujer"]].sum(axis=1)
 ocupados    = ocup_h + ocup_m
 
 educ_cols_h = ["educacion_ninguno_hombre","educacion_primaria_hombre","educacion_secundaria_hombre",
@@ -121,6 +127,7 @@ ind["pct_transporte"]       = calc(safe_div((f["actividad_transporte_hombre"]+f[
 ind["pct_alojamiento"]      = calc(safe_div((f["actividad_alojamientoycomida_hombre"]+f["actividad_alojamientoycomida_mujer"]).values, ocupados.values))
 
 # Educación
+ind["pct_sin_educacion"]    = calc(safe_div((f["educacion_ninguno_hombre"]+f["educacion_ninguno_mujer"]).values, educ_total.values))
 ind["pct_educ_superior"]    = calc(safe_div((f["educacion_superior_hombre"]+f["educacion_superior_mujer"]).values, educ_total.values))
 ind["brecha_educ"]          = calc(
     safe_div((f["educacion_secundaria_mujer"]+f["educacion_superior_mujer"]).values, educ_m.values) -
@@ -129,13 +136,15 @@ ind["brecha_educ"]          = calc(
 
 # Salud — acceso formal
 ind["pct_sin_seguro"]       = calc(safe_div((f["saludafiliacion_ninguno_hombre"]+f["saludafiliacion_ninguno_mujer"]).values, afil_total.values))
+ind["pct_sus"]              = calc(safe_div((f["saludafiliacion_sus_hombre"]+f["saludafiliacion_sus_mujer"]).values, afil_total.values))
 ind["pct_seguro_privado"]   = calc(safe_div((f["saludafiliacion_seguroprivado_hombre"]+f["saludafiliacion_seguroprivado_mujer"]).values, afil_total.values))
 ind["brecha_seguro"]        = calc(
     safe_div((f["saludafiliacion_sus_mujer"]+f["saludafiliacion_cajadesalud_mujer"]+f["saludafiliacion_seguroprivado_mujer"]).values, afil_m.values) -
     safe_div((f["saludafiliacion_sus_hombre"]+f["saludafiliacion_cajadesalud_hombre"]+f["saludafiliacion_seguroprivado_hombre"]).values, afil_h.values)
 )
 
-# Salud — acceso informal (NUEVO)
+# Salud — atención
+ind["pct_salud_publica"]    = calc(safe_div((f["salud_centropublico_hombre"]+f["salud_centropublico_mujer"]).values, salud_total.values))
 ind["pct_med_tradicional"]  = calc(safe_div((f["salud_medicinatradicional_hombre"]+f["salud_medicinatradicional_mujer"]).values, salud_total.values))
 ind["pct_automedicacion"]   = calc(safe_div((f["salud_farmaciasinreceta_hombre"]+f["salud_farmaciasinreceta_mujer"]).values, salud_total.values))
 ind["pct_remedios_caseros"] = calc(safe_div((f["salud_remedioscaseros_hombre"]+f["salud_remedioscaseros_mujer"]).values, salud_total.values))
@@ -144,10 +153,19 @@ ind["pct_remedios_caseros"] = calc(safe_div((f["salud_remedioscaseros_hombre"]+f
 ind["pct_viv_desocupada"]   = calc(safe_div(f["viviendatipo_particulardesocupada"].values, f["viviendatipo_particular"].values))
 ind["pct_alquiler"]         = calc(safe_div((f["viviendatenencia_alquilada"]+f["viviendatenencia_anticretico"]).values, viv.values))
 
-# Servicios básicos
+# Servicios básicos — energía eléctrica
 ind["pct_electricidad"]     = calc(safe_div(f["energiaelectrica_serviciopublico"].values, viv.values))
+ind["pct_sin_electricidad"] = calc(safe_div(f["energiaelectrica_notiene"].values, viv.values))
+
+# Servicios básicos — agua
 ind["pct_agua_red"]         = calc(safe_div(f[agua_col].values, viv.values))
+
+# Servicios básicos — saneamiento (desagüe)
+camara_col = next(c for c in f.columns if c.startswith("desague_camara"))
 ind["pct_alcantarillado"]   = calc(safe_div(f["desague_alcantarillado"].values, viv.values))
+ind["pct_camara_septica"]   = calc(safe_div(f[camara_col].values, viv.values))
+ind["pct_pozo_ciego"]       = calc(safe_div(f["desague_pozociego"].values, viv.values))
+ind["pct_sin_desague"]      = calc(safe_div(f["desague_notiene"].values, viv.values))
 
 # Energía de cocción (NUEVO)
 ind["pct_gas_red"]          = calc(safe_div(f[gas_red_col].values, viv.values))

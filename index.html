@@ -472,6 +472,9 @@ const GRUPOS = [
   {
     grupo: "Educación",
     inds: [
+      { key:"pct_sin_educacion",   label:"% sin instrucción formal",    unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Población sin ningún nivel de instrucción formal alcanzado. Proxy directo de analfabetismo y exclusión educativa. Es uno de los componentes clásicos de Necesidades Básicas Insatisfechas (NBI).",
+        colores:["#ffffcc","#fed976","#fd8d3c","#e31a1c","#800026"], invertido:true },
       { key:"pct_educ_superior",   label:"% con educación superior",    unidad:"%",  fmt: v=>v+"%",
         ayuda:"Población de 19 años o más con nivel de instrucción superior (universitaria o técnica). Indicador de capital humano y acceso a oportunidades.",
         colores:["#fff7f3","#fde0dd","#fc9272","#de2d26","#67000d"] },
@@ -486,6 +489,9 @@ const GRUPOS = [
       { key:"pct_sin_seguro",      label:"% sin ningún seguro de salud", unidad:"%", fmt: v=>v+"%",
         ayuda:"Personas sin SUS, caja de salud ni seguro privado. Indicador directo de vulnerabilidad sanitaria. Alto valor = alta desprotección.",
         colores:["#ffffcc","#fed976","#fd8d3c","#e31a1c","#800026"], invertido:true },
+      { key:"pct_sus",             label:"% con SUS",                   unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Personas afiliadas al Sistema Único de Salud (SUS), creado en 2019 para universalizar la cobertura de quienes no tienen seguro contributivo. Mide el alcance del aseguramiento público no contributivo.",
+        colores:["#f7fbff","#c6dbef","#6baed6","#2171b5","#08306b"] },
       { key:"pct_seguro_privado",  label:"% con seguro privado",        unidad:"%",  fmt: v=>v+"%",
         ayuda:"Afiliados a seguros de salud privados. Indicador indirecto de ingresos y empleo formal de calidad.",
         colores:["#f7fbff","#c6dbef","#6baed6","#2171b5","#08306b"] },
@@ -497,6 +503,9 @@ const GRUPOS = [
   {
     grupo: "Salud · Atención",
     inds: [
+      { key:"pct_salud_publica",   label:"% se atiende en centro público", unidad:"%", fmt: v=>v+"%",
+        ayuda:"Personas que acuden a centros de salud públicos (hospitales y postas del Ministerio de Salud) cuando enferman, sobre el total que declaró su forma de atención. Mide el alcance efectivo de la red pública de salud.",
+        colores:["#f7fbff","#c6dbef","#6baed6","#2171b5","#08306b"] },
       { key:"pct_med_tradicional", label:"% usa medicina tradicional",  unidad:"%",  fmt: v=>v+"%",
         ayuda:"Personas que acuden a médico/a tradicional ancestral cuando enferman, sobre el total que declaró su forma de atención. Refleja identidad cultural y/o barreras de acceso al sistema formal.",
         colores:["#f7f7f7","#d9d9d9","#969696","#525252","#252525"] },
@@ -525,12 +534,29 @@ const GRUPOS = [
       { key:"pct_electricidad",    label:"% electricidad red pública",  unidad:"%",  fmt: v=>v+"%",
         ayuda:"Viviendas con servicio público de energía eléctrica sobre el total de viviendas ocupadas.",
         colores:["#ffffcc","#a1dab4","#41b6c4","#2c7fb8","#253494"] },
+      { key:"pct_sin_electricidad", label:"% sin electricidad",         unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Viviendas que no disponen de ningún tipo de energía eléctrica (ni red, ni motor, ni panel solar). Indicador directo de pobreza energética. Componente clásico de Necesidades Básicas Insatisfechas (NBI).",
+        colores:["#ffffcc","#fed976","#fd8d3c","#e31a1c","#800026"], invertido:true },
       { key:"pct_agua_red",        label:"% agua por cañería",          unidad:"%",  fmt: v=>v+"%",
         ayuda:"Viviendas con acceso a agua potable por cañería de red domiciliaria. Indicador básico de saneamiento.",
         colores:["#ffffcc","#a1dab4","#41b6c4","#2c7fb8","#253494"] },
+    ]
+  },
+  {
+    grupo: "Saneamiento (desagüe)",
+    inds: [
       { key:"pct_alcantarillado",  label:"% alcantarillado",            unidad:"%",  fmt: v=>v+"%",
-        ayuda:"Viviendas cuyo desagüe va a la red de alcantarillado. Diferencia significativa entre ciudades capitales y periferias.",
+        ayuda:"Viviendas cuyo desagüe va a la red de alcantarillado público. Es la solución más segura para aguas servidas. Diferencia significativa entre ciudades capitales y periferias.",
         colores:["#ffffcc","#a1dab4","#41b6c4","#2c7fb8","#253494"] },
+      { key:"pct_camara_septica",  label:"% cámara séptica",            unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Viviendas que descargan el desagüe a una cámara séptica. Solución intermedia: trata las aguas residuales pero requiere mantenimiento. Frecuente en zonas peri-urbanas y municipios sin red de alcantarillado.",
+        colores:["#fff7fb","#d4b9da","#c994c7","#df65b0","#980043"] },
+      { key:"pct_pozo_ciego",      label:"% pozo ciego",                unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Viviendas que descargan el desagüe a un pozo ciego (sin tratamiento). Riesgo de contaminación de napas freáticas y aguas superficiales. Afecta a 1 de cada 6 hogares en Bolivia.",
+        colores:["#ffffcc","#fed976","#fd8d3c","#e31a1c","#800026"], invertido:true },
+      { key:"pct_sin_desague",     label:"% sin desagüe",               unidad:"%",  fmt: v=>v+"%",
+        ayuda:"Viviendas que no cuentan con ningún sistema de desagüe (ni alcantarillado, ni cámara séptica, ni pozo). Indicador NBI directo y de mayor gravedad sanitaria.",
+        colores:["#ffffcc","#fed976","#fd8d3c","#e31a1c","#800026"], invertido:true },
     ]
   },
   {
