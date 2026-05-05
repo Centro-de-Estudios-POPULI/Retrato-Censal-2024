@@ -196,6 +196,44 @@ df_val = df_val.merge(ind, on="codigo")
 ind_cols = [c for c in ind.columns if c != "codigo"]
 print(f"  {len(ind_cols)} indicadores calculados")
 
+# ── Breaks nacionales (escala absoluta para coloración) ───────────────────────
+# Usamos cuantiles 20/40/60/80 sobre TODA Bolivia (no por ciudad). Esto permite
+# que un mismo color signifique el mismo rango de valores en cualquier municipio
+# del dashboard, garantizando comparabilidad inter-ciudad. La barra del popup
+# (percentil intra-ciudad) se mantiene en el frontend para conservar la lectura
+# local. Para indicadores con muchos ceros (donde p20==p40==0 etc.), se usan
+# percentiles más altos como sustitutos hasta tener 4 breaks únicos.
+print("Calculando breaks nacionales...")
+
+def compute_breaks(vals):
+    vals = pd.to_numeric(pd.Series(vals), errors="coerce").dropna().values
+    if len(vals) < 5:
+        return None
+    candidates = list(np.percentile(vals, [20, 40, 60, 80]))
+    breaks, prev = [], -np.inf
+    for c in candidates:
+        if c > prev:
+            breaks.append(float(c)); prev = c
+    if len(breaks) < 4:
+        last = breaks[-1] if breaks else float(vals.min())
+        for p in [50, 70, 85, 95, 99]:
+            v = float(np.percentile(vals, p))
+            if v > last:
+                breaks.append(v); last = v
+            if len(breaks) == 4:
+                break
+    return [int(round(b)) for b in breaks][:4]
+
+breaks_global = {}
+for col in ind_cols:
+    b = compute_breaks(df_val[col].values)
+    if b and len(b) >= 2:
+        breaks_global[col] = b
+
+with open(DATA_DIR / "breaks.json", "w", encoding="utf-8") as fp:
+    json.dump(breaks_global, fp, ensure_ascii=False, indent=2)
+print(f"  breaks calculados para {len(breaks_global)}/{len(ind_cols)} indicadores")
+
 # ── Simplificar geometrías ────────────────────────────────────────────────────
 print("Simplificando geometrias...")
 df_val["geometry"] = df_val["geometry"].simplify(SIMPLIFY, preserve_topology=True)

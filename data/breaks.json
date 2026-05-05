@@ -1,0 +1,257 @@
+{
+  "personas_x_ha": [
+    36,
+    61,
+    91,
+    135
+  ],
+  "masculinidad": [
+    76,
+    89,
+    100,
+    118
+  ],
+  "pct_menor20": [
+    28,
+    34,
+    39,
+    46
+  ],
+  "pct_60mas": [
+    4,
+    7,
+    10,
+    15
+  ],
+  "pct_migrante": [
+    23,
+    33,
+    43,
+    57
+  ],
+  "dependencia_econ": [
+    72,
+    92,
+    112,
+    144
+  ],
+  "pct_empleados": [
+    24,
+    35,
+    43,
+    52
+  ],
+  "pct_cuentapropia": [
+    32,
+    40,
+    48,
+    58
+  ],
+  "pct_agricultura": [
+    0,
+    4,
+    9,
+    23
+  ],
+  "pct_comercio": [
+    11,
+    18,
+    25,
+    33
+  ],
+  "pct_manufactura": [
+    0,
+    6,
+    10,
+    17
+  ],
+  "pct_construccion": [
+    0,
+    5,
+    9,
+    14
+  ],
+  "pct_transporte": [
+    0,
+    5,
+    8,
+    12
+  ],
+  "pct_alojamiento": [
+    0,
+    4,
+    8,
+    12
+  ],
+  "pct_sin_educacion": [
+    0,
+    3,
+    7,
+    8
+  ],
+  "pct_educ_superior": [
+    15,
+    27,
+    38,
+    53
+  ],
+  "brecha_educ": [
+    -20,
+    -11,
+    -5,
+    1
+  ],
+  "pct_sin_seguro": [
+    8,
+    15,
+    22,
+    31
+  ],
+  "pct_sus": [
+    46,
+    59,
+    70,
+    82
+  ],
+  "pct_seguro_privado": [
+    0,
+    2,
+    3,
+    8
+  ],
+  "brecha_seguro": [
+    -3,
+    2,
+    7,
+    14
+  ],
+  "pct_salud_publica": [
+    20,
+    24,
+    28,
+    35
+  ],
+  "pct_med_tradicional": [
+    3,
+    6,
+    9,
+    14
+  ],
+  "pct_automedicacion": [
+    14,
+    18,
+    21,
+    24
+  ],
+  "pct_remedios_caseros": [
+    20,
+    23,
+    25,
+    28
+  ],
+  "pct_viv_desocupada": [
+    0,
+    5,
+    12,
+    14
+  ],
+  "pct_alquiler": [
+    0,
+    12,
+    21,
+    33
+  ],
+  "pct_electricidad": [
+    94,
+    100
+  ],
+  "pct_sin_electricidad": [
+    0,
+    7,
+    20,
+    50
+  ],
+  "pct_agua_red": [
+    67,
+    89,
+    98,
+    100
+  ],
+  "pct_alcantarillado": [
+    0,
+    38,
+    90,
+    100
+  ],
+  "pct_camara_septica": [
+    0,
+    4,
+    20,
+    28
+  ],
+  "pct_pozo_ciego": [
+    0,
+    14,
+    50,
+    57
+  ],
+  "pct_sin_desague": [
+    0,
+    14,
+    20,
+    57
+  ],
+  "pct_gas_red": [
+    0,
+    8,
+    40,
+    62
+  ],
+  "pct_gas_garrafa": [
+    35,
+    56,
+    77,
+    100
+  ],
+  "pct_lena_guano": [
+    0,
+    6,
+    22,
+    67
+  ],
+  "pct_basura_formal": [
+    70,
+    96,
+    100
+  ],
+  "pct_basura_quema": [
+    0,
+    20,
+    38,
+    88
+  ],
+  "pct_basura_informal": [
+    0,
+    2,
+    17,
+    47
+  ],
+  "pct_internet": [
+    71,
+    83,
+    89,
+    95
+  ],
+  "pct_celular": [
+    85,
+    91,
+    97,
+    100
+  ],
+  "pct_televisor": [
+    69,
+    81,
+    89,
+    95
+  ]
+}

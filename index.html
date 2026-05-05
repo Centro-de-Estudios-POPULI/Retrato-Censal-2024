@@ -225,8 +225,16 @@ body {
 }
 #leg-title { font-size: 11px; font-weight: 600; color: var(--text2); margin-bottom: 7px; }
 #leg-bar   { height: 8px; border-radius: 4px; margin-bottom: 5px; }
-#leg-marks { display: flex; justify-content: space-between; font-size: 10px; color: var(--text3); margin-bottom: 4px; }
-#leg-unit  { font-size: 10px; color: var(--text3); text-align: right; }
+/* Marcas posicionadas a 20%, 40%, 60% y 80% — coinciden con las divisiones
+   de color del mapa (cuantiles nacionales) */
+#leg-marks { position: relative; height: 13px; font-size: 10px; color: var(--text3); margin-bottom: 4px; }
+.leg-mark  { position: absolute; transform: translateX(-50%); top: 0; white-space: nowrap; }
+.leg-mark[data-pos="20"] { left: 20%; }
+.leg-mark[data-pos="40"] { left: 40%; }
+.leg-mark[data-pos="60"] { left: 60%; }
+.leg-mark[data-pos="80"] { left: 80%; }
+#leg-foot  { display: flex; justify-content: space-between; align-items: baseline; font-size: 10px; color: var(--text3); gap: 8px; }
+#leg-city  { color: var(--text2); white-space: nowrap; }
 .leg-na    { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--text3); }
 .na-box    { width: 12px; height: 8px; border-radius: 2px; background: repeating-linear-gradient(45deg, var(--na-stripe) 0, var(--na-stripe) 2px, transparent 2px, transparent 4px); border: 1px solid var(--border); }
 
@@ -394,8 +402,16 @@ body {
     <div id="legend">
       <div id="leg-title">—</div>
       <div id="leg-bar"></div>
-      <div id="leg-marks"><span id="leg-min">—</span><span id="leg-mid">—</span><span id="leg-max">—</span></div>
-      <div id="leg-unit"></div>
+      <div id="leg-marks">
+        <span class="leg-mark" data-pos="20"></span>
+        <span class="leg-mark" data-pos="40"></span>
+        <span class="leg-mark" data-pos="60"></span>
+        <span class="leg-mark" data-pos="80"></span>
+      </div>
+      <div id="leg-foot">
+        <span id="leg-unit"></span>
+        <span id="leg-city"></span>
+      </div>
       <div class="leg-na"><div class="na-box"></div>Sin datos</div>
     </div>
   </div>
@@ -610,6 +626,13 @@ const IND  = Object.fromEntries(INDS.map(d => [d.key, d]));
 // ESTADO
 // ══════════════════════════════════════════════════════════════════════════════
 let ciudades = [], currentInd = "pct_internet", currentData = null, cityStats = {};
+// Breaks nacionales (cuantiles 20/40/60/80% sobre todo Bolivia, calculados en
+// procesar.py). Se usan como escala absoluta de coloración: el mismo color
+// significa el mismo rango de valores en cualquier municipio. Se cargan una
+// sola vez al inicio (en bloque INIT, junto con ciudades.json) para evitar
+// race con la primera coloración. Si el fetch falla, el dashboard cae a
+// cuantiles por ciudad (legado) — ver buildColorExpr.
+let globalBreaks = {};
 let loadController = null;
 const isMobile = () => window.matchMedia("(max-width: 768px)").matches;
 const isTouch  = () => window.matchMedia("(hover: none), (pointer: coarse)").matches;
@@ -748,10 +771,27 @@ function buildStats(data) {
   }
 }
 
-// Reusa cityStats (ya ordenado) — sin re-sort ni re-filter
+// Coloración del mapa: usa breaks NACIONALES (escala absoluta para
+// comparabilidad inter-ciudad). Fallback a cuantiles intra-ciudad si no hay
+// globalBreaks disponibles para ese indicador (caso legado / fetch fallido).
 function buildColorExpr(ind) {
-  const s = cityStats[ind.key];
   const c = ind.colores;
+  const s = cityStats[ind.key];
+  const breaks = globalBreaks[ind.key];
+
+  if (breaks && breaks.length) {
+    // Mapeo proporcional de breaks a colores cuando hay menos de 4 breaks
+    // (algunos indicadores muy concentrados solo logran 2-3 breaks únicos).
+    const nb = breaks.length + 1;
+    const colors = Array.from({ length: nb }, (_, i) =>
+      c[Math.round(i * (c.length - 1) / (nb - 1))]
+    );
+    const expr = ["step", ["get", ind.key], colors[0]];
+    for (let i = 0; i < breaks.length; i++) expr.push(breaks[i], colors[i + 1]);
+    return expr;
+  }
+
+  // ── Fallback: cuantiles por ciudad (lógica anterior) ──
   if (!s) return "#888";
   const { vals, min, max } = s;
   if (min === max) return c[Math.floor(c.length / 2)];
@@ -759,42 +799,69 @@ function buildColorExpr(ind) {
   const n = vals.length;
   const q = p => vals[Math.min(Math.floor(p * n), n - 1)];
   const candidates = [q(.2), q(.4), q(.6), q(.8)];
-
-  const breaks = [];
+  const fbreaks = [];
   let prev = min;
   for (const b of candidates) {
-    if (b > prev && b < max) { breaks.push(b); prev = b; }
+    if (b > prev && b < max) { fbreaks.push(b); prev = b; }
   }
-
-  if (!breaks.length) {
-    // Mayoría de ceros: mediana de no-cero (vals está ordenado, así que el primer >0 es búsqueda lineal corta)
+  if (!fbreaks.length) {
     let i = 0;
     while (i < n && vals[i] === 0) i++;
-    if (i < n) breaks.push(vals[i + ((n - i) >> 1)]);
+    if (i < n) fbreaks.push(vals[i + ((n - i) >> 1)]);
     else return c[0];
   }
-
-  const nb = breaks.length + 1;
+  const nb = fbreaks.length + 1;
   const colors = Array.from({ length: nb }, (_, i) =>
     c[Math.round(i * (c.length - 1) / (nb - 1))]
   );
-
   const expr = ["step", ["get", ind.key], colors[0]];
-  for (let i = 0; i < breaks.length; i++) expr.push(breaks[i], colors[i + 1]);
+  for (let i = 0; i < fbreaks.length; i++) expr.push(fbreaks[i], colors[i + 1]);
   return expr;
 }
 
 function updateLegend(ind) {
   const s = cityStats[ind.key];
-  if (!s) return;
-  const n = s.vals.length;
-  const q = p => s.vals[Math.min(Math.floor(p*n), n-1)];
+  const breaks = globalBreaks[ind.key];
   document.getElementById("leg-title").textContent = ind.label;
-  document.getElementById("leg-bar").style.background = `linear-gradient(to right,${ind.colores.join(",")})`;
-  document.getElementById("leg-min").textContent = ind.fmt(s.min);
-  document.getElementById("leg-mid").textContent = ind.fmt(q(.5));
-  document.getElementById("leg-max").textContent = ind.fmt(s.max);
-  document.getElementById("leg-unit").textContent = ind.unidad ? `Unidad: ${ind.unidad}` : "";
+
+  // Barra escalonada: refleja FIELMENTE la coloración discreta del mapa
+  // (5 bloques de color, no degradé continuo). Ajusta el número de bloques al
+  // número real de breaks (algunos indicadores muy concentrados solo tienen 2-3).
+  const c = ind.colores;
+  let bars;
+  if (breaks && breaks.length) {
+    const nb = breaks.length + 1;
+    const colors = Array.from({ length: nb }, (_, i) =>
+      c[Math.round(i * (c.length - 1) / (nb - 1))]
+    );
+    bars = colors.map((col, i) => {
+      const a = (i / nb) * 100, b = ((i + 1) / nb) * 100;
+      return `${col} ${a}% ${b}%`;
+    }).join(",");
+  } else {
+    // Fallback: gradiente continuo (modo cuantiles por ciudad)
+    bars = c.join(",");
+  }
+  document.getElementById("leg-bar").style.background = `linear-gradient(to right,${bars})`;
+
+  // Marcas de break: si hay menos de 4 breaks (indicador muy concentrado),
+  // las marcas extras se vacían — quedan ocultas visualmente sin desalinear.
+  const marks = document.querySelectorAll(".leg-mark");
+  marks.forEach((m, i) => {
+    const b = breaks && breaks[i];
+    m.textContent = b != null ? ind.fmt(b) : "";
+    // Reposiciona si hay menos de 4 breaks (espaciado proporcional al nb real)
+    if (breaks && breaks.length && breaks.length < 4) {
+      const pos = ((i + 1) / (breaks.length + 1)) * 100;
+      m.style.left = i < breaks.length ? `${pos}%` : "";
+    } else {
+      m.style.left = "";
+    }
+  });
+
+  document.getElementById("leg-unit").textContent = ind.unidad ? ind.unidad : "";
+  // Min–max de la ciudad seleccionada como contexto local
+  document.getElementById("leg-city").textContent = s ? `Ciudad: ${ind.fmt(s.min)} – ${ind.fmt(s.max)}` : "";
 }
 
 function applyIndicator() {
@@ -1055,17 +1122,19 @@ document.addEventListener("click", e => {
 // ══════════════════════════════════════════════════════════════════════════════
 renderIndicadores();
 
-fetch("data/ciudades.json")
-  .then(r => r.json())
-  .then(data => {
-    ciudades = data;
-    const scz = data.find(c => c.slug.includes("santa_cruz_de_la_sierra")) || data[0];
-    if (scz) {
-      document.getElementById("ciudad-input").value = scz.municipio;
-      if (map.loaded()) loadCiudad(scz);
-      else map.on("load", () => loadCiudad(scz));
-    }
-  });
+Promise.all([
+  fetch("data/ciudades.json").then(r => r.json()),
+  fetch("data/breaks.json").then(r => r.ok ? r.json() : {}).catch(() => ({}))
+]).then(([data, breaks]) => {
+  ciudades = data;
+  globalBreaks = breaks;
+  const scz = data.find(c => c.slug.includes("santa_cruz_de_la_sierra")) || data[0];
+  if (scz) {
+    document.getElementById("ciudad-input").value = scz.municipio;
+    if (map.loaded()) loadCiudad(scz);
+    else map.on("load", () => loadCiudad(scz));
+  }
+});
 </script>
 </body>
 </html>
