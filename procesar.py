@@ -13,7 +13,7 @@ warnings.filterwarnings("ignore")
 DATA_DIR = Path("data")
 DATA_DIR.mkdir(exist_ok=True)
 
-SRC         = Path("C:/Users/HP/Downloads")
+SRC         = Path(__file__).resolve().parent / "fuente"
 SIMPLIFY    = 0.00005   # ~5 m en WGS84
 MIN_MANZANOS = 5
 

@@ -3,3 +3,6 @@ __pycache__/
 *.parquet
 *.egg-info/
 .env
+
+# Datos crudos del CPV 2024 (fuente local, no versionar)
+fuente/
