@@ -455,6 +455,20 @@ body.dark .ind.on .mini{opacity:1!important;filter:saturate(1.05)!important}
 .cmp .ds-g{font:600 3.6px var(--f);fill:var(--suave);font-variant-numeric:tabular-nums}
 .cmp .ds-u{font-weight:500;fill:var(--faint)}
 .cmp .ds-ax{font:500 3.2px var(--f);fill:var(--faint)}
+/* ── el perfil del país y el recorte del comparativo (2026-09-04) ─────────── */
+.ver-mas{display:block;width:100%;margin:7px 0 2px;padding:5px 8px;background:none;
+  border:1px solid var(--linea);color:var(--teal-dk);font:600 .62rem var(--f);
+  cursor:pointer;letter-spacing:.02em}
+.ver-mas:hover{border-color:var(--teal);background:var(--card-hov)}
+.cmp .cmp-hueco{font-size:2.6px;fill:var(--faint);font-style:italic}
+.cmp .cmp-pos{fill:var(--faint);font-weight:600}
+.cmp .pf-piv{stroke:var(--tx);stroke-width:.35;stroke-dasharray:1.2 1}
+.cmp .pf-piv-t{font-size:2.7px;fill:var(--suave);font-weight:600}
+.cmp .pf-rango{stroke:var(--faint);stroke-width:.3}
+.pf-ax{display:flex;justify-content:space-between;font-size:.58rem;color:var(--faint);
+  margin-top:2px;font-weight:500}
+.pf-frase{font-size:.66rem;line-height:1.55;color:var(--suave);margin-top:7px}
+.pf-frase b{color:var(--tx);font-weight:700}
 .cmp .ds-hit{fill:transparent;cursor:pointer}
 .cmp .ds-hit:hover{fill:var(--tx);fill-opacity:.045}
 .ds-ley{display:flex;flex-wrap:wrap;align-items:center;gap:4px 9px;
@@ -2331,15 +2345,18 @@ ${iB.label}: ${fmtM(p.y, iB)}</title></circle>`;
                  : a >= .3 ? "de forma floja" : "casi nada";
     const sentido = rho >= 0 ? "en el mismo sentido" : "en sentidos opuestos";
     lectura = a < .3
-      ? `<p>Los dos indicadores <b>casi no se ordenan igual</b> entre los nueve
-         (Spearman ${nf(rho, 2)}): saber uno no ayuda a adivinar el otro.</p>`
-      : `<p>Los nueve se ordenan <b>${fuerza}</b> y ${sentido}
+      ? `<p>Los dos indicadores <b>casi no se ordenan igual</b> entre los
+         ${nf(pts.length, 0)} municipios (Spearman ${nf(rho, 2)}): saber uno no ayuda
+         a adivinar el otro.</p>`
+      : `<p>Los ${nf(pts.length, 0)} municipios se ordenan <b>${fuerza}</b> y ${sentido}
          (Spearman ${nf(rho, 2)}).</p>`;
-    lectura += `<p class="mc-adv">Son nueve municipios: con tan pocos casos una
-      correlación no prueba nada por sí sola, sirve para mirar dónde y no para
-      concluir por qué.</p>`;
+    /* ⛔ Acá decía «Son nueve municipios: con tan pocos casos una correlación no
+       prueba nada». Con 343 la advertencia se da vuelta: el problema ya no es la
+       falta de casos sino confundir orden con causa. */
+    lectura += `<p class="mc-adv">Que dos indicadores se ordenen parecido no dice
+      que uno explique al otro: sirve para mirar dónde, no para concluir por qué.</p>`;
   }
-  return `<div class="cmp-t"><span class="mc-ti">Los nueve, en dos ejes</span>
+  return `<div class="cmp-t"><span class="mc-ti">Los municipios, en dos ejes</span>
       <span>${pts.length} con dato en ambos</span></div>
     <svg class="cmp dz" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMin meet">${s}</svg>
     <div class="mc-lee">${lectura}</div>`;
@@ -2808,16 +2825,16 @@ function lecturaPanel(filas, ind, refv, ra, rb){
   if (refv !== null && refv !== undefined && isFinite(refv)){
     const arriba = con.filter(f => f.act > refv).length;
     li.push(`<b>${arriba}</b> de ${con.length} ${arriba === 1 ? "queda" : "quedan"} por encima
-             de la Bolivia (${fmtM(refv, ind)}).`);
+             del país (${fmtM(refv, ind)}).`);
   }
   if (esCambio){
     const suben = con.filter(f => f.act > 0).length, bajan = con.filter(f => f.act < 0).length;
-    li.push(suben === con.length ? "Los nueve suben entre los dos censos."
-      : bajan === con.length ? "Los nueve bajan entre los dos censos."
+    li.push(suben === con.length ? `Los ${nf(con.length, 0)} suben entre los dos censos.`
+      : bajan === con.length ? `Los ${nf(con.length, 0)} bajan entre los dos censos.`
       : `<b>${suben}</b> ${suben === 1 ? "sube" : "suben"} y <b>${bajan}</b> ${bajan === 1 ? "baja" : "bajan"} entre los dos censos.`);
     const r = ritmoAnual(ra, rb, ind);
     if (r !== null)
-      li.push(`La Bolivia se mueve a <b>${signo(r)}${nf(Math.abs(r), Math.abs(r) < 1 ? 2 : 1)}${
+      li.push(`El país se mueve a <b>${signo(r)}${nf(Math.abs(r), Math.abs(r) < 1 ? 2 : 1)}${
                esConteo(ind) ? "%" : " " + u} por año</b>, repartido sobre los ${nf(ANIOS_INTERCENSAL, 0)}
                años entre censos. <span class="mc-adv">Es un promedio: el censo da dos puntos y no
                dice nada de lo que pasó en el medio.</span>`);
@@ -2831,10 +2848,61 @@ function lecturaPanel(filas, ind, refv, ra, rb){
   return `<div class="mc-lee">${li.map(t => `<p>${t}</p>`).join("")}</div>`;
 }
 
-function comparativo(e, ind){
-  const filas = MUN.map(m => ({m, v: valorParaMini(m, ind)}))
+/* ★★ EL PANEL DERECHO NO LISTA LOS 343 (2026-09-04).
+   ⛔ QUÉ ESTABA MAL: este comparativo dibujaba UNA FILA POR MUNICIPIO. Con nueve
+      era LA lectura del panel; con 343 son 343 × 7,4 unidades ≈ 31 px reales,
+      o sea unos 10.700 px — doce pantallas de scroll —, y abajo la tira de
+      distribución agregaba otras 277 filas. El panel entero pasaba de 19.000 px.
+   Y el largo era el síntoma, no la enfermedad: el ranking municipal es la
+   pregunta que responde el Atlas Socioeconómico, un producto entero dedicado a
+   eso. Acá el objeto es la MANZANA.
+   ⇒ Por defecto se muestran las filas que ubican al lector —el país, los
+     extremos y los vecinos inmediatos del municipio elegido— y la lista completa
+     queda a un clic. **El recorte se DICE**: la fila del medio informa cuántos
+     municipios quedaron fuera, porque una lista truncada en silencio se lee como
+     si fuera todo. */
+let VER_TODOS = {cmp: false, dist: false};
+
+function filasComparativo(ind){
+  return MUN.map(m => ({m, v: valorParaMini(m, ind)}))
     .sort((a, b) => (b.v === null ? -Infinity : b.v) - (a.v === null ? -Infinity : a.v));
+}
+
+/* La lista corta: el país, el techo y el piso, y el vecindario inmediato del
+   municipio elegido. Sin selección, las cinco puntas de cada lado — que es lo
+   que un lector mira primero cuando no eligió nada. */
+function recorte(filas){
   const con = filas.filter(f => f.v !== null && isFinite(f.v));
+  if (con.length <= 12) return {filas: con, fuera: 0};
+  const idx = new Set([0, 1, con.length - 2, con.length - 1]);
+  const i = con.findIndex(f => f.m.sigep === sel);
+  if (i >= 0){
+    // el vecindario del elegido: dos arriba y dos abajo
+    for (let k = i - 2; k <= i + 2; k++) if (k >= 0 && k < con.length) idx.add(k);
+  } else {
+    /* ⛔ SIN LLAVES, ESTE `else` SE ATABA AL `if` DE ADENTRO DEL `for` y sin
+       municipio elegido la lista quedaba en cuatro filas: las dos puntas de
+       arriba y las dos de abajo, sin nada en el medio.
+       Sin selección se muestran cinco de cada punta, que es lo que un lector
+       mira primero cuando todavía no eligió nada. */
+    [2, 3, 4, con.length - 5, con.length - 4, con.length - 3].forEach(k => {
+      if (k >= 0 && k < con.length) idx.add(k);
+    });
+  }
+  const orden = [...idx].sort((a, b) => a - b);
+  const out = [];
+  orden.forEach((k, j) => {
+    if (j && k - orden[j - 1] > 1) out.push({hueco: k - orden[j - 1] - 1});
+    out.push(Object.assign({pos: k + 1}, con[k]));
+  });
+  return {filas: out, fuera: con.length - orden.length, total: con.length};
+}
+
+function comparativo(e, ind){
+  const todas = filasComparativo(ind);
+  const rec = VER_TODOS.cmp ? {filas: todas, fuera: 0} : recorte(todas);
+  const filas = rec.filas;
+  const con = todas.filter(f => f.v !== null && isFinite(f.v));
   if (!con.length) return `<div class="sin">${mudo(ind) ? motivoSinSerie(ind)
     : "Sin datos para este indicador."}</div>`;
 
@@ -2850,8 +2918,21 @@ function comparativo(e, ind){
 
   let s = "";
   filas.forEach((f, k) => {
-    const y = k * H + 2, cy = y + 3.6, sel_ = f.m.sigep === sel;
-    s += `<text x="0" y="${cy + 1.3}" class="cmp-n${sel_ ? " sel" : ""}">${nombreCorto(f.m.nombre)}</text>`;
+    const y = k * H + 2, cy = y + 3.6;
+    if (f.hueco !== undefined){
+      // ★ EL RECORTE SE DICE, no se disimula: sin esta fila el salto de la 2ª a
+      //   la 170ª se lee como si en el medio no hubiera nada.
+      s += `<text x="0" y="${cy + 1.3}" class="cmp-hueco">··· ${nf(f.hueco, 0)} municipios más ···</text>`;
+      return;
+    }
+    const sel_ = f.m.sigep === sel;
+    /* El número de orden ocupa lugar en la misma línea, así que el nombre se
+       corta antes: con los 24 caracteres de siempre, «1 Nuestra Señora de La Paz»
+       se salía de la columna. */
+    const pos = f.pos ? `<tspan class="cmp-pos">${f.pos}</tspan> ` : "";
+    const nom_ = f.pos ? (f.m.nombre.length <= 20 ? f.m.nombre : f.m.nombre.slice(0, 19) + "…")
+                       : nombreCorto(f.m.nombre);
+    s += `<text x="0" y="${cy + 1.3}" class="cmp-n${sel_ ? " sel" : ""}">${pos}${nom_}</text>`;
     if (f.v !== null && isFinite(f.v)){
       s += `<rect x="${LX}" y="${cy - 2.1}" width="${Math.max(.5, x(f.v) - LX)}" height="4.2"
               fill="${tonoDe(e, f.v)}" ${sel_ ? `stroke="${SENAL}" stroke-width=".35"` : ""}/>`;
@@ -2866,6 +2947,9 @@ function comparativo(e, ind){
     if (xp > LX && xp < VX)
       s += `<line x1="${xp}" y1="1" x2="${xp}" y2="${filas.length * H + 1}" class="cmp-piv"/>`;
   }
+  const boton = con.length > 12
+    ? `<button class="ver-mas" data-ver="cmp">${VER_TODOS.cmp
+        ? "ver sólo el vecindario" : "ver los " + nf(con.length, 0) + " ordenados"}</button>` : "";
   /* ★ LAS NUEVE TARJETAS TAMPOCO VAN ACÁ (2026-08-26). Estas barras ya
      recorren los nueve con su nombre, su valor y su fila clicable: las tarjetas
      de abajo repetían municipio, valor y orden, igual que pasaba con la
@@ -2874,7 +2958,8 @@ function comparativo(e, ind){
   const rg = refRegion(ind);
   return `<div class="cmp-t">Comparación entre municipios<span>${e ? e.tipo + " " + fmtM(e.pivReal != null ? e.pivReal : e.piv, ind) : ""}</span></div>
     <svg class="cmp" viewBox="0 0 ${W} ${alto}" preserveAspectRatio="xMidYMin meet">${s}</svg>
-    ${lecturaPanel(filas.map(f => ({m: f.m, act: f.v})), ind, rg ? rg.v : null)}`;
+    ${boton}
+    ${lecturaPanel(con.map(f => ({m: f.m, act: f.v})), ind, rg ? rg.v : null)}`;
 }
 
 /* ── SERIE FISCAL: LAS 10 GESTIONES ──────────────────────────────────────────
@@ -2909,7 +2994,127 @@ function comparativo(e, ind){
    anchas que el rango de los nueve promedios, así que forzarlas al eje de
    arriba las recortaría. El color sí es compartido — sale de la escala del
    nivel manzana, que es la que pinta el mapa cuando bajás. */
+/* ★★ LA DISTRIBUCIÓN, EN DOS LECTURAS (2026-09-04).
+   Por defecto: DÓNDE CAE ESTO — el perfil de las 131.797 manzanas del país y,
+   encima, la caja del municipio elegido. Es la lectura que justifica el nivel
+   manzana y que hasta ahora estaba calculada y no se veía: la ficha de Santa
+   Cruz de la Sierra dice 70,4% de alcantarillado, pero un cuarto de sus
+   manzanas no llega a 13%.
+   A pedido: la tira municipio por municipio, que es la versión vieja y sigue
+   sirviendo para comparar cómo de parejo es cada uno. Se saca de la vista por
+   defecto porque son 277 filas. */
 function distribucion(ind){
+  if (!MZS || !ind.k_mz) return "";
+  const st = MZS[ind.k_mz];
+  if (!st || !st.esc) return "";
+  return VER_TODOS.dist ? distribucionMunicipios(ind) : perfilPais(ind, st);
+}
+
+/* Interpola un percentil sobre la rejilla de 51 cortes que publica
+   `estadisticas_manzana.py` (cada 2%). Sin esto habría que elegir el corte más
+   cercano y `p25` caería en 24% o 26%, que no es lo que dice el rótulo. */
+function cuantilQ(q, pr){
+  if (!q || !q.length) return null;
+  const h = (q.length - 1) * pr, b = Math.floor(h), r = h - b;
+  if (q[b] === null || q[b] === undefined) return null;
+  return b + 1 < q.length && q[b + 1] !== null ? q[b] + r * (q[b + 1] - q[b]) : q[b];
+}
+
+function perfilPais(ind, st){
+  const e = escalaManzana(ind);
+  const q = st.esc.q || [];
+  if (q.length < 10) return "";
+  const lo = st.esc.lo, hi = st.esc.hi, rango = (hi - lo) || 1;
+  const W = 100, LX = 2, VX = 98, HP = 15;          // HP: alto del perfil
+  const x = v => LX + Math.max(0, Math.min(1, (v - lo) / rango)) * (VX - LX);
+
+  /* ★ HISTOGRAMA DE CANASTAS FIJAS, NO DENSIDAD POR CUANTIL.
+     ⛔ El primer intento derivaba la altura de la distancia entre cortes vecinos
+        (entre dos siempre vive el 2% de las manzanas, así que densidad = 2% /
+        ancho). Es correcto en teoría y se ve VACÍO en la práctica: en indicadores
+        como alcantarillado la mitad de las manzanas está exactamente en 0% y otra
+        parte exactamente en 100%, así que casi todos los tramos tienen ancho cero,
+        la densidad se dispara y aplasta a las barras que sí se ven.
+     Acá el 2% de cada tramo se REPARTE entre las canastas que toca, y si el tramo
+     no tiene ancho —un apilamiento en un valor exacto— su 2% entero cae en una
+     sola canasta. Los apilamientos, que son la forma real de estos datos, quedan
+     como una barra alta en vez de romper la escala. */
+  const NB = 26, masa = new Array(NB).fill(0);
+  const canasta = v => Math.max(0, Math.min(NB - 1,
+    Math.floor(((v - lo) / rango) * NB)));
+  for (let i = 0; i < q.length - 1; i++){
+    if (q[i] === null || q[i + 1] === null) continue;
+    const a = Math.min(q[i], q[i + 1]), b = Math.max(q[i], q[i + 1]);
+    const ca = canasta(a), cb = canasta(b);
+    if (ca === cb || b - a <= 0){ masa[ca] += 1; continue; }
+    // repartido en proporción a lo que el tramo ocupa de cada canasta
+    for (let c = ca; c <= cb; c++){
+      const c0 = lo + (c / NB) * rango, c1 = lo + ((c + 1) / NB) * rango;
+      masa[c] += Math.max(0, Math.min(b, c1) - Math.max(a, c0)) / (b - a);
+    }
+  }
+  const tope = Math.max(...masa) || 1;
+  let s = "";
+  const anchoB = (VX - LX) / NB;
+  masa.forEach((mm, c) => {
+    if (mm <= 0) return;
+    const h = (mm / tope) * HP;
+    const v = lo + ((c + .5) / NB) * rango;
+    s += `<rect x="${(LX + c * anchoB).toFixed(2)}" y="${(HP - h).toFixed(2)}"
+            width="${(anchoB - .12).toFixed(2)}" height="${h.toFixed(2)}"
+            fill="${tonoDe(e, v)}" fill-opacity=".9"/>`;
+  });
+  // el pivote del país, la misma marca que usa el mapa
+  const xp = x(st.esc.piv);
+  s += `<line x1="${xp}" y1="0" x2="${xp}" y2="${HP + 3}" class="pf-piv"/>`;
+  s += `<text x="${xp}" y="${HP + 6.5}" class="pf-piv-t" text-anchor="${
+        xp > 70 ? "end" : xp < 30 ? "start" : "middle"}">país ${fmtM(st.esc.piv, ind)}</text>`;
+
+  // ── la caja del municipio elegido, sobre el mismo eje ────────────────────
+  const m = sel ? MUN.find(z => z.sigep === sel) : null;
+  const d = m && st.dist ? st.dist[m.sigep] : null;
+  let alto = HP + 9, frase = "";
+  if (d){
+    const y = HP + 11;
+    alto = y + 11;
+    s += `<line x1="${x(d.min)}" y1="${y + 3}" x2="${x(d.max)}" y2="${y + 3}" class="pf-rango"/>`;
+    s += `<line x1="${x(d.p10)}" y1="${y + 3}" x2="${x(d.p90)}" y2="${y + 3}" class="ds-w"/>`;
+    s += `<rect x="${x(d.p25)}" y="${y + .8}" width="${Math.max(.6, x(d.p75) - x(d.p25))}"
+            height="4.4" fill="${tonoDe(e, d.p50)}" stroke="${SENAL}" stroke-width=".5"/>`;
+    s += `<line x1="${x(d.p50)}" y1="${y + .2}" x2="${x(d.p50)}" y2="${y + 5.6}" class="ds-med"/>`;
+    s += `<text x="${LX}" y="${y + 10}" class="ds-ax">${nombreCorto(m.nombre)} · ${
+            nf(d.n, 0)} manzanas con ficha</text>`;
+    /* La frase dice lo que la caja muestra. Es el hallazgo del nivel manzana:
+       una cifra municipal puede esconder un cuarto del municipio en otra
+       realidad, y eso no se lee en ningún otro producto del ecosistema. */
+    /* ⚠️ La cola de arriba se dice distinto cuando el p75 YA ES el máximo, que
+       en los indicadores de servicios pasa todo el tiempo: «el cuarto más alto
+       pasa de 100%» no significa nada. */
+    const techo = d.p75 >= d.max - 1e-9;
+    frase = `<div class="pf-frase">La mitad de las manzanas de <b>${m.nombre}</b> está entre
+      <b>${fmtM(d.p25, ind)}</b> y <b>${fmtM(d.p75, ind)}</b>; el cuarto más bajo no llega a
+      <b>${fmtM(d.p25, ind)}</b>${techo
+        ? ` y un cuarto está en <b>${fmtM(d.p75, ind)}</b>`
+        : ` y el más alto supera <b>${fmtM(d.p75, ind)}</b>`}.</div>`;
+  } else {
+    const p25 = cuantilQ(q, .25), p50 = cuantilQ(q, .5), p75 = cuantilQ(q, .75);
+    if (p25 !== null)
+      frase = `<div class="pf-frase">La mitad de las manzanas del país está entre
+        <b>${fmtM(p25, ind)}</b> y <b>${fmtM(p75, ind)}</b>, con la mediana en
+        <b>${fmtM(p50, ind)}</b>. Elegí un municipio para ver cómo se reparte adentro.</div>`;
+  }
+  const boton = st.dist && Object.keys(st.dist).length > 1
+    ? `<button class="ver-mas" data-ver="dist">ver municipio por municipio (${
+        nf(Object.keys(st.dist).length, 0)})</button>` : "";
+  return `<div class="cmp-t">Dónde cae en el país<span>${nf(st.esc.n, 0)} manzanas con ficha</span></div>
+    <svg class="cmp pf" viewBox="0 0 ${W} ${alto}" preserveAspectRatio="xMidYMin meet">${s}</svg>
+    <div class="pf-ax"><span>${fmtM(lo, ind)}</span><span>${fmtM(hi, ind)}</span></div>
+    ${frase}${boton}`;
+}
+/* La inversa del mapeo, para saber qué valor pintar en cada tramo del perfil. */
+function invX(px, lo, rango, LX, VX){ return lo + ((px - LX) / (VX - LX)) * rango; }
+
+function distribucionMunicipios(ind){
   if (!MZS || !ind.k_mz) return "";
   const st = MZS[ind.k_mz];
   if (!st || !st.dist) return "";
@@ -2963,7 +3168,8 @@ function distribucion(ind){
       nf(st.esc.n, 0)} manzanas con ficha</span></div>
     <svg class="cmp" viewBox="0 0 ${W} ${alto}" preserveAspectRatio="xMidYMin meet">${s}</svg>
     <div class="ds-ley"><span class="ds-k1"></span>80% central de las manzanas
-      <span class="ds-k2"></span>mitad más común <span class="ds-k3"></span>mediana</div>`;
+      <span class="ds-k2"></span>mitad más común <span class="ds-k3"></span>mediana</div>
+    <button class="ver-mas" data-ver="dist">volver al perfil del país</button>`;
 }
 
 function serieDe(sigep, ind){
@@ -3092,8 +3298,11 @@ function ficha(e, i){
     //   bajo el nombre, en el encabezado del panel de la derecha. Queda el
     //   ámbito, que es lo que ubica al municipio dentro de la región y no se
     //   puede leer en ningún otro lado de la pantalla.
-    document.getElementById("d-sub").textContent =
-      m.ambito === "núcleo" ? "Núcleo metropolitano" : "Área de influencia";
+    /* ⛔ Acá decía «Núcleo metropolitano / Área de influencia», que es el campo
+       `ambito` de la región metropolitana. A escala nacional ese campo no
+       existe, así que los 343 salían rotulados «Área de influencia». Lo que
+       ubica a un municipio en el país es su DEPARTAMENTO. */
+    document.getElementById("d-sub").textContent = m.dpto || "";
     g.innerHTML = cat_actual.indicadores.filter(x => x.k_mun).map((x, n) => {
       const sinSerie = mudo(x);
       const v = valorMunicipal(m, x);
@@ -3165,7 +3374,7 @@ function ficha(e, i){
         return `<div class="kpi${n === 0 ? " kpi-lider" : ""}${m.sigep === sel ? " sel" : ""}"
           data-s="${m.sigep}" style="--d:${Math.min(n,14)*14}ms${tono ? `;--tono:${tono}` : ""}">
           <div class="k-l">${m.nombre}</div><div class="k-v">${mudo(i) ? "s/d" : fmtM(v, i)}</div>
-          <div class="k-c"><span>${m.ambito}</span><span>${nf(m.manzanas,0)} manzanas</span></div></div>`;
+          <div class="k-c"><span>${m.dpto || ""}</span><span>${nf(m.manzanas,0)} manzanas</span></div></div>`;
       }).join("");
     }
   }
@@ -3183,6 +3392,11 @@ function ficha(e, i){
      que reemplazó: si no, sacarlas le quitaba al panel una forma de navegar. */
   document.querySelectorAll("#cmp .mc-hit").forEach(el =>
     el.onclick = () => seleccionar(el.dataset.s));
+  /* Abrir o cerrar la lista completa vuelve a pintar el panel entero: el estado
+     vive en `VER_TODOS` y no en el DOM, así que sobrevive a cualquier otro
+     cambio (indicador, año, municipio) sin que haya que acordarse de restaurarlo. */
+  document.querySelectorAll("#cmp .ver-mas, #dist .ver-mas").forEach(el =>
+    el.onclick = () => { VER_TODOS[el.dataset.ver] = !VER_TODOS[el.dataset.ver]; pintar(); });
   g.querySelectorAll(".kpi[data-k]").forEach(el => el.onclick = () => elegirIndicador(el.dataset.k));
   /* Clicar un año del gráfico hace lo mismo que su botón de gestión. Con eso
      cada valor de la serie se alcanza SIN hover —al fijar la gestión, la cifra
@@ -3388,8 +3602,7 @@ function tooltipHTML(p, esMz){
     nom = m.nombre;
     const pob = poblacionDe(m);
     mcHTML = mancuernaPop(m, i);
-    sub = (m.ambito === "núcleo" ? "Núcleo metropolitano" : "Área de influencia")
-        + (isFinite(pob) ? ` · ${nf(Math.round(pob), 0)} hab.` : "");
+    sub = (m.dpto || "") + (isFinite(pob) ? ` · ${nf(Math.round(pob), 0)} hab.` : "");
 
     if (hay && e){
       if (ANIO === "cambio"){
