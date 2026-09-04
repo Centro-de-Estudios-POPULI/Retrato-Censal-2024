@@ -3012,7 +3012,7 @@ function serieSVG(m, ind){
     const x0 = Math.max(LX, X(k) - paso / 2), x1 = Math.min(RX, X(k) + paso / 2);
     const vm = hay(sm[k]) ? fmt(sm[k], ind.unit) : "s/d";
     const vr = hay(sr[k]) ? fmt(sr[k], ind.unit) : "s/d";
-    g += `<g class="ser-band" data-i="${k}"><title>${y} · ${m.nombre} ${vm} · región ${vr}</title>` +
+    g += `<g class="ser-band" data-i="${k}"><title>${y} · ${m.nombre} ${vm} · país ${vr}</title>` +
          `<rect x="${x0.toFixed(2)}" y="${T}" width="${(x1 - x0).toFixed(2)}" height="${PH}"/>` +
          `<line class="ser-gd" x1="${X(k).toFixed(2)}" y1="${T}" x2="${X(k).toFixed(2)}" y2="${YB}"/></g>`;
   });
