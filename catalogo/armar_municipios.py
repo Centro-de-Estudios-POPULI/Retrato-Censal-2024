@@ -94,6 +94,46 @@ def main():
         for (dp, mu), n in huerf.head(15).items():
             print(f"     {dp:<12} {mu:<32} {n:>6,}")
 
+    # ★★ LA SUPERFICIE AMANZANADA Y LA CAJA URBANA (2026-09-04, pedido de Carlos).
+    #   Dos números que salen de la misma pasada por la geometría y que arreglan
+    #   dos cosas distintas:
+    #   · `area_manzanada_ha` — la densidad municipal se venía calculando sobre
+    #     TODO el territorio del municipio, y eso no es una densidad urbana: en
+    #     un municipio con 3.000 km² de monte y una mancha de 200 ha, dividir por
+    #     el municipio entero da un número que no describe a nadie. Es además la
+    #     razón por la que `densidad` estaba EXCLUIDA de la comparación entre
+    #     niveles: el municipal dividía por el municipio y el de manzana por la
+    #     manzana. Con la superficie amanzanada las dos miden lo mismo.
+    #   · `bbox_urbano` — el rectángulo que ocupan las manzanas del municipio, que
+    #     es a dónde tiene que llevar el buscador: encuadrar el POLÍGONO municipal
+    #     deja la ciudad como un punto en medio del campo.
+    #   ⚠️ El área se mide reproyectando a UTM 20S. Calcularla sobre grados da un
+    #     número que no es una superficie.
+    import numpy as np, shapely
+    import pyarrow.parquet as pq
+    print("midiendo la superficie amanzanada…")
+    areas, cajas, cods = [], [], []
+    pf = pq.ParquetFile(FUENTE / "manzanos.parquet")
+    for lote in pf.iter_batches(batch_size=20000, columns=["codigo", "geometry"]):
+        g_ = shapely.from_wkb(lote.column("geometry").to_numpy(zero_copy_only=False))
+        cods.extend(lote.column("codigo").to_pylist())
+        cajas.append(shapely.bounds(g_))
+        # área en m²: proyección cilíndrica equivalente local, exacta a esta escala
+        lat = np.radians(shapely.get_y(shapely.centroid(g_)))
+        gm = shapely.transform(g_, lambda c: np.column_stack([
+            np.radians(c[:, 0]) * 6378137.0,
+            np.radians(c[:, 1]) * 6378137.0]))
+        areas.append(shapely.area(gm) * np.cos(lat))
+    areas = np.concatenate(areas); cajas = np.vstack(cajas)
+    geo_m = pd.DataFrame({"codigo": cods, "area_m2": areas,
+                          "x0": cajas[:, 0], "y0": cajas[:, 1],
+                          "x1": cajas[:, 2], "y1": cajas[:, 3]})
+    d = d.merge(geo_m, on="codigo", how="left")
+
+    caja_mun = d.dropna(subset=["cod_ine"]).groupby("cod_ine").agg(
+        x0=("x0", "min"), y0=("y0", "min"), x1=("x1", "max"), y1=("y1", "max"),
+        area_m2=("area_m2", "sum"))
+
     g = d.dropna(subset=["cod_ine"]).groupby("cod_ine").agg(
         manzanas=("codigo", "size"),
         con_ficha=("validado", "sum"),
@@ -116,6 +156,15 @@ def main():
             "con_ficha": int(x.con_ficha) if x is not None else 0,
             "personas_urbano": float(x.personas_urbano) if x is not None else 0.0,
             "viviendas_urbano": float(x.viviendas_urbano) if x is not None else 0.0,
+            # superficie que ocupan sus manzanas, en hectáreas
+            "area_manzanada_ha": (round(float(caja_mun.at[ci, "area_m2"]) / 1e4, 2)
+                                  if ci in caja_mun.index else 0.0),
+            # el rectángulo de su mancha urbana, para el buscador
+            "bbox_urbano": ([[round(float(caja_mun.at[ci, "x0"]), 5),
+                              round(float(caja_mun.at[ci, "y0"]), 5)],
+                             [round(float(caja_mun.at[ci, "x1"]), 5),
+                              round(float(caja_mun.at[ci, "y1"]), 5)]]
+                            if ci in caja_mun.index else None),
         })
 
     SALIDA.parent.mkdir(parents=True, exist_ok=True)
@@ -153,6 +202,10 @@ def main():
           f"({sum(m['con_ficha'] for m in out) / sum(m['manzanas'] for m in out):.1%})")
     print(f"gente en manzano: {sum(m['personas_urbano'] for m in out):,.0f} · "
           f"en manzano CON ficha: {pers_ficha:,.0f} ({100*pers_ficha/pers_tot:.1f}%)")
+    sup = sum(m["area_manzanada_ha"] for m in out)
+    print(f"superficie amanzanada del país: {sup:,.0f} ha "
+          f"({sup/100:,.0f} km²) · densidad urbana media: "
+          f"{sum(m['personas_urbano'] for m in out)/sup:,.1f} hab/ha")
     print(f"-> {SALIDA.relative_to(RAIZ)}")
 
 

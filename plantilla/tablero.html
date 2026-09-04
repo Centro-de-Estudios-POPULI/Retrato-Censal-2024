@@ -455,6 +455,21 @@ body.dark .ind.on .mini{opacity:1!important;filter:saturate(1.05)!important}
 .cmp .ds-g{font:600 3.6px var(--f);fill:var(--suave);font-variant-numeric:tabular-nums}
 .cmp .ds-u{font-weight:500;fill:var(--faint)}
 .cmp .ds-ax{font:500 3.2px var(--f);fill:var(--faint)}
+/* ── buscador de municipio (2026-09-04) ───────────────────────────────────── */
+.busca-mun{position:relative;margin-top:8px}
+#busca-mun{width:100%;padding:7px 10px;border:1px solid var(--linea);background:var(--card-solid);
+  color:var(--tx);font:500 .72rem var(--f);outline:none}
+#busca-mun:focus{border-color:var(--teal)}
+#busca-mun::placeholder{color:var(--faint)}
+.bm-res{position:absolute;left:0;right:0;top:100%;z-index:40;background:var(--card-solid);
+  border:1px solid var(--linea);box-shadow:var(--sh);max-height:15rem;overflow:auto}
+.bm-op{padding:6px 10px;font-size:.72rem;font-weight:600;cursor:pointer;
+  border-top:1px solid var(--linea-2)}
+.bm-op:first-child{border-top:0}
+.bm-op:hover{background:var(--gris-card)}
+.bm-op span{display:block;font-size:.62rem;font-weight:500;color:var(--faint)}
+.bm-vacio{padding:7px 10px;font-size:.68rem;color:var(--faint)}
+
 /* ── el perfil del país y el recorte del comparativo (2026-09-04) ─────────── */
 .ver-mas{display:block;width:100%;margin:7px 0 2px;padding:5px 8px;background:none;
   border:1px solid var(--linea);color:var(--teal-dk);font:600 .62rem var(--f);
@@ -626,10 +641,20 @@ body.dark{--ser-mun:#43b3bd;--ser-reg:#c3d0d6}
     <div class="grip-bar" aria-hidden="true"></div>
     <div class="det-head"><div class="d-mun" id="d-mun">Bolivia</div><div class="d-sub" id="d-sub">343 municipios</div></div>
     <div class="pk" id="pk"></div>
-    <!-- ★ COMPARAR DOS INDICADORES (2026-08-26). El tablero contestaba «cómo
-         está X» y nunca «¿X y Z van juntos?». El mapa sigue mostrando el
-         principal; la dispersión de los nueve va en este panel. -->
-    <select id="cmp-b" aria-label="Comparar con otro indicador"></select>
+    <!-- ✂ SE FUE «COMPARAR CON…» (decisión de Carlos, 2026-09-04). Cruzar dos
+         indicadores en una dispersión tenía sentido con nueve municipios, donde
+         la nube se lee de un vistazo; con 343 puntos es una mancha, y encima
+         ocupaba el lugar del panel donde hace falta otra cosa.
+         ★ EN SU LUGAR, EL BUSCADOR DE MUNICIPIO. Con 343 no hay forma de llegar
+         a uno sin encontrarlo primero en el mapa, y lo que el lector quiere ver
+         al elegirlo es SU MANCHA URBANA — no el polígono municipal, que en los
+         municipios grandes deja la ciudad como un punto en medio del campo. -->
+    <div class="busca-mun">
+      <input id="busca-mun" type="search" autocomplete="off" spellcheck="false"
+             placeholder="Buscar municipio y volar a su mancha urbana…"
+             aria-label="Buscar municipio">
+      <div class="bm-res" id="bm-res" hidden></div>
+    </div>
   </div>
   <div class="p-body">
     <div id="cmp"></div>
@@ -1025,7 +1050,12 @@ function escala(valores, pesos, ind, ambito){
      rango municipal, así que centrar la rampa ahí la degeneraría. Un conteo se
      centra en su MEDIANA, que sí es una magnitud municipal. Es la misma guarda
      que le faltaba al Atlas nacional cuando publicó "país 62.550 viviendas". */
-  piv = esConteo(ind) ? null : pivDeclarado(ind, ambito);
+  /* ⚗️ PRUEBA (2026-09-04): con `#esc=mediana` el pivote pasa a ser la mediana
+     de las unidades que el mapa dibuja, en vez del agregado del país. Está para
+     poder COMPARAR las dos lecturas en pantalla antes de decidir cuál se
+     publica; el ancla-país es la que sigue por defecto. */
+  piv = esConteo(ind) ? null
+      : (ESC_MEDIANA ? cuantil(ord, .5) : pivDeclarado(ind, ambito));
   if (piv === null){
     const sw = w.reduce((a,b) => a + b, 0);
     if (sw > 0){ piv = v.reduce((a,x,i) => a + x * w[i], 0) / sw; tipo = "país"; }
@@ -1054,6 +1084,22 @@ function escala(valores, pesos, ind, ambito){
    Devuelve la misma forma de objeto que `escala()` para que la leyenda, el
    termómetro y el tooltip no tengan que saber de dónde salió. */
 function escalaManzana(ind){
+  /* ⚗️ misma prueba, del lado de la manzana: la mediana sale de la rejilla de
+     cuantiles que ya publica `mz_stats`. */
+  if (ESC_MEDIANA && MZS && ind.k_mz && MZS[ind.k_mz]){
+    const st = MZS[ind.k_mz], q = st.esc.q || [];
+    const med = cuantilQ(q, .5);
+    if (med !== null){
+      const base = escalaManzanaBase(ind);
+      if (base) return Object.assign({}, base, {piv: Math.min(Math.max(med, base.lo +
+        (base.hi - base.lo) * .08), base.hi - (base.hi - base.lo) * .08),
+        pivReal: med, tipo: "mediana"});
+    }
+  }
+  return escalaManzanaBase(ind);
+}
+
+function escalaManzanaBase(ind){
   const st = MZS && MZS[ind.k_mz];
   if (!st || !st.esc) return null;
   const e = st.esc;
@@ -1499,6 +1545,7 @@ Promise.all([
   // catálogo es verificable sin navegador con GPU.
   montarCategorias();
   montarDeptos();
+  montarBuscaMun();
   /* El conmutador de censo se apaga si el catálogo no trae serie: en el tablero
      de manzana ningún indicador tiene `s12` —las fichas por manzano son sólo de
      2024— y ofrecer un botón que no puede hacer nada es peor que no tenerlo. */
@@ -1516,7 +1563,6 @@ Promise.all([
   if (_est && _est.i) aplicarEstado(_est, false);
   else elegirCategoria(CAT.grupos[0].key);
   montarBuscador();
-  montarComparar();
   montarTeclado();
   montarHoja();
   actualizarCobertura();
@@ -2402,22 +2448,55 @@ ${iB.label}: ${fmtM(p.y, iB)}</title></circle>`;
     <div class="mc-lee">${lectura}</div>`;
 }
 
-/* El selector: todas las categorías, agrupadas, más la opción de apagarlo. */
-function montarComparar(){
-  const sl = document.getElementById("cmp-b");
-  if (!sl || !CAT) return;
-  sl.innerHTML = `<option value="">Comparar con…</option>` + CAT.grupos.map(g =>
-    `<optgroup label="${g.label}">` + g.indicadores
-      .filter(i => i.k_mun && i.fuente !== "fiscal")
-      .map(i => `<option value="${i.key}">${i.label}</option>`).join("")
-    + `</optgroup>`).join("");
-  sl.value = IND_B || "";
-  sl.onchange = () => {
-    IND_B = sl.value || null;
-    /* Compararse consigo mismo dibuja una diagonal perfecta y no dice nada. */
-    if (IND_B && ind_actual && IND_B === ind_actual.key){ IND_B = null; sl.value = ""; }
-    pintar();
+/* ★ BUSCADOR DE MUNICIPIO — elige y VUELA A LA MANCHA URBANA.
+   El encuadre no es el polígono municipal sino `bbox_urbano`, el rectángulo que
+   ocupan sus manzanas (lo mide `armar_municipios.py`). La diferencia no es
+   cosmética: el municipio de Santa Cruz de la Sierra tiene 1.400 km² y su mancha
+   ~380; encuadrar el polígono deja la ciudad chica en medio del monte, que es lo
+   contrario de lo que este tablero existe para mostrar.
+   Sin manzanas —los municipios íntegramente dispersos— se encuadra el polígono,
+   que es lo único que hay, y el buscador lo dice en la fila. */
+function montarBuscaMun(){
+  const inp = document.getElementById("busca-mun"), res = document.getElementById("bm-res");
+  if (!inp || !res) return;
+  const norm = s => (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+  const cerrar = () => { res.hidden = true; res.innerHTML = ""; };
+  inp.oninput = () => {
+    const q = norm(inp.value).trim();
+    if (q.length < 2) return cerrar();
+    const hits = MUN.filter(m => norm(m.nombre).includes(q) || norm(m.dpto).includes(q))
+      .sort((a, b) => (b.personas_urbano || 0) - (a.personas_urbano || 0)).slice(0, 8);
+    res.innerHTML = hits.length
+      ? hits.map(m => `<div class="bm-op" data-s="${m.sigep}">${m.nombre}
+          <span>${m.dpto}${m.manzanas ? "" : " · sin manzanas censadas"}</span></div>`).join("")
+      : `<div class="bm-vacio">sin resultados</div>`;
+    res.hidden = false;
+    res.querySelectorAll(".bm-op").forEach(el => el.onclick = () => {
+      irAMunicipio(el.dataset.s);
+      inp.value = ""; cerrar();
+    });
   };
+  inp.onkeydown = ev => {
+    if (ev.key === "Escape"){ inp.value = ""; cerrar(); }
+    if (ev.key === "Enter"){
+      const pr = res.querySelector(".bm-op");
+      if (pr){ irAMunicipio(pr.dataset.s); inp.value = ""; cerrar(); }
+    }
+  };
+  document.addEventListener("click", ev => { if (!ev.target.closest(".busca-mun")) cerrar(); });
+}
+
+function irAMunicipio(s){
+  const m = MUN.find(x => x.sigep === s);
+  if (!m) return;
+  if (sel !== s) seleccionar(s);
+  if (!map) return;
+  const caja = m.bbox_urbano ||
+    (m.geom ? bboxDe(m.geom.geometry.coordinates) : null);
+  if (!caja) return;
+  /* `maxZoom` frena el vuelo en los pueblos chicos: sin él, una mancha de cuatro
+     manzanas lleva la cámara a z18 y se pierde toda referencia de dónde está. */
+  map.fitBounds(caja, {padding: padPaneles(), duration: 1200, maxZoom: 15});
 }
 const indPorKey = k => {
   for (const g of CAT.grupos){
@@ -2902,6 +2981,8 @@ function lecturaPanel(filas, ind, refv, ra, rb){
      municipios quedaron fuera, porque una lista truncada en silencio se lee como
      si fuera todo. */
 let VER_TODOS = {cmp: false, dist: false};
+const ESC_MEDIANA = /(^|[#&])esc=mediana/.test(location.hash) ||
+                    /[?&]esc=mediana/.test(location.search);
 
 function filasComparativo(ind){
   return MUN.map(m => ({m, v: valorParaMini(m, ind)}))
@@ -3318,10 +3399,10 @@ function ficha(e, i){
   /* Con un segundo indicador elegido, este lugar lo ocupa la dispersión: es la
      lectura que contesta la pregunta que se acaba de hacer. La mancuerna vuelve
      apenas se apaga la comparación. */
-  const _b = IND_B ? indPorKey(IND_B) : null;
-  document.getElementById("cmp").innerHTML = _b
-    ? dispersionDos(i, _b, e)
-    : ((i.s12 && i.fuente !== "fiscal" && i.k_mun) ? mancuerna(e, i) : comparativo(e, i));
+  /* Sin «comparar con», no hay segundo indicador: queda la mancuerna cuando hay
+     dos censos y las barras cuando no. */
+  document.getElementById("cmp").innerHTML =
+    (i.s12 && i.fuente !== "fiscal" && i.k_mun) ? mancuerna(e, i) : comparativo(e, i);
   /* La distribución va SIEMPRE que el indicador baje a manzana: es la lectura
      que el panel no tenía. Con un municipio elegido queda resaltado, así que
      sirve igual en los dos estados. */

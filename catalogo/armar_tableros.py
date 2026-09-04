@@ -277,11 +277,22 @@ def describir(i, glosario):
     return d
 
 
+# ★ Un caso que la regla general no cubre: en una DENSIDAD lo que hay que
+#   declarar no es el numerador sino el denominador, que es justamente donde
+#   estaba el error (se dividía por todo el territorio municipal). El universo
+#   se declara acá y no se deduce de `uni`, que dice «personas».
+UNIVERSO_PROPIO = {
+ "densidad": "medido sobre la superficie que ocupan las manzanas, no sobre todo el municipio",
+}
+
+
 def universo_de(i):
     """Sobre qué se calcula. Va SEPARADO de la definición: es lo que hace falta
     para leer el número —un 40% no significa lo mismo sobre viviendas que sobre
     personas— pero no es lo que el indicador mide, así que no puede ocupar el
     lugar de la definición ni mezclarse con ella."""
+    if i["k"] in UNIVERSO_PROPIO:
+        return UNIVERSO_PROPIO[i["k"]]
     uni = UNIVERSO.get(i.get("uni"))
     if not uni:
         return ""
@@ -409,6 +420,9 @@ def main():
              "con_ficha": m.get("con_ficha"),
              "personas_urbano": m.get("personas_urbano"),
              "viviendas_urbano": m.get("viviendas_urbano"),
+             # el rectángulo de su mancha urbana: es a donde vuela el buscador
+             "bbox_urbano": m.get("bbox_urbano"),
+             "area_manzanada_ha": m.get("area_manzanada_ha"),
              # ★ población y viviendas viajan SIEMPRE, aunque no estén entre los
              #   indicadores del tablero: son CONTEXTO, no un indicador elegible.
              #   Sin esto el Tablero B —donde `pob_total` no es comparable con la
@@ -513,8 +527,19 @@ def main():
     agr.columns = [ALIAS.get(c, c) for c in agr.columns]
     ks_mz = sorted(set(comp.get("solo_manzana", [])) & set(decl) & set(agr.columns))
     for k in ks_mz:
-        if k not in v24.columns:
-            v24[k] = agr[k].reindex(v24.index)
+        # ⛔⛔ EL AGREGADO DE SUS MANZANAS PISA AL MUNICIPAL, SIEMPRE (2026-09-04).
+        #   Decía `if k not in v24.columns`, o sea: usaba la cifra municipal si
+        #   existía. Para `densidad` existía y medía OTRA COSA — el motor la
+        #   calcula sobre TODO el territorio del municipio, y por eso Charagua
+        #   publicaba 0,005 hab/ha (una persona cada 200 hectáreas: eso describe
+        #   la geografía, no la ciudad) y Sucre 1,7 cuando su mancha urbana tiene
+        #   67,9. Son dos magnitudes con el mismo nombre.
+        #   Un indicador que está en `solo_manzana` es, por definición, uno que
+        #   el nivel municipal NO mide igual: su cifra municipal tiene que ser el
+        #   agregado de sus manzanas o no es comparable con lo que muestra el
+        #   mapa al bajar de nivel. La tarjeta ya lo dice («al ver el mapa de
+        #   municipios se muestra la suma de sus manzanas urbanas»).
+        v24[k] = agr[k].reindex(v24.index)
     print(f"TABLERO B · sólo manzana: {len(ks_mz)} indicadores "
           f"(cifra municipal = agregado de sus manzanas)")
     avisos, err = set(comp.get("con_aviso", [])), comp.get("error_pp", {})

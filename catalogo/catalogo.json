@@ -431,7 +431,7 @@
    "e24": "personas / superficie",
    "e12": "personas / superficie",
    "val": null,
-   "nota": "Única que no sale del censo: la superficie viene del mapa maestro.",
+   "nota": "Única que no sale del censo: la superficie sale de la geometría de las manzanas del geoportal, no del mapa municipal (2026-09-04). Dividir por todo el territorio municipal daba 0,005 hab/ha en Charagua y 1,7 en Sucre —geografía, no ciudad— y hacía incomparables el nivel municipio y el de manzana.",
    "fuente": "geometría"
   },
   {

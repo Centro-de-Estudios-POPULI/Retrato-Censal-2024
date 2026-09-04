@@ -20,7 +20,7 @@
  "indice_envejecimiento": "Cuántas personas mayores hay por cada cien niñas y niños; cruzar cien significa que ya hay más viejos que chicos.",
  "indice_juventud": "Qué peso tienen las personas jóvenes dentro de la población total.",
  "pct_urbano": "Viviendas que el censo ubicó en área urbana. Es la medida de cuánto del municipio es ciudad y cuánto es campo.",
- "densidad": "Cuántas personas viven por hectárea. Distingue el tejido compacto del disperso mucho mejor que la población total.",
+ "densidad": "Cuántas personas viven por hectárea de suelo amanzanado. Distingue el tejido compacto del disperso mucho mejor que la población total.",
  "pct_20_39": "Población adulta joven.",
  "pct_40_59": "Población adulta madura.",
  "tam_hogar": "Cuántas personas viven, en promedio, en cada hogar.",
