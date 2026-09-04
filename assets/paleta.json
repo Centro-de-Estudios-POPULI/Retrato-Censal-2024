@@ -1,0 +1,66 @@
+{
+  "_": "Fuente única de la paleta. Ver scripts/paleta.py. `pinta` es DERIVADO.",
+  "declarada": {
+    "_": "Rampa del OFPDT/POPULI: la MISMA lista de nueve tonos que publica el Atlas Socioeconómico (`DIV` en Mapa_Censo_2024_Bolivia.html) y con la que el Banco de Gráficos dibuja sus láminas censales (`DIV_ATLAS` en galeria-populi/viz/populi_style.py). Que sean idénticas es el requisito, no una coincidencia: el mismo dato tiene que tener el mismo color en el tablero, en el Atlas y en la lámina descargable.",
+    "divergente": [
+      "#00323d",
+      "#005f73",
+      "#0a9396",
+      "#94d2bd",
+      "#e9d8a6",
+      "#eda13e",
+      "#df5d25",
+      "#c71e1d",
+      "#8f1f22"
+    ],
+    "sin_dato": "#8c8378",
+    "senal": "#ee9b00",
+    "institucional": "#005f73"
+  },
+  "ajustes": {
+    "bisagra": {
+      "valor": "#e9d8a6",
+      "por_que": "Se CONSERVA la parada declarada, al revés que en el tablero de la Gobernación. Allá hubo que reemplazarla porque el centro de su rampa (#eeebe1) era exactamente el fondo del tablero y todo lo que caía en el pivote se pintaba del color del papel. Acá el centro es la arena #e9d8a6 sobre un fondo #f2efe8: se distingue, y sobre todo es la parada que ya publican el Atlas y las 215 láminas censales. Cambiarla acá rompería el match entre los tres productos, que es justamente para lo que se comparte la rampa."
+    },
+    "suave_factor": {
+      "valor": 1.0,
+      "por_que": "Sin suavizado. El 0,8 del tablero metropolitano salió de un pedido concreto de Carlos sobre AQUELLA rampa —«bajale un poco a los colores, se ve medio chillón», dicho del verde limón de la Gobernación—. Ésta es la rampa POPULI ya publicada y aprobada en el Atlas; desaturarla un 20% la separaría de sus propias láminas sin que nadie lo haya pedido."
+    },
+    "realce_oscuro": {
+      "valor": 0.0,
+      "por_que": "Una sola rampa para los dos temas. El realce existía para compensar que el relleno es más transparente en oscuro, o sea que arreglaba con color un problema de opacidad, y el resultado era que el mismo dato no se reconocía al cambiar de tema. La corrección va donde está la causa: realce 0, y el relleno sube en oscuro."
+    },
+    "sin_secuencial": {
+      "valor": true,
+      "por_que": "La divergente vale para TODOS los indicadores, también los neutros (`dir: 0`). El Atlas tomó la misma decisión y por la misma razón: el Banco dibuja sus láminas con esta lista leyendo el `dir` de este mismo catálogo, así que dos criterios distintos harían que la lámina y la pantalla pintaran distinto el mismo número."
+    }
+  },
+  "pinta": {
+    "_": "DERIVADO por scripts/paleta.py — no editar a mano.",
+    "divergente": [
+      "#00323d",
+      "#005f73",
+      "#0a9396",
+      "#94d2bd",
+      "#e9d8a6",
+      "#eda13e",
+      "#df5d25",
+      "#c71e1d",
+      "#8f1f22"
+    ],
+    "divergente_oscuro": [
+      "#00323d",
+      "#005f73",
+      "#0a9396",
+      "#94d2bd",
+      "#e9d8a6",
+      "#eda13e",
+      "#df5d25",
+      "#c71e1d",
+      "#8f1f22"
+    ],
+    "sin_dato": "#8c8378",
+    "senal": "#ee9b00",
+    "institucional": "#005f73"
+  }
+}

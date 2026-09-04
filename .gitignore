@@ -6,3 +6,20 @@ __pycache__/
 
 # Datos crudos del CPV 2024 (fuente local, no versionar)
 fuente/
+
+# ── El pipeline nacional (2026-09-04) ───────────────────────────────────────
+# El CSV del motor por manzana pesa 152 MB: GitHub rechaza cualquier archivo de
+# más de 100 MB, y además es una SALIDA del motor, no una fuente. Se regenera
+# con `catalogo/motor_manzana.py` sobre los parquets del geoportal.
+catalogo/manzana_2024.csv
+# Tabulados del INE bajados a mano para contrastar (148 MB): son insumo de
+# verificación, no del sitio.
+Censo2024_Tabulados/
+trabajo/
+
+# ⚠️ EXCEPCIÓN A `*.parquet`: el puente manzano→municipio SÍ se versiona. Pesa
+#    2,2 MB, lo produce `armar_municipios.py` y es la única pieza que resuelve
+#    las cinco autonomías indígenas que el geoportal nombra distinto. Sin él,
+#    quien clone el repo no puede teselar aunque tenga los parquets.
+!datos/manzano_municipio.parquet
+

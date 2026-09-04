@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- El octágono del OFPDT, el mismo del masthead. En #005f73 sobre transparente:
+       la pestaña del navegador ya pone su propio fondo. -->
+  <rect width="200" height="200" fill="#013a46"/>
+  <polygon points="100,10 155,35 191,84 173,142 130,183 69,185 26,143 10,84 45,35" fill="none" stroke="#94d2bd" stroke-width="9" stroke-linejoin="round"/>
+  <polygon points="122,33 156,65 171,110 145,150 102,169 56,156 35,114 36,66 75,39" fill="none" stroke="#0a9396" stroke-width="8" stroke-linejoin="round"/>
+  <polygon points="129,60 146,89 147,123 120,144 86,148 58,129 52,95 64,63 97,53" fill="none" stroke="#0a9396" stroke-width="7" stroke-linejoin="round" opacity=".6"/>
+</svg>
