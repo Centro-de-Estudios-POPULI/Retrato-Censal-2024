@@ -455,6 +455,17 @@ body.dark .ind.on .mini{opacity:1!important;filter:saturate(1.05)!important}
 .cmp .ds-g{font:600 3.6px var(--f);fill:var(--suave);font-variant-numeric:tabular-nums}
 .cmp .ds-u{font-weight:500;fill:var(--faint)}
 .cmp .ds-ax{font:500 3.2px var(--f);fill:var(--faint)}
+/* Las referencias sobre la barra de la leyenda: el país lleva rótulo porque es
+   la que el lector busca; la mediana va sin él para no amontonar. */
+/* ⚠️ El rótulo sobre la marca chocaba con el pie de la leyenda —«país» encima de
+   «país 47,9%»—, así que la marca se identifica por COLOR: el ámbar de señal de
+   la marca para el país, un trazo neutro para la mediana, y el pie nombra cada
+   una con su mismo color. Ocupa cero lugar y no hay nada que se pise. */
+.tm-ref{position:absolute;top:-3px;bottom:-3px;width:1.5px;background:var(--tx);opacity:.5}
+.tm-ref.pais{width:2.5px;background:var(--warm);opacity:1}
+.tm-l-pais{color:var(--warm);font-weight:700}
+.tm-l-med{color:var(--tx);font-weight:700}
+
 /* ── buscador de municipio (2026-09-04) ───────────────────────────────────── */
 .busca-mun{position:relative;margin-top:8px}
 #busca-mun{width:100%;padding:7px 10px;border:1px solid var(--linea);background:var(--card-solid);
@@ -1040,7 +1051,19 @@ function escala(valores, pesos, ind, ambito){
      OJO a la asimetría deliberada: el rango DIBUJADO es el de los dos censos
      juntos, pero el mínimo y el máximo que informa la leyenda son los del censo
      EN PANTALLA — es lo que el lector está mirando. */
-  if (decl && ind.dom){ lo = ind.dom[0]; hi = ind.dom[1]; }
+  /* ★★ UNA SOLA ESCALA PARA LOS DOS NIVELES (2026-09-04). `ind.esc` es el
+     [mínimo, centro, máximo] que declara `estadisticas_manzana.py` buscando los
+     tres juntos sobre las dos distribuciones a la vez.
+     ⛔ Antes cada nivel armaba la suya: el municipal con el agregado del país y
+        el de manzana con el suyo, y los dos centros no coincidían — medido, el
+        salto pasaba de 5 puntos en 30 indicadores y llegaba a 24,5. El mismo
+        valor cambiaba de color al cruzar el zoom, que es lo contrario de lo que
+        este tablero promete.
+     Y no salió más pobre: medido sobre los 91, la escala única deja el peor de
+     los dos niveles en 0,33 de contraste contra 0,26 de las dos separadas, y
+     baja de 32 a 24 los indicadores ilegibles en algún nivel. */
+  if (ind.esc){ lo = ind.esc[0]; hi = ind.esc[2]; }
+  else if (decl && ind.dom){ lo = ind.dom[0]; hi = ind.dom[1]; }
   else { lo = cuantil(ord, .02); hi = cuantil(ord, .98); }
   if (hi <= lo){ lo = ord[0]; hi = ord[ord.length-1] || lo + 1; if (hi <= lo) hi = lo + 1; }
   /* ⚠️ EL PIVOTE DECLARADO NO VALE PARA UN CONTEO. El agregado que emite
@@ -1054,13 +1077,18 @@ function escala(valores, pesos, ind, ambito){
      de las unidades que el mapa dibuja, en vez del agregado del país. Está para
      poder COMPARAR las dos lecturas en pantalla antes de decidir cuál se
      publica; el ancla-país es la que sigue por defecto. */
+  /* ⚗️ `#esc=secuencial` pone el pivote en el MEDIO DEL DOMINIO, que es lo mismo
+     que no tener pivote: la rampa pasa a recorrer los valores de forma lineal de
+     un extremo al otro. El color deja de decir «de qué lado del país estás» y
+     pasa a decir el NIVEL, que es lo que no se puede ocultar. */
   piv = esConteo(ind) ? null
-      : (ESC_MEDIANA ? cuantil(ord, .5) : pivDeclarado(ind, ambito));
+      : ind.esc ? ind.esc[1]
+      : pivDeclarado(ind, ambito);
   if (piv === null){
     const sw = w.reduce((a,b) => a + b, 0);
     if (sw > 0){ piv = v.reduce((a,x,i) => a + x * w[i], 0) / sw; tipo = "país"; }
     else { piv = cuantil(ord, .5); tipo = "mediana"; }
-  } else tipo = "país";
+  } else tipo = ind.esc ? "centro" : "país";
   /* El pivote tiene que caer DENTRO del rango dibujado: pegado a un extremo la
      rampa se degenera y media paleta no se usa nunca.
      ⚠️ Cuando eso pasa el número recortado YA NO ES la región ni la mediana, así
@@ -1084,18 +1112,6 @@ function escala(valores, pesos, ind, ambito){
    Devuelve la misma forma de objeto que `escala()` para que la leyenda, el
    termómetro y el tooltip no tengan que saber de dónde salió. */
 function escalaManzana(ind){
-  /* ⚗️ misma prueba, del lado de la manzana: la mediana sale de la rejilla de
-     cuantiles que ya publica `mz_stats`. */
-  if (ESC_MEDIANA && MZS && ind.k_mz && MZS[ind.k_mz]){
-    const st = MZS[ind.k_mz], q = st.esc.q || [];
-    const med = cuantilQ(q, .5);
-    if (med !== null){
-      const base = escalaManzanaBase(ind);
-      if (base) return Object.assign({}, base, {piv: Math.min(Math.max(med, base.lo +
-        (base.hi - base.lo) * .08), base.hi - (base.hi - base.lo) * .08),
-        pivReal: med, tipo: "mediana"});
-    }
-  }
   return escalaManzanaBase(ind);
 }
 
@@ -1103,11 +1119,15 @@ function escalaManzanaBase(ind){
   const st = MZS && MZS[ind.k_mz];
   if (!st || !st.esc) return null;
   const e = st.esc;
-  let lo = e.lo, hi = e.hi;
+  /* La MISMA escala declarada que usa el nivel municipal: es lo que hace que un
+     valor tenga el mismo color arriba y abajo. `e.lo/e.hi/e.piv` —los de las
+     manzanas solas— quedan para el perfil y los percentiles del panel, que sí
+     son del nivel manzana. */
+  let lo = ind.esc ? ind.esc[0] : e.lo, hi = ind.esc ? ind.esc[2] : e.hi;
   if (hi <= lo){ lo = e.min; hi = e.max > lo ? e.max : lo + 1; }
-  const pivReal = e.piv, pad = (hi - lo) * .08;
+  const pivReal = ind.esc ? ind.esc[1] : e.piv, pad = (hi - lo) * .08;
   const piv = pad > 0 ? Math.min(Math.max(pivReal, lo + pad), hi - pad) : pivReal;
-  return {lo, piv, hi, pivReal, tipo: e.tipo,
+  return {lo, piv, hi, pivReal, tipo: ind.esc ? "centro" : e.tipo,
           tonos: rampa(ind.dir),
           q: e.q, ord: null, min: e.min, max: e.max,
           recorte: e.min < lo || e.max > hi, n: e.n};
@@ -2722,9 +2742,31 @@ function termometro(e, i){
   const cap = e.recorte;
   document.getElementById("tm-lo").innerHTML = `<span class="cap">${cap ? "≤ " : ""}</span>${fmtM(e.lo, i)}`;
   document.getElementById("tm-hi").innerHTML = `<span class="cap">${cap ? "≥ " : ""}</span>${fmtM(e.hi, i)}`;
-  bar.querySelectorAll(".tm-mk").forEach(m => m.remove());
+  bar.querySelectorAll(".tm-mk, .tm-ref").forEach(m => m.remove());
   const mk = document.createElement("div"); mk.className = "tm-mk"; mk.style.left = "50%";
   bar.appendChild(mk);
+  /* ★★ LAS REFERENCIAS SE MARCAN SOBRE LA BARRA (2026-09-04).
+     El centro de la rampa ya no es una estadística —es el punto que mejor
+     reparte la paleta en los dos niveles— así que rotularlo «país» sería
+     rebautizar un número de diseño con el nombre de un dato. Lo que sí son
+     datos van marcados aparte y con su nombre: dónde cae el país y dónde la
+     mitad de las unidades que el mapa está dibujando. Sin esto, al soltar el
+     ancla-país el lector perdía la referencia absoluta. */
+  const refs = [];
+  if (i.ref){
+    if (i.ref.pais !== null && i.ref.pais !== undefined) refs.push(["país", i.ref.pais]);
+    const med = nivel === "municipio" ? i.ref.med_mun : i.ref.med_mz;
+    if (med !== null && med !== undefined) refs.push(["mediana", med]);
+  }
+  refs.forEach(([nom, v]) => {
+    if (!isFinite(v) || v < e.lo || v > e.hi) return;
+    const d = document.createElement("div");
+    d.className = "tm-ref" + (nom === "país" ? " pais" : "");
+    d.style.left = (posEnRampa(e, v) * 100).toFixed(2) + "%";
+    d.title = `${nom}: ${fmtM(v, i)}`;
+    d.dataset.n = nom;
+    bar.appendChild(d);
+  });
   const unidad = nivel === "municipio" ? "municipios" : "manzanas con dato";
   /* ⚠️ El pivote se recorta para que no quede pegado a un borde de la rampa
      (`pad` en `escala`). Cuando eso pasa, el número dibujado YA NO ES el agregado
@@ -2732,10 +2774,16 @@ function termometro(e, i){
      con el nombre de una estadística. Se dice el real y se nombra el recorte. */
   const rec = e.pivReal !== undefined && e.pivReal !== null
            && Math.abs(e.pivReal - e.piv) > 1e-9;
-  const piv = rec ? `${e.tipo} <b>${fmtM(e.pivReal, i)}</b> <small>(escala centrada en ${fmtM(e.piv, i)})</small>`
-                  : `${e.tipo} <b>${fmtM(e.piv, i)}</b>`;
+  /* Con escala declarada el pie nombra las REFERENCIAS, no el centro: el centro
+     es geometría de la rampa y no significa nada por sí solo. */
+  const piv = i.esc
+    ? refs.map(([nom, v]) => `<span class="${nom === "país" ? "tm-l-pais" : "tm-l-med"}">${
+        nom} ${fmtM(v, i)}</span>`).join(" · ")
+    : (rec ? `${e.tipo} <b>${fmtM(e.pivReal, i)}</b> <small>(escala centrada en ${fmtM(e.piv, i)})</small>`
+           : `${e.tipo} <b>${fmtM(e.piv, i)}</b>`);
   document.getElementById("tm-st").innerHTML =
-    `n <b>${nf(e.n,0)}</b> ${unidad} · mín <b>${fmtM(e.min,i)}</b> · ${piv} · máx <b>${fmtM(e.max,i)}</b>`;
+    `n <b>${nf(e.n,0)}</b> ${unidad} · mín <b>${fmtM(e.min,i)}</b>${piv ? " · " + piv : ""}`
+    + ` · máx <b>${fmtM(e.max,i)}</b>`;
 }
 
 /* ── COMPARATIVO ENTRE MUNICIPIOS ────────────────────────────────────────────
@@ -2981,8 +3029,24 @@ function lecturaPanel(filas, ind, refv, ra, rb){
      municipios quedaron fuera, porque una lista truncada en silencio se lee como
      si fuera todo. */
 let VER_TODOS = {cmp: false, dist: false};
-const ESC_MEDIANA = /(^|[#&])esc=mediana/.test(location.hash) ||
-                    /[?&]esc=mediana/.test(location.search);
+/* ⚗️ LO QUE SE PROBÓ Y SE DESCARTÓ PARA ELEGIR LA ESCALA (2026-09-04), medido
+   sobre los 91 indicadores con la misma métrica: cuánta rampa separa al cuartil
+   de abajo del de arriba —o sea, si el mapa se puede leer—.
+     · ancla en el país ponderado (lo que había): 0,32 municipal · 0,36 manzana,
+       32 indicadores ilegibles en algún nivel, y dos centros distintos que
+       hacían cambiar el color al cruzar el zoom.
+     · ancla en la mediana de cada nivel: el mejor contraste (0,38 / 0,37) pero
+       relativo — con una rampa divergente, la mitad del país se ve «del lado
+       bueno» sea cual sea el nivel. Lo descartó Carlos, con razón: escondería
+       que hay muchos municipios con dificultades.
+     · media rampa como termómetro (sin bisagra): honesta, pero recorre la mitad
+       de la distancia de color y pierde contraste.
+     · escala única con el dominio fijado a la unión de los dos niveles: PEOR que
+       lo que había (0,22 en el peor nivel, 41 ilegibles).
+   ⇒ Ganó buscar los TRES parámetros juntos sobre la distribución agrupada, que
+     es lo que declara `estadisticas_manzana.py` en `ind.esc`: 0,33 en el peor
+     nivel, 24 ilegibles, un solo color por valor en los dos niveles, y la
+     paleta entera. Las banderas de prueba se retiraron; el criterio queda acá. */
 
 function filasComparativo(ind){
   return MUN.map(m => ({m, v: valorParaMini(m, ind)}))
@@ -3064,7 +3128,12 @@ function comparativo(e, ind){
             class="mc-hit" data-s="${f.m.sigep}"><title>${f.m.nombre}</title></rect>`;
   });
   if (e){
-    const xp = x(e.piv);
+    /* ⚠️ La punteada marcaba el PIVOTE de la rampa. Desde que el pivote es el
+       punto que mejor reparte la paleta —y no una estadística— marcar eso sería
+       trazar una línea sin significado en medio de las barras. Marca el país,
+       que es contra lo que el texto de abajo dice cuántos quedan por encima. */
+    const _pv = ind.ref && ind.ref.pais != null ? ind.ref.pais : e.piv;
+    const xp = x(_pv);
     if (xp > LX && xp < VX)
       s += `<line x1="${xp}" y1="1" x2="${xp}" y2="${filas.length * H + 1}" class="cmp-piv"/>`;
   }
@@ -3077,7 +3146,11 @@ function comparativo(e, ind){
      mancuerna. En su lugar va la MISMA lectura escrita, para que el panel se
      comporte igual con cualquiera de los dos gráficos. */
   const rg = refRegion(ind);
-  return `<div class="cmp-t">Comparación entre municipios<span>${e ? e.tipo + " " + fmtM(e.pivReal != null ? e.pivReal : e.piv, ind) : ""}</span></div>
+  /* El encabezado nombra la referencia que el lector usa para comparar —el
+     país—, no el centro de la rampa, que es geometría del color. */
+  const _ref = ind.ref && ind.ref.pais != null ? `país ${fmtM(ind.ref.pais, ind)}`
+             : e ? `${e.tipo} ${fmtM(e.pivReal != null ? e.pivReal : e.piv, ind)}` : "";
+  return `<div class="cmp-t">Comparación entre municipios<span>${_ref}</span></div>
     <svg class="cmp" viewBox="0 0 ${W} ${alto}" preserveAspectRatio="xMidYMin meet">${s}</svg>
     ${boton}
     ${lecturaPanel(con.map(f => ({m: f.m, act: f.v})), ind, rg ? rg.v : null)}`;
@@ -3185,11 +3258,15 @@ function perfilPais(ind, st){
             width="${(anchoB - .12).toFixed(2)}" height="${h.toFixed(2)}"
             fill="${tonoDe(e, v)}" fill-opacity=".9"/>`;
   });
-  // el pivote del país, la misma marca que usa el mapa
-  const xp = x(st.esc.piv);
+  /* ⚠️ EL MISMO «PAÍS» QUE LA LEYENDA, y no el de `mz_stats`. Son dos números
+     distintos —el del microdato municipal y el promedio ponderado de las
+     manzanas— y verlos los dos en la misma pantalla con el mismo rótulo es
+     peor que no ver ninguno: en alcantarillado decían 47,9% y 65,8%. */
+  const _pais = ind.ref && ind.ref.pais != null ? ind.ref.pais : st.esc.piv;
+  const xp = x(_pais);
   s += `<line x1="${xp}" y1="0" x2="${xp}" y2="${HP + 3}" class="pf-piv"/>`;
   s += `<text x="${xp}" y="${HP + 6.5}" class="pf-piv-t" text-anchor="${
-        xp > 70 ? "end" : xp < 30 ? "start" : "middle"}">país ${fmtM(st.esc.piv, ind)}</text>`;
+        xp > 70 ? "end" : xp < 30 ? "start" : "middle"}">país ${fmtM(_pais, ind)}</text>`;
 
   // ── la caja del municipio elegido, sobre el mismo eje ────────────────────
   const m = sel ? MUN.find(z => z.sigep === sel) : null;

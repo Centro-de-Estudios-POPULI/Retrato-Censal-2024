@@ -63,6 +63,105 @@ def r1(v):
     return None if v is None else round(v, 1)
 
 
+def contraste(ordenados, lo, piv, hi):
+    """Cuánta rampa separa al cuartil de abajo del de arriba.
+
+    Es la medida de si un mapa se puede LEER: con 0,10 los municipios típicos
+    caen todos en el mismo tono y la variación no se ve, aunque la rampa entera
+    esté declarada. Réplica exacta de `posEnRampa()` del tablero, incluido el
+    recorte del 8% que impide que el pivote se pegue a un borde."""
+    pad = (hi - lo) * .08
+    pv = min(max(piv, lo + pad), hi - pad)
+    ps = []
+    for v in ordenados:
+        if v <= pv:
+            t = .5 if pv == lo else .5 * (v - lo) / (pv - lo)
+        else:
+            t = .5 + .5 * (v - pv) / (hi - pv)
+        ps.append(max(0.0, min(1.0, t)))
+    ps.sort()
+    return cuantil(ps, .75) - cuantil(ps, .25)
+
+
+def escala_unica(cat, out, mun):
+    """★★ UN SOLO DOMINIO Y UN SOLO CENTRO POR INDICADOR, PARA LOS DOS NIVELES.
+
+    ⛔ EL DEFECTO QUE ESTO ARREGLA (medido 2026-09-04): cada nivel armaba su
+       escala por su cuenta —el municipal con el agregado del país, el de manzana
+       con el suyo— y los dos centros no coincidían. Medido sobre los 74 que
+       existen en ambos: el centro salta más de 5 puntos en 30 indicadores y
+       hasta 24,5 en «recojo formal de basura». O sea que **el mismo valor
+       cambiaba de color al cruzar el zoom**, que es justo lo contrario de lo que
+       este tablero promete.
+
+    ⚠️ Y NO ALCANZA CON ELEGIR UNA DE LAS DOS MEDIANAS. Las dos distribuciones son
+       genuinamente distintas y no por ruido: la mitad de los municipios son
+       chicos y rurales, la mitad de las manzanas están en ciudades. En
+       alcantarillado el municipio típico tiene 17,3% y la manzana típica 75,0%.
+       Con el centro en la mediana municipal, el 92% de las manzanas de «piso de
+       tierra» cae de un solo lado y el contraste dentro de la ciudad se desploma
+       de 0,55 a 0,16 — se pierde justo la desigualdad intraurbana que este nivel
+       existe para mostrar.
+
+    ⇒ El centro se BUSCA: el valor que deja el mejor contraste en el PEOR de los
+      dos niveles. No pretende ser una estadística, y por eso la leyenda no lo
+      rotula como tal: marca aparte el país y las dos medianas, que sí lo son.
+    """
+    vals_mun = {}
+    for f in mun:
+        for k, v in (f.get("municipal") or {}).items():
+            if v is not None and np.isfinite(v):
+                vals_mun.setdefault(k, []).append(float(v))
+
+    n_ok, saltos = 0, []
+    for g in cat["grupos"]:
+        for i in g["indicadores"]:
+            k = i["key"]
+            st_ = out.get(k)
+            vm = sorted(vals_mun.get(i.get("k_mun") or "", []))
+            if not st_ or len(vm) < 50:
+                continue
+            q = [x for x in st_["esc"]["q"] if x is not None]
+            if len(q) < 20:
+                continue
+            # ★ LOS TRES PARÁMETROS SE BUSCAN JUNTOS, no sólo el centro.
+            #   Medido: con el dominio fijado a la unión de los dos —lo primero
+            #   que probé— la escala única quedaba PEOR que las dos separadas
+            #   (0,22 de contraste en el peor nivel contra 0,26, y 41
+            #   indicadores ilegibles contra 32). El problema no era el centro
+            #   sino los bordes: la unión estira el dominio hasta cubrir la cola
+            #   del nivel más disperso y aplasta al otro.
+            #   Buscando los tres sobre la distribución AGRUPADA, la escala única
+            #   pasa a ser MEJOR que las dos que reemplaza: 0,33 y 24 ilegibles.
+            #   El recorte no pasa del 5% por punta y la leyenda ya lo dice con
+            #   sus «≤» y «≥».
+            pool = sorted(vm + q)
+            mejor, cbest = None, -1
+            for pl in (0, .01, .02, .05):
+                for ph in (1, .99, .98, .95):
+                    l, h = cuantil(pool, pl), cuantil(pool, ph)
+                    if h <= l:
+                        continue
+                    for j in range(5, 96):
+                        pv = l + (h - l) * j / 100
+                        c = min(contraste(vm, l, pv, h), contraste(q, l, pv, h))
+                        if c > cbest:
+                            cbest, mejor = c, (l, pv, h)
+            if mejor is None:
+                continue
+            i["esc"] = [round(mejor[0], 4), round(mejor[1], 4), round(mejor[2], 4)]
+            # las referencias que SÍ significan algo, para que la leyenda las marque
+            i["ref"] = {"pais": cat["region"]["municipal"].get(i.get("k_mun")),
+                        "med_mun": round(cuantil(vm, .5), 2),
+                        "med_mz": round(cuantil(q, .5), 2)}
+            n_ok += 1
+            saltos.append(cbest)
+    (DATOS / "catalogo_manzana.json").write_text(
+        json.dumps(cat, ensure_ascii=False), encoding="utf-8")
+    print(f"escala única declarada en {n_ok} indicadores · contraste del peor nivel: "
+          f"mediana {np.median(saltos):.2f} · bajo 0,20: {sum(1 for c in saltos if c < .20)}")
+
+
 def main():
     cat = json.loads((DATOS / "catalogo_manzana.json").read_text(encoding="utf-8"))
     orden = [i["key"] for g in cat["grupos"] for i in g["indicadores"]]
@@ -125,6 +224,8 @@ def main():
             },
             "dist": dist,
         }
+
+    escala_unica(cat, out, mun)
 
     SALIDA.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")),
                       encoding="utf-8")
