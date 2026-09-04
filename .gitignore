@@ -23,3 +23,8 @@ trabajo/
 #    quien clone el repo no puede teselar aunque tenga los parquets.
 !datos/manzano_municipio.parquet
 
+
+# El crosswalk del pipeline viejo: superado por la espina de bo-geo-maestro.
+# Sigue en el disco, fuera del repo. Se ignora para que no vuelva a colarse
+# con un `git add -A scripts`, que ya pasó dos veces.
+scripts/crosswalk_municipios.py
