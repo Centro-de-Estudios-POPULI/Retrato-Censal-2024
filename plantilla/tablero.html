@@ -462,6 +462,13 @@ body.dark .ind.on .mini{opacity:1!important;filter:saturate(1.05)!important}
 .cmp .ds-g{font:600 3.6px var(--f);fill:var(--suave);font-variant-numeric:tabular-nums}
 .cmp .ds-u{font-weight:500;fill:var(--faint)}
 .cmp .ds-ax{font:500 3.2px var(--f);fill:var(--faint)}
+/* El conmutador de escala, con el molde del selector de año de la barra. */
+.tm-esc{display:flex;gap:0;border:1px solid var(--linea);margin:0 .6rem}
+.tm-esc button{background:none;border:0;padding:2px 7px;font:600 .55rem var(--f);
+  color:var(--suave);cursor:pointer;white-space:nowrap}
+.tm-esc button.on{background:var(--sel);color:#fff}
+.tm-esc button:not(.on):hover{background:var(--gris-card)}
+
 /* Las referencias sobre la barra de la leyenda: el país lleva rótulo porque es
    la que el lector busca; la mediana va sin él para no amontonar. */
 /* ⚠️ El rótulo sobre la marca chocaba con el pie de la leyenda —«país» encima de
@@ -696,7 +703,20 @@ body.dark{--ser-mun:#43b3bd;--ser-reg:#c3d0d6}
 <div class="zc"><button id="z-in">+</button><button id="z-out">−</button><button id="z-rst">⤢</button></div>
 
 <div class="termo">
-  <div class="tm-top"><div class="tm-t" id="tm-t">—</div><div class="tm-st" id="tm-st"></div></div>
+  <div class="tm-top"><div class="tm-t" id="tm-t">—</div>
+    <!-- ★ CONMUTADOR DE ESCALA (2026-09-04). La escala del mapa es NACIONAL, que
+         es lo que hace comparable a una ciudad con otra y al municipio con su
+         manzana. El precio, medido: en el 24% de los pares ciudad×indicador la
+         ciudad usa menos de un quinto de la rampa —y en cosas como «agua de
+         pozo» o «cocina con leña», nada: en una ciudad casi ninguna manzana las
+         usa, así que todas caen en el mismo extremo y el mapa urbano queda liso.
+         ⇒ El lector puede pedir la escala de ESTA ciudad, que reparte la rampa
+           entre las manzanas de ese municipio. No se ofrece por defecto y se
+           ROTULA mientras está activa, porque un turquesa local no significa lo
+           mismo que un turquesa nacional. Sale de los deciles que
+           `mz_stats.json` ya publica por municipio: no hay dato nuevo. -->
+    <div class="tm-esc" id="tm-esc" hidden><button data-e="pais" class="on">país</button><button data-e="local">esta ciudad</button></div>
+    <div class="tm-st" id="tm-st"></div></div>
   <div class="tm-row"><span class="tm-side" id="tm-lo"></span><div class="tm-bar" id="tm-bar"></div><span class="tm-side" id="tm-hi"></span></div>
 </div>
 
@@ -1119,7 +1139,28 @@ function escala(valores, pesos, ind, ambito){
    Devuelve la misma forma de objeto que `escala()` para que la leyenda, el
    termómetro y el tooltip no tengan que saber de dónde salió. */
 function escalaManzana(ind){
-  return escalaManzanaBase(ind);
+  return escalaLocal(ind) || escalaManzanaBase(ind);
+}
+
+let ESC_LOCAL = false;      // el conmutador de la leyenda
+
+/* La escala de las manzanas de UN municipio. Sale de los deciles que ya viajan
+   en `mz_stats.dist`. El dominio es p10–p90 —el 80% central— porque con el
+   mínimo y el máximo una sola manzana extrema vuelve a aplastar la rampa, que
+   es el problema que esto viene a resolver; las puntas saturan y la leyenda lo
+   dice con sus «≤» y «≥», igual que en la escala nacional. */
+function escalaLocal(ind){
+  if (!(ESC_LOCAL && sel && MZS && ind.k_mz && MZS[ind.k_mz])) return null;
+  const d = MZS[ind.k_mz].dist && MZS[ind.k_mz].dist[sel];
+  if (!d) return null;
+  let lo = d.p10, hi = d.p90;
+  if (!(hi > lo)){ lo = d.min; hi = d.max; }          // ciudad muy pareja
+  if (!(hi > lo)) return null;                         // todas iguales: no hay escala
+  const pad = (hi - lo) * .08;
+  const piv = Math.min(Math.max(d.p50, lo + pad), hi - pad);
+  return {lo, piv, hi, pivReal: d.p50, tipo: "mediana de la ciudad", local: true,
+          tonos: rampa(ind.dir), q: null, ord: null,
+          min: d.min, max: d.max, recorte: d.min < lo || d.max > hi, n: d.n};
 }
 
 function escalaManzanaBase(ind){
@@ -2136,6 +2177,7 @@ function estadoActual(){
   const e = {};
   if (ind_actual) e.i = ind_actual.key;
   if (ANIO !== "2024") e.a = ANIO;
+  if (ESC_LOCAL) e.e = "local";
   /* ⚠️ En la URL va el CÓDIGO INE, no el `sigep` interno. Adentro el municipio
      se identifica por `sigep` («1704») porque así viene la geometría, pero una
      dirección que se comparte y se pega en un informe tiene que llevar el
@@ -2213,6 +2255,7 @@ function aplicarEstado(e, encuadrar_){
     else if (!cat_actual) elegirCategoria(CAT.grupos[0].key);
     anioSeg.querySelectorAll("button").forEach(b =>
       b.classList.toggle("on", b.dataset.a === ANIO));
+    if (e.e === "local") ESC_LOCAL = true;
     if (e.i) elegirIndicador(e.i);
     actualizarPistas();
     /* Se acepta el código INE y, por si acaso, también el `sigep`: un enlace
@@ -2759,7 +2802,9 @@ function termometro(e, i){
      mitad de las unidades que el mapa está dibujando. Sin esto, al soltar el
      ancla-país el lector perdía la referencia absoluta. */
   const refs = [];
-  if (i.ref){
+  if (e.local){
+    refs.push(["mediana", e.pivReal]);
+  } else if (i.ref){
     if (i.ref.pais !== null && i.ref.pais !== undefined) refs.push(["país", i.ref.pais]);
     const med = nivel === "municipio" ? i.ref.med_mun : i.ref.med_mz;
     if (med !== null && med !== undefined) refs.push(["mediana", med]);
@@ -2773,7 +2818,19 @@ function termometro(e, i){
     d.dataset.n = nom;
     bar.appendChild(d);
   });
-  const unidad = nivel === "municipio" ? "municipios" : "manzanas con dato";
+  /* El conmutador sólo tiene sentido con un municipio elegido y mirando sus
+     manzanas: sin eso no hay «esta ciudad» que escalar. */
+  const cesc = document.getElementById("tm-esc");
+  if (cesc){
+    const hay = nivel !== "municipio" && sel && i.k_mz && MZS && MZS[i.k_mz]
+             && MZS[i.k_mz].dist && MZS[i.k_mz].dist[sel];
+    cesc.hidden = !hay;
+    cesc.querySelectorAll("button").forEach(b =>
+      b.classList.toggle("on", (b.dataset.e === "local") === ESC_LOCAL));
+  }
+  const unidad = nivel === "municipio" ? "municipios"
+               : e.local ? `manzanas de ${(MUN.find(m => m.sigep === sel) || {}).nombre || "la ciudad"}`
+               : "manzanas con dato";
   /* ⚠️ El pivote se recorta para que no quede pegado a un borde de la rampa
      (`pad` en `escala`). Cuando eso pasa, el número dibujado YA NO ES el agregado
      de la región: publicarlo igual bajo el rótulo "región" es rebautizar un borde
@@ -3599,6 +3656,14 @@ function ficha(e, i){
   /* Abrir o cerrar la lista completa vuelve a pintar el panel entero: el estado
      vive en `VER_TODOS` y no en el DOM, así que sobrevive a cualquier otro
      cambio (indicador, año, municipio) sin que haya que acordarse de restaurarlo. */
+  const _ce = document.getElementById("tm-esc");
+  if (_ce) _ce.querySelectorAll("button").forEach(b => b.onclick = ev => {
+    ev.stopPropagation();
+    const nuevo = b.dataset.e === "local";
+    if (nuevo === ESC_LOCAL) return;
+    ESC_LOCAL = nuevo;
+    pintar();
+  });
   document.querySelectorAll("#cmp .ver-mas, #dist .ver-mas").forEach(el =>
     el.onclick = () => { VER_TODOS[el.dataset.ver] = !VER_TODOS[el.dataset.ver]; pintar(); });
   g.querySelectorAll(".kpi[data-k]").forEach(el => el.onclick = () => elegirIndicador(el.dataset.k));
