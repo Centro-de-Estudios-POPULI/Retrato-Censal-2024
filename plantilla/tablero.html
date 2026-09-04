@@ -1234,6 +1234,29 @@ function estiloBase(oscuro){
     layers: capas,
   };
 }
+/* El rectángulo de Bolivia, en grados. Sale del mapa maestro de los 343
+   (`municipios.geojson`): es el mismo bbox que `preparar_web.py` imprime al
+   armarlo, redondeado hacia afuera. */
+const BBOX_PAIS = [[-69.65, -22.91], [-57.45, -9.66]];
+
+/* ★ EL PADDING DESCUENTA LOS PANELES, Y SE MIDE. Con un padding parejo el país
+   queda centrado en el LIENZO ENTERO, y como los dos paneles lo tapan —unos 350
+   px a la izquierda y 420 a la derecha— un tercio de Bolivia cae debajo de
+   ellos. Los anchos se leen en vez de escribirse: cambian con el ancho de
+   ventana (`--panel-w` es un clamp) y en móvil los paneles son hojas de ancho
+   completo, donde descontarlos dejaría el mapa sin lugar — de ahí la guarda del
+   60%: si un panel ocupa más de eso, no está al costado. */
+function padPaneles(){
+  const anc = (document.getElementById("map") || document.body).clientWidth || 1;
+  const caja = id => {
+    const el = document.getElementById(id);
+    if (!el || el.offsetParent === null) return 40;
+    const w = el.getBoundingClientRect().width;
+    return w > 0 && w < anc * .6 ? w + 16 : 40;
+  };
+  return {top: 80, bottom: 150, left: caja("panel-ind"), right: caja("panel-det")};
+}
+
 try {
   /* El protocolo `pmtiles://` se registra ANTES de construir el mapa: si una
      fuente lo usa y el protocolo no está, MapLibre falla al resolverla y la
@@ -1247,8 +1270,22 @@ try {
   map = new maplibregl.Map({
     container: "map",
     style: estiloBase(esOscuro()),
-center: [-64.6, -16.6], zoom: 4.6,   /* Bolivia entera: el encuadre fino lo hace `encuadrar()` con el bbox real */ attributionControl: {compact: true},
-    maxZoom: 18, minZoom: 7
+    /* ★★ EL ENCUADRE DE ARRANQUE ES EL PAÍS ENTERO, Y SE DECLARA ACÁ.
+       ⛔ EL DEFECTO QUE ESTO ARREGLA: `minZoom: 7` venía del tablero
+          metropolitano, donde es correcto —no tiene sentido alejarse más allá de
+          la región—. Bolivia entera necesita ~z5,2, así que ese piso hacía
+          IMPOSIBLE ver el país: medido, el mapa arrancaba en z7,00 mostrando de
+          -68,45 a -60,75 cuando Bolivia va de -69,6 a -57,5. Faltaban Pando,
+          buena parte del Beni y todo el este cruceño, y `encuadrar()` tampoco
+          podía arreglarlo porque el clamp también lo alcanza.
+       El encuadre va en el CONSTRUCTOR y no en un `fitBounds` posterior: así la
+       primera pintada ya es la correcta y no hay salto de cámara al llegar los
+       datos. El bbox es el del país, constante — no depende de que
+       `region.geojson` haya cargado. */
+    bounds: BBOX_PAIS,
+    fitBoundsOptions: {padding: padPaneles()},
+    attributionControl: {compact: true},
+    maxZoom: 18, minZoom: 4.2
   });
   const ctrl = document.querySelector(".maplibregl-ctrl-top-right");
   if (ctrl) ctrl.style.display = "none";
@@ -1341,15 +1378,7 @@ let BBOX = null;
    60%: si el panel ocupa más de eso, no está al costado. */
 function encuadrar(){
   if (!(BBOX && map)) return;
-  const ancho = map.getContainer().clientWidth;
-  const caja = id => {
-    const el = document.getElementById(id);
-    if (!el || el.offsetParent === null) return 40;
-    const w = el.getBoundingClientRect().width;
-    return w > 0 && w < ancho * .6 ? w + 16 : 40;
-  };
-  map.fitBounds(BBOX, {padding: {top: 80, bottom: 150,
-    left: caja("panel-ind"), right: caja("panel-det")}, duration: 700});
+  map.fitBounds(BBOX, {padding: padPaneles(), duration: 700});
 }
 
 /* TOOLTIP. Es un div propio y no el `Popup` de MapLibre: el Popup impone su
@@ -1658,7 +1687,16 @@ function tarjeta(i, n){
   const sinSerie = mudo(i);
   const dosNiveles = hayManzana();
   const badge = i.nivel === "ambos" ? '<span class="co-n">municipio + manzana</span>'
-    : i.nivel === "manzana" ? '<span class="co-n">sólo manzana</span>'
+    /* ⛔ DECÍA LO CONTRARIO DE LO QUE ES. El catálogo emite `nivel: "solo_mz"`
+       (lo escribe `armar_tableros.py`) y acá se comparaba contra `"manzana"`,
+       que no existe: los 17 indicadores que SÓLO bajan a la manzana caían en la
+       última rama y se rotulaban «sólo municipio» — justo al revés. Se aceptan
+       los dos nombres para no depender de cuál emita el armador.
+       ⚠️ El mismo defecto está vivo en el tablero metropolitano publicado
+          (verificado en su `catalogo_manzana.json`: sus 17 también dicen
+          `solo_mz`). */
+    : (i.nivel === "solo_mz" || i.nivel === "manzana")
+      ? '<span class="co-n">sólo manzana</span>'
     : i.fuente === "fiscal" ? '<span class="co-n">fiscal · 10 gestiones</span>'
     : dosNiveles ? '<span class="co-n">sólo municipio</span>' : '';
   return `<div class="ind${ok ? "" : " off"}${sinSerie ? " sin12" : ""}" data-k="${i.key}" style="--d:${Math.min(n,14)*14}ms">
@@ -1758,7 +1796,7 @@ function avisar(i){
     txt = `<b>Cambia de definición al bajar.</b> ${i.par_manzana.nota}`;
   else if (i.par_municipal)
     txt = `<b>Cambia de definición al subir.</b> ${i.par_municipal.nota}`;
-  else if (i.nivel === "manzana")
+  else if (i.nivel === "solo_mz" || i.nivel === "manzana")
     txt = "<b>Sólo existe a nivel de manzana.</b> No tiene equivalente publicado por municipio.";
   el.innerHTML = txt;
   el.classList.toggle("on", !!txt);
