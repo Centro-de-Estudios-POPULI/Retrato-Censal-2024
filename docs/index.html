@@ -393,18 +393,25 @@ body.dark .aviso b{color:var(--orange)}
    trae `estilo-atlas.css`; acá va el FILETE, que allá no existía. */
 /* Las divisiones ENTRE municipios se quedan sutiles SIEMPRE: son la textura
    del territorio, no el mensaje. */
-.mini > path{stroke:var(--linea);stroke-width:.5;transition:stroke .28s ease}
-.ind:hover .mini > path{stroke:var(--suave)}
-body.dark .mini > path{stroke:#2a3138}
-body.dark .ind:hover .mini > path{stroke:#49535c}
-/* El PERÍMETRO del conjunto es lo único que engorda al elegir el indicador. */
-.mini .mh path{fill:var(--linea);stroke:var(--linea);stroke-width:1.3;
-  transition:fill .28s ease,stroke .28s ease,stroke-width .28s ease}
-.ind:hover .mini .mh path{fill:var(--suave);stroke:var(--suave);stroke-width:1.8}
-.ind.on .mini .mh path{fill:#11110f;stroke:#11110f;stroke-width:3.2}
-body.dark .mini .mh path{fill:#2a3138;stroke:#2a3138}
-body.dark .ind:hover .mini .mh path{fill:#49535c;stroke:#49535c}
-body.dark .ind.on .mini .mh path{fill:#e6e3d8;stroke:#e6e3d8;stroke-width:3.2}
+/* El peso del trazo es el del Atlas: 0,22 unidades del lienzo y translúcido.
+   En unidades del VIEWBOX, no del dispositivo: así 343 municipios se perfilan
+   sin que el borde le gane al relleno. */
+.mini > path{stroke:rgba(15,22,30,.28);stroke-width:.22;transition:stroke .28s ease}
+.ind:hover .mini > path{stroke:rgba(15,22,30,.45)}
+body.dark .mini > path{stroke:rgba(8,14,20,.55)}
+body.dark .ind:hover .mini > path{stroke:rgba(232,244,250,.4)}
+/* ⛔ EL PERÍMETRO ERA UNA COSTRA. Cuando el «halo» eran las siluetas engordadas,
+   engordar su trazo al elegir la tarjeta (1,3 → 3,2) daba el efecto de foco. Con
+   343 esos anchos tapan el país entero. Ahora el perímetro es UNA silueta: hace
+   de fondo de los municipios sin dato y de contorno, y el foco se consigue
+   oscureciéndolo, no engordándolo. */
+.mini .mh path{fill:var(--gris-card);stroke:rgba(15,22,30,.3);stroke-width:.4;
+  transition:fill .28s ease,stroke .28s ease}
+.ind:hover .mini .mh path{stroke:rgba(15,22,30,.5)}
+.ind.on .mini .mh path{stroke:rgba(15,22,30,.8);stroke-width:.6}
+body.dark .mini .mh path{fill:#1b2a33;stroke:rgba(232,244,250,.28)}
+body.dark .ind:hover .mini .mh path{stroke:rgba(232,244,250,.45)}
+body.dark .ind.on .mini .mh path{stroke:rgba(232,244,250,.7);stroke-width:.6}
 /* el elegido pasa de «casi gris» a color pleno; los demás bajan un poco más
    para que la diferencia se note sin que la lista se apague entera */
 .mini{opacity:.5!important;filter:saturate(.26)!important}
@@ -1757,26 +1764,25 @@ function miniSVG(ind){
   const vals = MUN.map(m => valorParaMini(m, ind));
   const pes = MUN.map(pesoMunicipal);
   const e = escala(vals, pes, ind, ambitoMini(ind));
-  /* ★ EL CONTORNO DEL CONJUNTO (pedido de Carlos, 2026-08-26).
-     `mini.json` trae una silueta POR MUNICIPIO y ninguna de la unión, así que
-     el perímetro de la región no existe como geometría. Se consigue dibujando
-     las nueve siluetas ENGORDADAS detrás de los rellenos: lo que asoma
-     alrededor es el borde de la unión, y las juntas internas quedan tapadas
-     por los rellenos que van encima. Sin calcular geometría nueva, y si algún
-     día cambian los límites sigue saliendo bien solo. */
-  const halo = MUN.map(m => MINI.paths[m.sigep]).filter(Boolean)
-    .map(d => `<path d="${d}" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>`)
-    .join("");
+  /* ⛔ EL BORRÓN NEGRO DEL MINIMAPA (2026-09-04). El contorno del conjunto se
+     conseguía dibujando TODAS las siluetas engordadas detrás de los rellenos:
+     lo que asomaba alrededor era el borde de la unión. Con nueve municipios es
+     un truco elegante; con 343 son 343 manchas gruesas superpuestas y el país
+     queda con una costra oscura encima que tapa el dato.
+     Ahora `mini.json` trae el contorno de verdad —una sola silueta, calculada
+     sobre la unión de los 343 en `preparar_web.py`—, así el borde es un trazo. */
+  const halo = MINI.pais ? `<path d="${MINI.pais}" stroke-linejoin="round"/>` : "";
   const p = MUN.map((m, k) => {
     const d = MINI.paths[m.sigep];
-    /* ★ CADA MUNICIPIO CON SU BORDE (2026-08-20). Sin trazo, dos municipios
-       vecinos de valor parecido se funden y la región se lee como una mancha:
-       la miniatura mostraba color pero no mostraba TERRITORIO. Es lo que ya
-       hace la lámina del banco, que perfila cada municipio.
-       `non-scaling-stroke` mantiene el pelo en 1 px del dispositivo, así que no
-       engorda al escalar ni desaparece en el minimapa más chico. */
+    /* ★ CADA MUNICIPIO CON SU BORDE, PERO AL PESO DEL ATLAS (2026-09-04).
+       Con `non-scaling-stroke` el borde vale 1 px del dispositivo cualquiera sea
+       el zoom: con nueve municipios es un pelo y con 343 es la mitad del dibujo
+       —el occidente, donde los municipios son chicos, quedaba convertido en una
+       reja gris—. El Atlas Socioeconómico dibuja los mismos 343 con un trazo de
+       0,22 unidades del lienzo y translúcido; se copia ese peso, que es el que
+       deja ver el color y sigue mostrando el territorio. */
     return d ? `<path d="${d}" fill="${tonoDe(e, vals[k])}"
-      vector-effect="non-scaling-stroke" stroke-linejoin="round"/>` : "";
+      stroke-linejoin="round"/>` : "";
   }).join("");
   /* ★ EL LIENZO AJUSTADO. `mini.json` trae también la caja real de la región
      (`viewBoxTight`). Con el lienzo cuadrado la silueta usaba el 40% del

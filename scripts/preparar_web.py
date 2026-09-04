@@ -88,6 +88,16 @@ def main():
         return "".join(d)
 
     paths = {r["sigep"]: a_path(r["geometry"]) for _, r in mini.iterrows()}
+    # ★ EL CONTORNO DEL PAÍS, COMO UNA SOLA SILUETA (2026-09-04).
+    #   El tablero metropolitano lo conseguía dibujando las nueve siluetas
+    #   ENGORDADAS detrás de los rellenos: lo que asomaba alrededor era el borde
+    #   de la unión. Con 343 ese truco pinta 343 manchas gruesas superpuestas y
+    #   el minimapa queda con un borrón negro encima. Acá va el contorno de
+    #   verdad, calculado una vez sobre la unión de los 343 y proyectado al mismo
+    #   lienzo, así el borde es un trazo y no una acumulación.
+    borde_m = borde.to_crs("EPSG:32720")
+    borde_m["geometry"] = borde_m.geometry.simplify(TOL_MINI_M, preserve_topology=True)
+    pais = a_path(borde_m.to_crs("EPSG:4326").geometry.iloc[0])
     # La caja real, con 2% de margen: Bolivia es casi cuadrada, pero el lienzo
     # ajustado igual evita el aire de los bordes.
     _n = [float(t) for d in paths.values() for t in re.findall(r"-?\d+(?:\.\d+)?", d)]
@@ -96,7 +106,8 @@ def main():
     caja = "%.2f %.2f %.2f %.2f" % (min(_x)-_m, min(_y)-_m,
                                     max(_x)-min(_x)+2*_m, max(_y)-min(_y)+2*_m)
     (SALIDA / "mini.json").write_text(
-        json.dumps({"viewBox": "0 0 100 100", "viewBoxTight": caja, "paths": paths},
+        json.dumps({"viewBox": "0 0 100 100", "viewBoxTight": caja,
+                    "pais": pais, "paths": paths},
                    ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
     kb = lambda f: (SALIDA / f).stat().st_size / 1024
