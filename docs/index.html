@@ -2205,6 +2205,38 @@ function vigilarZoom(){
   };
   map.on("zoomend", revisar);
   map.on("moveend", revisar);
+  /* `idle` y no sólo `moveend`: al terminar el movimiento las teselas del
+     lugar nuevo pueden no estar dibujadas todavía y la consulta vuelve vacía;
+     `idle` llega cuando el mapa quedó quieto Y pintado. Es idempotente. */
+  map.on("moveend", seguirCiudad);
+  map.on("idle", seguirCiudad);
+}
+/* ★ SEGUIR LA CIUDAD (2026-09-17). A nivel manzana la selección —y con ella la
+   escala «esta ciudad», la ficha y la URL— pasa a ser el municipio que está
+   bajo el CENTRO del mapa. Antes quedaba pegada a la última ciudad tocada:
+   recorrías de Santa Cruz a Warnes y la rampa seguía repartida entre las
+   manzanas de Santa Cruz. Cuesta una consulta de un punto en `moveend`
+   (nada), y el repintado no toca los datos: los valores ya están en el estado
+   de las manzanas; sólo cambia la expresión de color y el panel.
+   Se mira la manzana bajo el centro (`s` = sigep) y, si el centro cae en
+   campo, el municipio. Sólo en `moveend`, así una frontera no parpadea
+   mientras se arrastra. */
+function seguirCiudad(){
+  if (!map || nivel !== "manzana" || !map.getLayer("mun-fill")) return;
+  if (map.isMoving()) return;
+  if (_saltarSeguir){ _saltarSeguir = false; return; }
+  const px = map.project(map.getCenter());
+  let s = null;
+  if (map.getLayer("mz-fill")){
+    const f = map.queryRenderedFeatures(px, {layers: ["mz-fill"]})[0];
+    if (f && f.properties.s) s = f.properties.s;
+  }
+  if (!s){
+    const f = map.queryRenderedFeatures(px, {layers: ["mun-fill"]})[0];
+    if (f && f.properties.sigep) s = f.properties.sigep;
+  }
+  if (!s || s === sel || !MUN.some(m => m.sigep === s)) return;
+  seleccionar(s, {seguir: true});
 }
 function actualizarCobertura(){
   const el = document.getElementById("cober");
@@ -2700,7 +2732,7 @@ function montarBuscaMun(){
 function irAMunicipio(s){
   const m = MUN.find(x => x.sigep === s);
   if (!m) return;
-  if (sel !== s) seleccionar(s);
+  if (sel !== s) return seleccionar(s);     // ya encuadra la mancha urbana
   if (!map) return;
   const caja = m.bbox_urbano ||
     (m.geom ? bboxDe(m.geom.geometry.coordinates) : null);
@@ -3833,20 +3865,46 @@ function ficha(e, i){
   });
 }
 
-function seleccionar(s){
-  sel = sel === s ? null : s;
+/* ★ EL ZOOM AL ELEGIR (2026-09-17). Antes se encuadraba el POLÍGONO MUNICIPAL
+   entero —Santa Cruz de la Sierra con su área rural cae en z10,6—, que es la
+   zona de fundido: ni mosaico de manzanas ni mapa municipal, una mancha a
+   medias. Ahora se encuadra la MANCHA URBANA (`bbox_urbano`) y, si aun así el
+   zoom queda por debajo de `Z_LEGIBLE`, se sube hasta ahí centrado en la
+   ciudad: la manzana de 100 m mide ~3 px a z12, que es donde el mosaico
+   empieza a leerse. En una ciudad grande eso muestra su centro, no el todo; el
+   todo está a un gesto de zoom hacia afuera y ya está descargado. */
+const Z_LEGIBLE = 12;
+function encuadrarMunicipio(m, dur){
+  if (!m || !map) return;
+  const caja = m.bbox_urbano || (m.geom ? bboxDe(m.geom.geometry.coordinates) : null);
+  if (!caja) return;
+  const cam = map.cameraForBounds(caja, {padding: padPaneles(), maxZoom: 15});
+  if (!cam) return;
+  if (cam.zoom < Z_LEGIBLE){
+    cam.zoom = Z_LEGIBLE;
+    /* Al recortar el zoom, el centro de la CAJA no sirve: en Santa Cruz cae en
+       Cotoca (la caja abarca localidades sueltas). `centro_urbano` es el
+       centroide de las manzanas ponderado por personas: siempre en la mancha. */
+    if (m.centro_urbano) cam.center = m.centro_urbano;
+  }
+  _saltarSeguir = true;      // este aterrizaje lo pidió el lector: no re-seleccionar
+  map.easeTo({center: cam.center, zoom: cam.zoom, duration: dur == null ? 900 : dur});
+}
+let _saltarSeguir = false;
+/* `op.seguir` = la selección la cambió el MAPA al moverse (ver `seguirCiudad`),
+   no un toque: no se re-encuadra, no se abre la hoja en el teléfono, y la URL
+   se reemplaza en vez de apilar una entrada de historial por cada frontera. */
+function seleccionar(s, op){
+  op = op || {};
+  sel = op.seguir ? s : (sel === s ? null : s);
   if (map && map.getSource("mun")) map.setFilter("mun-sel", ["==", ["get", "sigep"], sel || ""]);
-  if (sel){
-    const m = MUN.find(x => x.sigep === sel);
-    if (m && m.geom && map){
-      // bbox del municipio recorriendo sus coordenadas: sirve para Polygon y
-      // MultiPolygon sin ramificar por tipo de geometría.
-      const b = bboxDe(m.geom.geometry.coordinates);
-      if (b) map.fitBounds(b, {padding: 90, duration: 700});
-    }
-  } else encuadrar();
+  if (!op.seguir){
+    if (sel) encuadrarMunicipio(MUN.find(x => x.sigep === sel));
+    else encuadrar();
+  }
   pintar();
-  escribirURL(true);
+  escribirURL(!op.seguir);
+  if (op.seguir) return;
   /* Tocar un municipio en el mapa es pedir su ficha: en móvil la hoja sube
      sola. Si no, el dato aparece detrás de una hoja bajada y parece que el
      toque no hizo nada. */

@@ -422,6 +422,9 @@ def main():
              "viviendas_urbano": m.get("viviendas_urbano"),
              # el rectángulo de su mancha urbana: es a donde vuela el buscador
              "bbox_urbano": m.get("bbox_urbano"),
+             # y el punto donde aterriza el zoom: centroide de manzanas ponderado
+             # por personas (el centro de la caja puede caer en otro municipio)
+             "centro_urbano": m.get("centro_urbano"),
              "area_manzanada_ha": m.get("area_manzanada_ha"),
              # ★ población y viviendas viajan SIEMPRE, aunque no estén entre los
              #   indicadores del tablero: son CONTEXTO, no un indicador elegible.

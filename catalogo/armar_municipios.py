@@ -112,14 +112,16 @@ def main():
     import numpy as np, shapely
     import pyarrow.parquet as pq
     print("midiendo la superficie amanzanada…")
-    areas, cajas, cods = [], [], []
+    areas, cajas, cods, cxs, cys = [], [], [], [], []
     pf = pq.ParquetFile(FUENTE / "manzanos.parquet")
     for lote in pf.iter_batches(batch_size=20000, columns=["codigo", "geometry"]):
         g_ = shapely.from_wkb(lote.column("geometry").to_numpy(zero_copy_only=False))
         cods.extend(lote.column("codigo").to_pylist())
         cajas.append(shapely.bounds(g_))
         # área en m²: proyección cilíndrica equivalente local, exacta a esta escala
-        lat = np.radians(shapely.get_y(shapely.centroid(g_)))
+        cen = shapely.centroid(g_)
+        cxs.append(shapely.get_x(cen)); cys.append(shapely.get_y(cen))
+        lat = np.radians(shapely.get_y(cen))
         gm = shapely.transform(g_, lambda c: np.column_stack([
             np.radians(c[:, 0]) * 6378137.0,
             np.radians(c[:, 1]) * 6378137.0]))
@@ -127,12 +129,25 @@ def main():
     areas = np.concatenate(areas); cajas = np.vstack(cajas)
     geo_m = pd.DataFrame({"codigo": cods, "area_m2": areas,
                           "x0": cajas[:, 0], "y0": cajas[:, 1],
-                          "x1": cajas[:, 2], "y1": cajas[:, 3]})
+                          "x1": cajas[:, 2], "y1": cajas[:, 3],
+                          "cx": np.concatenate(cxs), "cy": np.concatenate(cys)})
     d = d.merge(geo_m, on="codigo", how="left")
 
     caja_mun = d.dropna(subset=["cod_ine"]).groupby("cod_ine").agg(
         x0=("x0", "min"), y0=("y0", "min"), x1=("x1", "max"), y1=("y1", "max"),
         area_m2=("area_m2", "sum"))
+    # ★ EL CENTRO URBANO (2026-09-17). El centro de `bbox_urbano` NO es la ciudad:
+    #   en Santa Cruz de la Sierra la caja abarca localidades sueltas al este y su
+    #   centro cae en Cotoca. El tablero necesita un punto que esté DENTRO de la
+    #   mancha principal para aterrizar el zoom: el centroide de las manzanas
+    #   ponderado por personas (1,6 millones en la ciudad contra unos miles en
+    #   las localidades lo dejan en el centro). Sin población, cuenta manzanas.
+    dd = d.dropna(subset=["cod_ine"]).copy()
+    dd["w"] = dd["personas"].fillna(0).astype(float)
+    dd.loc[dd.groupby("cod_ine")["w"].transform("sum") <= 0, "w"] = 1.0
+    dd["wx"] = dd["w"] * dd["cx"]; dd["wy"] = dd["w"] * dd["cy"]
+    cen_mun = dd.groupby("cod_ine").agg(w=("w", "sum"), wx=("wx", "sum"), wy=("wy", "sum"))
+    cen_mun["lon"] = cen_mun["wx"] / cen_mun["w"]; cen_mun["lat"] = cen_mun["wy"] / cen_mun["w"]
 
     g = d.dropna(subset=["cod_ine"]).groupby("cod_ine").agg(
         manzanas=("codigo", "size"),
@@ -165,6 +180,9 @@ def main():
                              [round(float(caja_mun.at[ci, "x1"]), 5),
                               round(float(caja_mun.at[ci, "y1"]), 5)]]
                             if ci in caja_mun.index else None),
+            "centro_urbano": ([round(float(cen_mun.at[ci, "lon"]), 5),
+                               round(float(cen_mun.at[ci, "lat"]), 5)]
+                              if ci in cen_mun.index else None),
         })
 
     SALIDA.parent.mkdir(parents=True, exist_ok=True)
