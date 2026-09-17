@@ -2827,8 +2827,14 @@ function montarHoja(){
 
   let y0 = 0, t0 = 0, base = 0, arrastrando = false, movido = 0;
 
+  /* ★ EL BUSCADOR VIVE DENTRO DEL ASA (2026-09-17). Un toque en el campo de
+     búsqueda era también un toque en el asa: capturaba el puntero y el `click`
+     alternaba la hoja a «peek», donde el buscador se esconde → el campo perdía
+     el foco y el teclado del teléfono no aparecía. Lo que nace en `.busca-mun`
+     no es un gesto de la hoja. */
+  const enBuscador = ev => ev.target && ev.target.closest && ev.target.closest(".busca-mun");
   asa.addEventListener("pointerdown", ev => {
-    if (!ES_MOVIL()) return;
+    if (!ES_MOVIL() || enBuscador(ev)) return;
     hojaMedir();
     arrastrando = true; movido = 0;
     y0 = ev.clientY; t0 = performance.now(); base = hojaY(HOJA.estado);
@@ -2874,8 +2880,8 @@ function montarHoja(){
   /* Un toque limpio en el asa alterna. Se distingue del arrastre por la
      distancia: si el dedo se movió más de 6 px, fue un arrastre y ya lo
      resolvió `soltar`. */
-  asa.addEventListener("click", () => {
-    if (!ES_MOVIL() || movido > 6) return;
+  asa.addEventListener("click", ev => {
+    if (!ES_MOVIL() || movido > 6 || enBuscador(ev)) return;
     hojaIr(HOJA.estado === "full" ? "peek" : "full", true);
   });
 
