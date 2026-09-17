@@ -2717,25 +2717,31 @@ function montarBuscaMun(){
           <span>${m.dpto}${m.manzanas ? "" : " · sin manzanas censadas"}</span></div>`).join("")
       : `<div class="bm-vacio">sin resultados</div>`;
     res.hidden = false;
-    res.querySelectorAll(".bm-op").forEach(el => el.onclick = () => {
-      irAMunicipio(el.dataset.s);
-      inp.value = ""; cerrar();
-    });
+    res.querySelectorAll(".bm-op").forEach(el => el.onclick = () => elegir(el.dataset.s));
+  };
+  /* ★ ELEGIR DESDE EL BUSCADOR (2026-09-17, pedido de Carlos). En el teléfono,
+     tras escribir y elegir, lo que se quiere ver es el MAPA volando a la
+     ciudad, no la ficha: la hoja baja a «peek» (en vez del «full» que abre un
+     toque en el mapa) y el campo suelta el foco para que el teclado se cierre. */
+  const elegir = s => {
+    irAMunicipio(s, {hoja: "peek"});
+    inp.value = ""; cerrar();
+    if (ES_MOVIL()){ inp.blur(); hojaIr("peek", true); }
   };
   inp.onkeydown = ev => {
     if (ev.key === "Escape"){ inp.value = ""; cerrar(); }
     if (ev.key === "Enter"){
       const pr = res.querySelector(".bm-op");
-      if (pr){ irAMunicipio(pr.dataset.s); inp.value = ""; cerrar(); }
+      if (pr) elegir(pr.dataset.s);
     }
   };
   document.addEventListener("click", ev => { if (!ev.target.closest(".busca-mun")) cerrar(); });
 }
 
-function irAMunicipio(s){
+function irAMunicipio(s, op){
   const m = MUN.find(x => x.sigep === s);
   if (!m) return;
-  if (sel !== s) return seleccionar(s);     // ya encuadra la mancha urbana
+  if (sel !== s) return seleccionar(s, op); // ya encuadra la mancha urbana
   if (!map) return;
   const caja = m.bbox_urbano ||
     (m.geom ? bboxDe(m.geom.geometry.coordinates) : null);
@@ -2833,8 +2839,14 @@ function montarHoja(){
      el foco y el teclado del teléfono no aparecía. Lo que nace en `.busca-mun`
      no es un gesto de la hoja. */
   const enBuscador = ev => ev.target && ev.target.closest && ev.target.closest(".busca-mun");
+  /* El `click` se decide con lo que se tocó en el pointerdown y no con su
+     propio target: al elegir un resultado, `cerrar()` vacía la lista y el
+     elemento tocado ya no está en el DOM, así que `closest()` no encuentra el
+     buscador y el click volvía a abrir la hoja que acabábamos de bajar. */
+  let gestoAsa = false;
   asa.addEventListener("pointerdown", ev => {
-    if (!ES_MOVIL() || enBuscador(ev)) return;
+    gestoAsa = ES_MOVIL() && !enBuscador(ev);
+    if (!gestoAsa) return;
     hojaMedir();
     arrastrando = true; movido = 0;
     y0 = ev.clientY; t0 = performance.now(); base = hojaY(HOJA.estado);
@@ -2880,8 +2892,8 @@ function montarHoja(){
   /* Un toque limpio en el asa alterna. Se distingue del arrastre por la
      distancia: si el dedo se movió más de 6 px, fue un arrastre y ya lo
      resolvió `soltar`. */
-  asa.addEventListener("click", ev => {
-    if (!ES_MOVIL() || movido > 6 || enBuscador(ev)) return;
+  asa.addEventListener("click", () => {
+    if (!ES_MOVIL() || movido > 6 || !gestoAsa) return;
     hojaIr(HOJA.estado === "full" ? "peek" : "full", true);
   });
 
@@ -3940,7 +3952,7 @@ function seleccionar(s, op){
   /* Tocar un municipio en el mapa es pedir su ficha: en móvil la hoja sube
      sola. Si no, el dato aparece detrás de una hoja bajada y parece que el
      toque no hizo nada. */
-  if (sel && ES_MOVIL()) hojaIr("full", true);
+  if (sel && ES_MOVIL()) hojaIr(op.hoja || "full", true);
 }
 
 /* ── TOOLTIP ─────────────────────────────────────────────────────────────────
