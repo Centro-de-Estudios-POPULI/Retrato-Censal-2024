@@ -57,6 +57,15 @@ def main():
     sub["dpto"] = sub["sigep"].map(lambda s: quiero[s]["dpto"])
     sub = sub[["sigep", "nombre", "dpto", "geometry"]]
     sub.to_file(SALIDA / "municipios.geojson", driver="GeoJSON", COORDINATE_PRECISION=5)
+    # ★ El mismo mapa como TopoJSON (2026-09-16): arcos compartidos entre vecinos
+    #   y coordenadas cuantizadas a 1e5 (~1 m). Medido: 620 KB comprimido el
+    #   GeoJSON, 161 KB el TopoJSON. El tablero lo infla con `topoAFeatures()`
+    #   y cae al GeoJSON si no lo encuentra, por eso se escriben los dos.
+    import topojson as tp
+    import json as _json
+    topo = tp.Topology(_json.loads((SALIDA / "municipios.geojson").read_text(encoding="utf-8")),
+                       prequantize=1e5, topology=True, toposimplify=False)
+    (SALIDA / "municipios.topojson").write_text(topo.to_json(), encoding="utf-8")
 
     borde = gpd.GeoDataFrame(geometry=[sub.union_all()], crs=sub.crs)
     borde.to_file(SALIDA / "region.geojson", driver="GeoJSON", COORDINATE_PRECISION=5)
@@ -114,6 +123,7 @@ def main():
     xmin, ymin, xmax, ymax = sub.total_bounds
     print(f"{len(sub)} municipios · bbox [{xmin:.2f}, {ymin:.2f}, {xmax:.2f}, {ymax:.2f}]")
     print(f"  municipios.geojson {kb('municipios.geojson'):>8.0f} KB")
+    print(f"  municipios.topojson{kb('municipios.topojson'):>8.0f} KB")
     print(f"  region.geojson     {kb('region.geojson'):>8.0f} KB")
     print(f"  mini.json          {kb('mini.json'):>8.0f} KB  "
           f"({len(paths)} siluetas, simplificadas a {TOL_MINI_M} m)")

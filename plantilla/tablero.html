@@ -172,7 +172,10 @@ body.dark .aviso b{color:var(--orange)}
 /* la botonera de zoom y el termómetro se apoyan en el borde del panel derecho:
    si no acompañan, el nuevo ancho los deja debajo del panel */
 .zc{right:calc(var(--det-w) + 26px)}
-.termo{width:min(34rem,calc(100vw - var(--panel-w) - var(--det-w) - 6rem))}
+/* Sólo en escritorio: en el teléfono `100vw - paneles` da un ancho negativo y
+   `min()` lo elegía; la leyenda quedaba de 60 px, con la rampa y el conmutador
+   desbordados. Nadie lo vio porque, además, estaba tapada por la hoja (2026-09-16). */
+@media (min-width:821px){.termo{width:min(34rem,calc(100vw - var(--panel-w) - var(--det-w) - 6rem))}}
 /* ⚠️ 820 Y NO 900. La hoja deslizable de `estilo-atlas.css` entra a los 820:
    con el corte en 900, entre esos dos anchos el panel se quedaba en su posición
    fija de escritorio pero con `width:auto` — o sea pegado al borde derecho y
@@ -463,11 +466,26 @@ body.dark .ind.on .mini{opacity:1!important;filter:saturate(1.05)!important}
 .cmp .ds-u{font-weight:500;fill:var(--faint)}
 .cmp .ds-ax{font:500 3.2px var(--f);fill:var(--faint)}
 /* El conmutador de escala, con el molde del selector de año de la barra. */
-.tm-esc{display:flex;gap:0;border:1px solid var(--linea);margin:0 .6rem}
-.tm-esc button{background:none;border:0;padding:2px 7px;font:600 .55rem var(--f);
-  color:var(--suave);cursor:pointer;white-space:nowrap}
+/* ★ Rediseño 2026-09-16: un rótulo («escala») dice qué se está eligiendo, el
+   botón local lleva el NOMBRE de la ciudad —«esta ciudad» obligaba a
+   acordarse de cuál— y el blanco de pulsación crece (22 px en PC, 34 en el
+   teléfono, donde antes medía 17). */
+.tm-esc{display:flex;align-items:stretch;gap:0;border:1px solid var(--linea);margin:0 .6rem}
+/* `display:flex` de autor le gana al `[hidden]{display:none}` del navegador: sin
+   esta línea el conmutador se dibujaba (vacío, 2 px de borde) aun oculto. */
+.tm-esc[hidden]{display:none}
+.tm-esc-l{display:flex;align-items:center;padding:0 7px;font:500 .5rem var(--f);letter-spacing:.06em;
+  text-transform:uppercase;color:var(--faint);border-right:1px solid var(--linea)}
+.tm-esc button{background:none;border:0;padding:3px 9px;min-height:22px;font:600 .58rem var(--f);
+  color:var(--suave);cursor:pointer;white-space:nowrap;max-width:12rem;overflow:hidden;text-overflow:ellipsis}
 .tm-esc button.on{background:var(--sel);color:#fff}
 .tm-esc button:not(.on):hover{background:var(--gris-card)}
+@media (max-width:820px){
+  .tm-top{flex-wrap:wrap}
+  .tm-esc{margin:6px 0 2px;width:100%;order:9}
+  .tm-esc button{flex:1;min-height:34px;padding:6px 8px;font-size:.68rem;max-width:none}
+  .tm-esc-l{font-size:.56rem;padding:0 10px}
+}
 
 /* Las referencias sobre la barra de la leyenda: el país lleva rótulo porque es
    la que el lector busca; la mediana va sin él para no amontonar. */
@@ -715,7 +733,7 @@ body.dark{--ser-mun:#43b3bd;--ser-reg:#c3d0d6}
            ROTULA mientras está activa, porque un turquesa local no significa lo
            mismo que un turquesa nacional. Sale de los deciles que
            `mz_stats.json` ya publica por municipio: no hay dato nuevo. -->
-    <div class="tm-esc" id="tm-esc" hidden><button data-e="pais" class="on">país</button><button data-e="local">esta ciudad</button></div>
+    <div class="tm-esc" id="tm-esc" hidden><span class="tm-esc-l">escala</span><button data-e="pais" class="on">país</button><button data-e="local" id="tm-esc-loc">esta ciudad</button></div>
     <div class="tm-st" id="tm-st"></div></div>
   <div class="tm-row"><span class="tm-side" id="tm-lo"></span><div class="tm-bar" id="tm-bar"></div><span class="tm-side" id="tm-hi"></span></div>
 </div>
@@ -953,6 +971,109 @@ function difIntercensal(a, b, ind){
   return esConteo(ind) ? (a ? 100 * (b - a) / a : null) : b - a;
 }
 let MZS = null, sel = null;   // MZS = estadísticas precalculadas del nivel manzana
+/* ★★ LOS VALORES DE LAS MANZANAS YA NO VIAJAN EN LA TESELA (2026-09-16).
+   Medido sobre la tesela más pesada (z10 de Santa Cruz, 27.584 manzanas):
+   2.257 KB con los 91 indicadores como atributos, 325 KB con la geometría
+   sola. Bajar del país a una ciudad descargaba ~9 MB. Ahora la tesela lleva
+   geometría + `id` (posición de la manzana en `manzanos.parquet`) + municipio
+   + ficha, y cada indicador es UNA columna JSON en `datos/col/<clave>.json`
+   (247.429 valores, ~120 KB comprimida por Pages) que se aplica con
+   `setFeatureState` a las manzanas cargadas. Cambiar de indicador = bajar
+   una columna; la geometría no se vuelve a pedir. */
+let COLS = null;                 // manifiesto datos/columnas.json (n, rango, con_dato)
+const COL = new Map();           // clave → array de 247.429 valores (null = sin dato)
+const COL_PEND = new Map();      // clave → promesa en vuelo
+let COL_ACTIVA = null;           // la clave que el mapa está pintando
+let COL_HECHAS = new Set();      // ids ya fijados para COL_ACTIVA
+let _colRAF = 0, _colEscucha = false;
+
+function columna(k){
+  if (COL.has(k)) return Promise.resolve(COL.get(k));
+  if (COL_PEND.has(k)) return COL_PEND.get(k);
+  const p = fetch(`datos/col/${k}.json`).then(r => { if (!r.ok) throw 0; return r.json(); })
+    .then(a => {
+      if (COLS && COLS.n && a.length !== COLS.n)
+        console.warn(`columna ${k}: ${a.length} valores, el manifiesto declara ${COLS.n}`);
+      COL.set(k, a); COL_PEND.delete(k); return a;
+    })
+    .catch(() => { COL_PEND.delete(k); return null; });
+  COL_PEND.set(k, p);
+  return p;
+}
+function valorCol(k, id){
+  const a = COL.get(k);
+  if (!a || id === undefined || id === null) return null;
+  const x = a[id];
+  return x === null || x === undefined ? null : x;
+}
+/* Fija el estado `v` de cada manzana CARGADA (las teselas en memoria) con la
+   columna activa. Se llama al cambiar de indicador y cada vez que entran
+   teselas nuevas (`sourcedata`), con un rAF para juntar la ráfaga. Las
+   manzanas sin dato NO se fijan: el estado ausente ya pinta gris, y son
+   la mitad —la mitad de llamadas que ahorrar. */
+function pintarCargadas(){
+  _colRAF = 0;
+  const k = COL_ACTIVA;
+  if (!k || !map || !map.getSource("mz")) return;
+  const a = COL.get(k);
+  if (!a) return;
+  const fs = map.querySourceFeatures("mz", {sourceLayer: "manzanas"});
+  for (const f of fs){
+    const id = f.id;
+    if (id === undefined || COL_HECHAS.has(id)) continue;
+    COL_HECHAS.add(id);
+    const v = a[id];
+    if (v !== null && v !== undefined)
+      map.setFeatureState({source: "mz", sourceLayer: "manzanas", id}, {v});
+  }
+}
+function programarPintado(){
+  if (!_colRAF) _colRAF = requestAnimationFrame(pintarCargadas);
+}
+async function aplicarColumna(k){
+  if (!map) return;
+  if (!_colEscucha){
+    _colEscucha = true;
+    map.on("sourcedata", ev => { if (ev.sourceId === "mz" && ev.tile) programarPintado(); });
+  }
+  if (COL_ACTIVA !== k){
+    COL_ACTIVA = k; COL_HECHAS = new Set();
+    if (map.getSource("mz")) map.removeFeatureState({source: "mz", sourceLayer: "manzanas"});
+  }
+  const a = await columna(k);
+  if (!a || COL_ACTIVA !== k) return;
+  pintarCargadas();
+}
+
+/* ★ TopoJSON → GeoJSON, en 30 líneas, para no cargar topojson-client por
+   161 KB de ahorro… que son 460 KB: `municipios.geojson` pesaba 620 KB
+   comprimido y el mismo mapa como TopoJSON (arcos compartidos, cuantizado a
+   1e5) pesa 161 KB. Devuelve la misma FeatureCollection que antes
+   (`sigep`, `nombre`, `dpto`). */
+function topoAFeatures(topo){
+  const sc = topo.transform ? topo.transform.scale : [1, 1];
+  const tr = topo.transform ? topo.transform.translate : [0, 0];
+  const arcos = topo.arcs.map(a => {
+    let x = 0, y = 0;
+    return a.map(([dx, dy]) => { x += dx; y += dy; return [x * sc[0] + tr[0], y * sc[1] + tr[1]]; });
+  });
+  const anillo = idx => {
+    const out = [];
+    idx.forEach(i => {
+      const a = i >= 0 ? arcos[i] : arcos[~i].slice().reverse();
+      for (let j = out.length ? 1 : 0; j < a.length; j++) out.push(a[j]);
+    });
+    return out;
+  };
+  const geom = g => g.type === "Polygon"
+    ? {type: "Polygon", coordinates: g.arcs.map(anillo)}
+    : g.type === "MultiPolygon"
+      ? {type: "MultiPolygon", coordinates: g.arcs.map(p => p.map(anillo))}
+      : null;
+  const obj = topo.objects[Object.keys(topo.objects)[0]];
+  return {type: "FeatureCollection",
+          features: obj.geometries.map(g => ({type: "Feature", properties: g.properties || {}, geometry: geom(g)}))};
+}
 let BANCO = null;             // qué láminas del banco existen, por ámbito
 // Escala vigente (la que acaba de pintar el mapa). El tooltip la lee para dar el
 // chip de color, la posición en la rampa y el percentil sin recalcular nada.
@@ -1252,8 +1373,16 @@ function expresionColor(e, campo){
   // saneo: las paradas deben ser estrictamente crecientes o MapLibre tira error
   for (let i = 2; i < paradas.length; i += 2)
     if (paradas[i] <= paradas[i-2]) paradas[i] = paradas[i-2] + 1e-9;
-  return ["case", ["==", ["get", campo], null], SIN_DATO[esOscuro() ? "oscuro" : "claro"],
-          ["interpolate", ["linear"], ["to-number", ["get", campo]], ...paradas]];
+  /* ★ `campo === null` = el valor vive en el FEATURE-STATE (`v`), no en un
+     atributo de la geometría (2026-09-16). Así pintan hoy los dos niveles:
+     el municipal (343 `setFeatureState` en vez de reserializar 2,5 MB de
+     GeoJSON con `setData` en cada cambio) y el de manzanas (la columna del
+     indicador aplicada sobre las teselas cargadas; ver `aplicarColumna`).
+     Un estado sin fijar devuelve null → gris de "sin dato", igual que antes
+     un atributo ausente. */
+  const ref = campo === null ? ["feature-state", "v"] : ["get", campo];
+  return ["case", ["==", ref, null], SIN_DATO[esOscuro() ? "oscuro" : "claro"],
+          ["interpolate", ["linear"], ["to-number", ref], ...paradas]];
 }
 
 /* ── FORMATO ─────────────────────────────────────────────────────────────── */
@@ -1557,6 +1686,18 @@ function encuadrar(){
 const popEl = document.getElementById("pop");
 
 /* ── CARGA ───────────────────────────────────────────────────────────────── */
+const pCat = fetch("datos/catalogo_municipal.json").then(r => r.json());
+/* ★ `mz_stats.json` (344 KB) se pedía DESPUÉS de que llegaran los seis
+   archivos de abajo, en serie: un viaje entero más antes de poder pintar.
+   Ahora sale apenas el catálogo dice que este tablero tiene nivel manzana,
+   en paralelo con el resto; el tablero municipal sigue sin pedirlo. Con él
+   viaja el manifiesto de las columnas por indicador. */
+const pMZS = pCat.then(cat => (cat.niveles && cat.niveles.manzana)
+  ? Promise.all([fetch("datos/mz_stats.json").then(r => r.json()),
+                 fetch("datos/columnas.json").then(r => r.ok ? r.json() : null).catch(() => null)])
+      .catch(() => [null, null])
+  : [null, null]);
+
 Promise.all([
   /* ⚠️ ESTE ARCHIVO ES LA PLANTILLA de los dos tableros (ver
      `scripts/generar_sitios.py`), pero también es una página servible: es lo que
@@ -1567,14 +1708,16 @@ Promise.all([
      tablero municipal, así lo que se sirve por defecto no es una versión vieja.
      `catalogo_tablero.json` sigue existiendo en disco porque `armar_tableros.py`
      lo lee para heredar el bloque fiscal; lo que ya no hace es servirse. */
-  fetch("datos/catalogo_municipal.json").then(r => r.json()),
+  pCat,
   fetch("datos/municipios_municipal.json").then(r => r.json()),
   // ★ No hay bloque fiscal en el Retrato: los indicadores de ejecución
   //   presupuestaria son del Atlas Fiscal Municipal, que es otro producto del
   //   mismo observatorio. La promesa se conserva —el resto del código espera
   //   seis— y resuelve en vacío en vez de romper la carga entera.
   Promise.resolve({anios: [], entidades: {}}),
-  fetch("datos/municipios.geojson").then(r => r.json()),
+  // TopoJSON primero (161 KB); si no está, el GeoJSON de siempre (620 KB).
+  fetch("datos/municipios.topojson").then(r => { if (!r.ok) throw 0; return r.json(); }).then(topoAFeatures)
+    .catch(() => fetch("datos/municipios.geojson").then(r => r.json())),
   fetch("datos/region.geojson").then(r => r.json()),
   fetch("datos/mini.json").then(r => r.json()),
 ]).then(async ([cat, mun, fis, gmun, greg, mini]) => {
@@ -1584,8 +1727,7 @@ Promise.all([
      cuantiles sobre todas las manzanas porque sólo ve las de la pantalla.
      Se piden DESPUÉS del catálogo porque hasta acá no se sabe si este tablero
      tiene nivel manzana — el municipal no lo tiene y no debe pedir nada. */
-  if (CAT.niveles && CAT.niveles.manzana)
-    MZS = await fetch("datos/mz_stats.json").then(r => r.json()).catch(() => null);
+  [MZS, COLS] = await pMZS;     // ya venían en vuelo desde que llegó el catálogo
   /* ★ QUÉ LÁMINAS EXISTEN DE VERDAD (2026-08-27). La pastilla de descarga
      armaba la ruta del PNG con la clave del indicador y confiaba en que el
      archivo estuviera: la garantía vivía en un comentario, no en el código, y
@@ -2603,6 +2745,12 @@ function hojaMedir(){
   if (!p) return;
   HOJA.alto = p.getBoundingClientRect().height;
   HOJA.asa = t ? t.getBoundingClientRect().height : 96;
+  /* ★ LA LEYENDA ESTABA TAPADA EN EL TELÉFONO (2026-09-16). `.termo` iba a
+     `bottom:8px` y la hoja en «peek» deja su asa (~96 px) justo ahí: el
+     termómetro y el conmutador «país / ciudad» existían pero nunca se veían,
+     ni en peek (debajo del asa) ni en full (opacidad 0). El asa publica su
+     alto y `estilo-atlas.css` sube la leyenda por encima. */
+  document.documentElement.style.setProperty("--asa", HOJA.asa + "px");
 }
 
 function hojaY(estado){
@@ -2745,13 +2893,16 @@ function pintar(){
   if (conMapa && map.getSource("mun")){
     const vm = MUN.map(m => valorMunicipal(m, i));
     const em = escala(vm, MUN.map(pesoMunicipal), i, "municipio");
-    const src = map.getSource("mun"), d = src._data;
-    d.features.forEach(f => {
-      const m = MUN.find(x => x.sigep === f.properties.sigep);
-      f.properties.v = m ? valorMunicipal(m, i) : null;
+    /* ★ Antes: reescribir `properties.v` en los 343 y `setData()` = 2,5 MB
+       reserializados y reteselados en el worker por cada cambio de indicador
+       o de año. Ahora: 343 `setFeatureState` (la fuente ya tenía
+       `promoteId: "sigep"`) y la expresión lee `["feature-state","v"]`. */
+    MUN.forEach(m => {
+      const v = valorMunicipal(m, i);
+      map.setFeatureState({source: "mun", id: m.sigep},
+                          {v: v === undefined || v === null || !isFinite(v) ? null : v});
     });
-    src.setData(d);
-    if (em) map.setPaintProperty("mun-fill", "fill-color", expresionColor(em, "v"));
+    if (em) map.setPaintProperty("mun-fill", "fill-color", expresionColor(em, null));
   }
 
   if (nivel === "municipio"){
@@ -2765,8 +2916,10 @@ function pintar(){
        Ahora el valor ya vive en la tesela con el nombre del indicador, así que
        basta apuntar la expresión de color a otro atributo. */
     e = escalaManzana(i);
-    if (conMapa && map.getLayer("mz-fill"))
-      map.setPaintProperty("mz-fill", "fill-color", expresionColor(e, i.k_mz));
+    if (conMapa && map.getLayer("mz-fill")){
+      map.setPaintProperty("mz-fill", "fill-color", expresionColor(e, null));
+      aplicarColumna(i.k_mz);      // baja la columna si hace falta y fija el estado
+    }
   }
   ESC = e;
   termometro(e, i);
@@ -2825,6 +2978,10 @@ function termometro(e, i){
     const hay = nivel !== "municipio" && sel && i.k_mz && MZS && MZS[i.k_mz]
              && MZS[i.k_mz].dist && MZS[i.k_mz].dist[sel];
     cesc.hidden = !hay;
+    if (hay){
+      const _loc = document.getElementById("tm-esc-loc"), _m = MUN.find(m => m.sigep === sel);
+      if (_loc) _loc.textContent = _m ? _m.nombre : "esta ciudad";
+    }
     cesc.querySelectorAll("button").forEach(b =>
       b.classList.toggle("on", (b.dataset.e === "local") === ESC_LOCAL));
   }
@@ -3975,7 +4132,15 @@ function ocultarPop(){ if (popEl) popEl.style.opacity = "0"; }
 function interacciones(){
   map.on("click", "mun-fill", ev => { if (nivel === "municipio") seleccionar(ev.features[0].properties.sigep); });
   const mostrar = (ev, esMz) => {
-    const html = tooltipHTML(ev.features[0].properties, esMz);
+    const f0 = ev.features[0], p = Object.assign({}, f0.properties);
+    /* El valor ya no viene en la geometría: la manzana lo toma de la columna
+       activa por su `id`; el municipio, de MUN (antes era `properties.v`,
+       escrito por el `setData` que ya no existe). */
+    if (ind_actual){
+      if (esMz) p[ind_actual.k_mz] = valorCol(ind_actual.k_mz, f0.id);
+      else { const m = MUN.find(x => x.sigep === p.sigep); p.v = m ? valorMunicipal(m, ind_actual) : null; }
+    }
+    const html = tooltipHTML(p, esMz);
     if (!html) return ocultarPop();
     mostrarPop(html, ev.originalEvent.clientX, ev.originalEvent.clientY);
   };

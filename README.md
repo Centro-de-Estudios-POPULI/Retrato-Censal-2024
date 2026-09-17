@@ -67,9 +67,12 @@ Cada paso depende del anterior. Los cuatro primeros son de datos; los dos últim
                                       catalogo/manzana_agregado_municipal.csv
 3. catalogo/comparar_niveles.py     → catalogo/comparables.json   (la puerta)
 4. catalogo/armar_tableros.py       → docs/datos/catalogo_*.json · municipios_*.json
-5. scripts/preparar_web.py          → docs/datos/municipios.geojson · region.geojson · mini.json
+5. scripts/preparar_web.py          → docs/datos/municipios.geojson · municipios.topojson
+                                      region.geojson · mini.json
    scripts/estadisticas_manzana.py  → docs/datos/mz_stats.json
-   scripts/generar_pmtiles.py       → docs/datos/manzanas.pmtiles      (~9 min)
+   scripts/generar_pmtiles.py       → docs/datos/manzanas.pmtiles      (~8 min)
+                                      docs/datos/col/<clave>.json · columnas.json
+                                      (--solo-columnas: sólo las columnas, ~1 min)
 6. scripts/generar_sitios.py        → docs/municipal/ · docs/manzana/
    scripts/armar_portada.py         → docs/index.html
 ```
@@ -83,7 +86,9 @@ Cada paso depende del anterior. Los cuatro primeros son de datos; los dos últim
 | `datos/cobertura.json` | las cifras de cobertura que el tablero muestra al pie | paso 1 |
 | `catalogo/comparables.json` | `verificados` · `con_aviso` · `excluidos` · `solo_manzana` | paso 3 |
 | `docs/datos/catalogo_*.json` | grupos, indicadores, dominio de color y el agregado país | paso 4 |
-| `docs/datos/manzanas.pmtiles` | geometría + los 91 indicadores como atributos | paso 5 |
+| `docs/datos/manzanas.pmtiles` | geometría + `id` (posición en `manzanos.parquet`) + `s` (sigep), `nom`, `f` (ficha). **Sin indicadores** desde 2026-09-16 | paso 5 |
+| `docs/datos/col/<clave>.json` | un indicador = una columna de 247.429 valores en el orden del `id` (`null` = sin ficha); el tablero la aplica con `setFeatureState`. `columnas.json` declara `n`, rango y cuántas traen dato | paso 5 |
+| `docs/datos/municipios.topojson` | los 343 como TopoJSON (161 KB comprimido; el GeoJSON, 620) — el tablero lo infla con `topoAFeatures()` y cae al GeoJSON si falta | paso 5 |
 
 ---
 

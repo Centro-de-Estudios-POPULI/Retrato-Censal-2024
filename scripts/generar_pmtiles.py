@@ -7,11 +7,16 @@ Port nacional del teselador metropolitano. Mismo formato de salida y mismos
 zooms, pero seis veces más manzanas y una máquina con 7,3 GB de RAM: la
 diferencia no es de escala, es de MÉTODO.
 
-★ POR QUÉ TESELAR, que sigue siendo la razón original: con los datos dentro de
-  la tesela como atributos, cambiar de indicador es cambiar la expresión de
-  color —`["get", clave]`— y nada más. La alternativa (un GeoJSON con los
-  valores y `setData()` en cada cambio) reserializa el nivel entero para
-  cambiar un color.
+★ POR QUÉ TESELAR, que sigue siendo la razón original: la geometría de
+  247.429 manzanas sólo se puede servir por teselas. Hasta 2026-09-16 los 91
+  indicadores viajaban DENTRO de la tesela como atributos y el color era
+  `["get", clave]`; medido, eso era el 85 % de los bytes (la z10 de Santa Cruz
+  pesaba 2,3 MB; 0,3 MB la geometría sola) y subir del país a una ciudad
+  descargaba ~9 MB. Ahora la tesela lleva geometría + `id` + municipio +
+  ficha, los valores van en columnas binarias (`docs/datos/col/`, una por
+  indicador, ~60 KB cada una) y el tablero pinta con `["feature-state","v"]`.
+  Cambiar de indicador = bajar una columna y aplicarla a las manzanas
+  cargadas; la geometría no se vuelve a pedir.
 
 ★ SIN tippecanoe: no hay binario de Windows ni WSL en esta máquina. Se tesela
   con shapely + mapbox_vector_tile y se empaqueta con `pmtiles` de Protomaps.
@@ -44,7 +49,8 @@ diferencia no es de escala, es de MÉTODO.
   a otro sin que nada fallara. El puente manzano→municipio lo emite
   `armar_municipios.py`; acá sólo se lee.
 
-    python scripts/generar_pmtiles.py
+    python scripts/generar_pmtiles.py                  # teselas + columnas (~12 min)
+    python scripts/generar_pmtiles.py --solo-columnas  # sólo docs/datos/col/ (~1 min)
 """
 import gzip, json, math, pathlib, sys, time
 import numpy as np
@@ -239,10 +245,67 @@ def propiedades(codigos):
     return claves, vals, nombres, sigeps, ficha
 
 
+def exportar_columnas(claves, vals, sigeps, ficha, codigos):
+    """Una columna por indicador, en el ORDEN DE `codigos` (= el `id` de la
+    feature en la tesela): `docs/datos/col/<clave>.json`, un array JSON con
+    `null` donde el INE no publica. `docs/datos/columnas.json` declara `n`,
+    cuántas manzanas traen dato y el rango de cada una.
+
+    ★ JSON y no binario, medido: la columna u8 comprimida a mano pesaba 86 KB
+      y la misma como JSON servida por GitHub Pages (que comprime
+      `application/json` pero NO `application/octet-stream`) 122 KB. Los 36 KB
+      de diferencia compran cero código de decodificación y compatibilidad con
+      cualquier navegador: un array de 247.429 números se parsea en ~5 ms.
+    Los valores ya vienen redondeados de `propiedades()` (entero, salvo las
+    tres razones con un decimal)."""
+    carpeta = DATOS / "col"
+    carpeta.mkdir(parents=True, exist_ok=True)
+    for viejo in carpeta.glob("*.bin.gz"):
+        viejo.unlink()
+    n = len(codigos)
+    manifiesto = {"n": n, "orden": "manzanos.parquet (columna codigo) = id de la feature",
+                  "columnas": {}}
+    total = 0
+    for c in claves:
+        v = np.asarray(vals[c], dtype="float64")
+        ok = ~np.isnan(v)
+        entero = ok.any() and bool(np.all(np.abs(v[ok] - np.round(v[ok])) < 1e-9))
+        lista = [None] * n
+        if entero:
+            for i in np.flatnonzero(ok):
+                lista[i] = int(round(v[i]))
+        else:
+            for i in np.flatnonzero(ok):
+                lista[i] = float(v[i])
+        txt = json.dumps(lista, separators=(",", ":"))
+        (carpeta / f"{c}.json").write_text(txt, encoding="utf-8")
+        total += len(txt)
+        manifiesto["columnas"][c] = {
+            "con_dato": int(ok.sum()),
+            "min": float(v[ok].min()) if ok.any() else None,
+            "max": float(v[ok].max()) if ok.any() else None,
+            "entero": entero}
+    (DATOS / "columnas.json").write_text(
+        json.dumps(manifiesto, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    print(f"  {len(claves)} columnas → docs/datos/col/ ({total/1e6:.1f} MB sin comprimir; "
+          f"Pages las sirve gzip, ~120 KB cada una)")
+
+
+def solo_columnas():
+    """Regenera las columnas sin teselar: el orden es el de `manzanos.parquet`,
+    igual que en `preparar()`, así que el `id` de la tesela sigue valiendo."""
+    import pyarrow.parquet as pq
+    codigos = pq.read_table(FUENTE / "manzanos.parquet", columns=["codigo"]) \
+                .column("codigo").to_pylist()
+    claves, vals, nombres, sigeps, ficha = propiedades(codigos)
+    exportar_columnas(claves, vals, sigeps, ficha, codigos)
+
+
 def main():
     t0 = time.time()
     codigos, wkbs, cajas = preparar()
     claves, vals, nombres, sigeps, ficha = propiedades(codigos)
+    exportar_columnas(claves, vals, sigeps, ficha, codigos)
 
     minx, miny = cajas[:, 0].min(), cajas[:, 1].min()
     maxx, maxy = cajas[:, 2].max(), cajas[:, 3].max()
@@ -282,7 +345,18 @@ def main():
                 p = {"s": sigeps[k], "nom": nombres[k]}
                 if ficha[k]:
                     p["f"] = 1
-                for c in claves:
+                # ★★ LOS 91 INDICADORES YA NO VIAJAN EN LA TESELA (2026-09-16).
+                #    Medido sobre la tesela más pesada (z10 de Santa Cruz,
+                #    27.584 manzanas): 2.257 KB con atributos, 325 KB con la
+                #    geometría sola. El 85 % del archivo eran las etiquetas
+                #    clave→valor repetidas por manzana (MVT deduplica valores,
+                #    no etiquetas: 94 pares por manzana con ficha). Ahora cada
+                #    manzana lleva un `id` entero (su posición en `codigos`) y
+                #    los valores salen a `docs/datos/col/<clave>.bin.gz`, una
+                #    columna por indicador en ese mismo orden; el tablero los
+                #    aplica con `setFeatureState` y pinta con
+                #    `["feature-state","v"]`. Ver `exportar_columnas()`.
+                for c in ():
                     v = vals[c][k]
                     # ausente y cero son cosas distintas: el mapa distingue "sin
                     # ficha" de "cero" con `["has", clave]`
@@ -319,7 +393,8 @@ def main():
                             g = normalizar(g.simplify(tol, preserve_topology=True))
                             if g is None or g.is_empty:
                                 continue
-                            feats.append({"geometry": g, "properties": props[k]})
+                            feats.append({"geometry": g, "properties": props[k],
+                                          "id": int(cerca[k])})
                         if not feats:
                             continue
                         tile = mapbox_vector_tile.encode(
@@ -357,7 +432,7 @@ def main():
              "center_lat_e7": int((lo[1] + hi[1]) / 2 * 1e7)},
             {"attribution": "INE · Censo 2024, fichas por manzano",
              "vector_layers": [{"id": CAPA, "minzoom": ZMIN, "maxzoom": ZMAX,
-                                "fields": {**{k: "Number" for k in claves},
+                                "fields": {
                                            "s": "String", "nom": "String",
                                            "f": "Number"}}]})
     mb = SALIDA.stat().st_size / 1e6
@@ -365,4 +440,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    if "--solo-columnas" in sys.argv:
+        solo_columnas()
+    else:
+        main()
