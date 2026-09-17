@@ -567,6 +567,29 @@ def main():
         for i in g["indicadores"]:
             if i["key"] in CONTEOS:
                 i["agg"] = "suma"
+    # ★ `esc` y `ref` los escribe el paso 5 (`scripts/estadisticas_manzana.py`)
+    #   SOBRE este mismo archivo. Re-correr este paso los borraba y el tablero
+    #   perdía la escala única sin avisar (2026-09-17). Se heredan del archivo
+    #   anterior si existe; el paso 5 los recalcula igual cuando corre.
+    previo = SALIDA / "catalogo_manzana.json"
+    if previo.exists():
+        try:
+            viejo = {i["key"]: i
+                     for g in json.loads(previo.read_text(encoding="utf-8"))["grupos"]
+                     for i in g["indicadores"]}
+        except Exception:
+            viejo = {}
+        n_h = 0
+        for g in grupos_b:
+            for i in g["indicadores"]:
+                v = viejo.get(i["key"])
+                if v:
+                    for k in ("esc", "ref"):
+                        if k in v and k not in i:
+                            i[k] = v[k]; n_h += 1
+        if n_h:
+            print(f"  esc/ref heredados del catálogo anterior: {n_h} "
+                  f"(estadisticas_manzana.py los recalcula)")
     (SALIDA / "catalogo_manzana.json").write_text(json.dumps({
         "tablero": "manzana", "anios_fiscal": [],
         "niveles": {k: {"n": len(muns) if k == "municipio" else N_MANZANAS,

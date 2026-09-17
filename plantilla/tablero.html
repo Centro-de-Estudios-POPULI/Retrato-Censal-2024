@@ -480,6 +480,9 @@ body.dark .ind.on .mini{opacity:1!important;filter:saturate(1.05)!important}
   color:var(--suave);cursor:pointer;white-space:nowrap;max-width:12rem;overflow:hidden;text-overflow:ellipsis}
 .tm-esc button.on{background:var(--sel);color:#fff}
 .tm-esc button:not(.on):hover{background:var(--gris-card)}
+/* la ciudad ocupa poca rampa: el botón local se marca y la leyenda lo dice */
+.tm-esc.sugerir button[data-e="local"]:not(.on){box-shadow:inset 0 0 0 2px var(--warm);color:var(--tx)}
+.tm-sug{color:var(--warm);font-weight:600}
 @media (max-width:820px){
   .tm-top{flex-wrap:wrap}
   .tm-esc{margin:6px 0 2px;width:100%;order:9}
@@ -2794,8 +2797,11 @@ function hojaIr(estado, animar){
   if (!p || !ES_MOVIL()) return;
   HOJA.estado = estado;
   p.classList.toggle("dragging", !animar);
-  p.style.transform = `translateY(${hojaY(estado)}px)`;
+  /* La clase va ANTES de medir: en «peek» el asa esconde el buscador de
+     municipios (~44 px) y el alto que se mide es el que se va a ver. */
   document.body.classList.toggle("sheet-open", estado === "full");
+  hojaMedir();
+  p.style.transform = `translateY(${hojaY(estado)}px)`;
   if (!animar) requestAnimationFrame(() => p.classList.remove("dragging"));
   hojaFinDeLista();
 }
@@ -3005,15 +3011,35 @@ function termometro(e, i){
   });
   /* El conmutador sólo tiene sentido con un municipio elegido y mirando sus
      manzanas: sin eso no hay «esta ciudad» que escalar. */
+  /* ★ AVISO DE RAMPA APLASTADA (2026-09-17). Medido en el propio catálogo: en el
+     24 % de los pares ciudad×indicador la ciudad usa menos de un quinto de la
+     rampa nacional, y el mapa urbano sale liso. El conmutador existía pero
+     callaba. Ahora, si el 80 % central de las manzanas de la ciudad (p10–p90)
+     ocupa menos del 20 % del rango nacional, la leyenda lo dice y el botón
+     de la ciudad se marca en ámbar. No cambia la escala solo: un turquesa
+     local no significa lo mismo que uno nacional, y eso lo decide el lector. */
+  let sug = "";
   const cesc = document.getElementById("tm-esc");
   if (cesc){
     const hay = nivel !== "municipio" && sel && i.k_mz && MZS && MZS[i.k_mz]
              && MZS[i.k_mz].dist && MZS[i.k_mz].dist[sel];
     cesc.hidden = !hay;
+    let apl = false;
     if (hay){
       const _loc = document.getElementById("tm-esc-loc"), _m = MUN.find(m => m.sigep === sel);
       if (_loc) _loc.textContent = _m ? _m.nombre : "esta ciudad";
+      const d = MZS[i.k_mz].dist[sel], base = escalaManzanaBase(i);
+      if (!ESC_LOCAL && d && base && base.hi > base.lo && d.p90 !== undefined){
+        const uso = Math.max(0, d.p90 - d.p10) / (base.hi - base.lo);
+        apl = uso < .2;
+        if (apl){
+          const pct = Math.round(uso * 100);
+          sug = ` · <span class="tm-sug">${_m ? _m.nombre : "la ciudad"} ocupa el ${pct} % de la rampa: vela a su escala</span>`;
+          if (_loc) _loc.title = `El 80 % de sus manzanas cae en el ${pct} % del rango nacional`;
+        }
+      }
     }
+    cesc.classList.toggle("sugerir", apl);
     cesc.querySelectorAll("button").forEach(b =>
       b.classList.toggle("on", (b.dataset.e === "local") === ESC_LOCAL));
   }
@@ -3035,7 +3061,7 @@ function termometro(e, i){
            : `${e.tipo} <b>${fmtM(e.piv, i)}</b>`);
   document.getElementById("tm-st").innerHTML =
     `n <b>${nf(e.n,0)}</b> ${unidad} · mín <b>${fmtM(e.min,i)}</b>${piv ? " · " + piv : ""}`
-    + ` · máx <b>${fmtM(e.max,i)}</b>`;
+    + ` · máx <b>${fmtM(e.max,i)}</b>` + sug;
 }
 
 /* ── COMPARATIVO ENTRE MUNICIPIOS ────────────────────────────────────────────
