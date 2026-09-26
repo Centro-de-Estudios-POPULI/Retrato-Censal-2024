@@ -18,6 +18,12 @@
      Socioeconómico con `extraer_estilo.py`—, así que volver al Observatorio es
      sacar la hoja, no escribir una nueva. -->
 <style>
+/* ★ A ESCUADRA (regla de marca, 2026-09-26): sin radios en nada, incluidos la
+   hoja del teléfono, los controles del mapa y los tooltips. La única excepción
+   es la leyenda de la mancuerna 2012→2024, cuyas marcas son círculos en el
+   dibujo: cuadradas en la leyenda dirían otra cosa. */
+*,*::before,*::after{border-radius:0!important}
+.mc-lg i:not(.mc-t){border-radius:50%!important}
 /* ── Sólo lo propio de este tablero. Todo lo demás vive en estilo-atlas.css ── */
 #mapbox{position:fixed;inset:0}
 #map{position:absolute;inset:0}
@@ -1871,6 +1877,15 @@ Promise.all([
        justo al bajar, que es cuando se pidió que sobreviviera. `moveLayer` sin
        segundo argumento la manda al final del orden de pintado. */
     ["mun-line", "mun-sel"].forEach(id => { if (map.getLayer(id)) map.moveLayer(id); });
+    /* ★ Y LOS RÓTULOS POR ENCIMA DE TODO (2026-09-26). Con OpenFreeMap son capas
+       vectoriales `symbol` (`MAPA_BASE.rotulos`): arriba de la coropleta se
+       leen nítidos, en vez de quedar lavados por su transparencia como la
+       imagen de rótulos de CARTO. La visibilidad por tema la sigue conmutando
+       `aplicarTema()`. */
+    const _rot = MAPA_BASE.rotulos || {};
+    [...(_rot.claro || []), ...(_rot.oscuro || [])].forEach(id => {
+      if (map.getLayer(id)) map.moveLayer(id);
+    });
     /* ★ EL ENCUADRE DE LA URL SE APLICA ACÁ (2026-08-26) y no en el arranque:
        allá todavía puede no haber contexto WebGL, y `map.jumpTo` sobre un mapa
        inexistente tira. Si la dirección no trae encuadre, se encuadra la
@@ -2213,6 +2228,13 @@ function vigilarZoom(){
      `idle` llega cuando el mapa quedó quieto Y pintado. Es idempotente. */
   map.on("moveend", seguirCiudad);
   map.on("idle", seguirCiudad);
+  /* ⛔ Y SE REVISA UNA VEZ AL INSTALARSE (2026-09-26). El encuadre de un enlace
+     compartido (`#…&z=12`) se aplica con `jumpTo` ANTES de que existan estos
+     oyentes: su `zoomend` ya pasó, así que el nivel quedaba en «municipio» con
+     el mapa en zoom de manzana y todas las manzanas salían grises hasta que el
+     lector tocaba el zoom. Estaba publicado así (el mismo error, y el mismo
+     arreglo, que en el tablero de la Gobernación). */
+  revisar();
 }
 /* ★ SEGUIR LA CIUDAD (2026-09-17). A nivel manzana la selección —y con ella la
    escala «esta ciudad», la ficha y la URL— pasa a ser el municipio que está
@@ -3211,7 +3233,7 @@ function mancuerna(e, ind){
     if (xb !== null) s += bolita(xb, cy, !es12, tono(f.b), sin12);
     if (sel_)
       s += `<rect x="${LX - 2.2}" y="${y - .3}" width="${VX - LX + 4.4}" height="${H - .8}"
-              fill="none" stroke="${SENAL}" stroke-width=".35" rx="1"/>`;
+              fill="none" stroke="${SENAL}" stroke-width=".35"/>`;
     /* Las cifras van ancladas a la DERECHA: así la columna se lee en vertical
        sin tener que estimar el ancho de cada número. */
     s += `<text x="${TX}" y="${cy + 1.2}" class="cmp-v" text-anchor="end">${
@@ -3642,7 +3664,7 @@ function distribucionMunicipios(ind){
     s += `<line x1="${x90}" y1="${y + 1.8}" x2="${x90}" y2="${y + 6.2}" class="ds-w"/>`;
     // caja p25–p75, con el tono que le toca a la mediana en el mapa
     s += `<rect x="${x25}" y="${y + 1.2}" width="${Math.max(.5, x75 - x25)}" height="5.6"
-            rx="0.6" fill="${tonoDe(eMz, d.p50)}" fill-opacity="${sel_ ? .95 : .72}"
+            fill="${tonoDe(eMz, d.p50)}" fill-opacity="${sel_ ? .95 : .72}"
             ${sel_ ? `stroke="${SENAL}" stroke-width="0.7"` : ""}/>`;
     s += `<line x1="${x50}" y1="${y + .6}" x2="${x50}" y2="${y + 7.4}" class="ds-med"/>`;
     // la brecha es el dato nuevo: cuánto separa al decil de arriba del de abajo
