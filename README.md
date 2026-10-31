@@ -73,9 +73,28 @@ Cada paso depende del anterior. Los cuatro primeros son de datos; los dos últim
    scripts/generar_pmtiles.py       → docs/datos/manzanas.pmtiles      (~8 min)
                                       docs/datos/col/<clave>.json · columnas.json
                                       (--solo-columnas: sólo las columnas, ~1 min)
+   scripts/zonas_manzana.py         → docs/datos/zonas/  («Comparar zonas», ~2 min;
+                                      DESPUÉS de las columnas: verifica contra ellas)
 6. scripts/generar_sitios.py        → docs/municipal/ · docs/manzana/
    scripts/armar_portada.py         → docs/index.html
 ```
+
+**«Comparar zonas» (2026-10-30).** `zonas_manzana.py` escribe numerador y
+denominador de cada manzana (nunca porcentajes: una zona suma conteos), en el
+orden del `id` de la tesela, partidos en las teselas z8 del mapa (60 pedazos):
+cada zona baja sólo los pedazos que toca y, de cada uno, sólo la categoría en
+pantalla. Los conteos van sólo para las manzanas con ficha; personas, viviendas
+y superficie, para todas, en la base del pedazo. Se niega a escribir si la
+cantidad de manzanas no coincide con `columnas.json`, y avisa si el cociente de
+una manzana sola se aparta de su valor publicado (los porcentajes viajan sin
+decimal: tolerancia de medio punto). Usa `numeradores()` de
+`catalogo/motor_manzana.py`, traída tal cual del motor de la Gobernación.
+
+**Fluidez (2026-10-30).** El estado de color se fija tesela por tesela leyendo
+sólo los `id` (`idsDeTesela`), sin `querySourceFeatures`: esa consulta
+decodificaba todas las manzanas en memoria, geometría incluida, cada vez que
+entraba una tesela o cambiaba la opacidad. No se fija el estado de las 247.429
+de una vez: MapLibre recorre todo el estado guardado en cada tesela que carga.
 
 ### Contratos entre pasos
 

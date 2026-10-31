@@ -390,6 +390,241 @@ body.dark .aviso b{color:var(--orange)}
 .cmp .cmp-n.sel{fill:var(--sel);font-weight:700}
 .cmp .cmp-v{font:700 2.6px var(--f);fill:var(--tx);font-variant-numeric:tabular-nums}
 .cmp .cmp-piv{stroke:var(--tx);stroke-width:.35;stroke-dasharray:1.2 1.1;opacity:.5}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   UPGRADE DE LOS PANELES (2026-10-30, pedido de Carlos): lo aprendido en el
+   tablero de la Gobernación, con la IDENTIDAD DEL OFPDT intacta — Inter para
+   el texto, Newsreader para títulos y cifras, petróleo de selección, ámbar
+   de señal, la rampa propia y los cantos a escuadra.
+   ═════════════════════════════════════════════════════════════════════════ */
+/* un solo sistema de sección: rótulo, una frase que dice qué muestra, el
+   gráfico y su lectura */
+.sec{padding-top:14px;margin-top:14px;border-top:1px solid var(--linea-2)}
+#cifra + #cmp > .sec:first-child{margin-top:0}
+.sec-q{font-size:.64rem;line-height:1.5;color:var(--suave);margin:-2px 0 8px}
+/* 1 · la cifra que se está mirando */
+#cifra:not(:empty){padding:2px 0 14px}
+.c-k{font:700 .55rem/1.3 var(--f);letter-spacing:.14em;text-transform:uppercase;color:var(--sel)}
+.c-t{font-family:var(--fd);font-size:1.08rem;font-weight:600;line-height:1.22;color:var(--tx);margin:4px 0 8px;overflow-wrap:anywhere}
+.c-fila{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.c-v{font-family:var(--fd);font-size:2.5rem;line-height:.92;font-weight:600;color:var(--tx);
+  font-variant-numeric:tabular-nums lining-nums;letter-spacing:-.015em}
+.c-c{font-size:.66rem;line-height:1.4;color:var(--suave);padding-bottom:4px;min-width:0;flex:1 1 9rem}
+.c-c b{color:var(--tx);font-weight:700}
+.c-dif{display:inline-block;margin-left:6px;padding:1px 6px;font-weight:700;font-size:.6rem;
+  border:1px solid currentColor;font-variant-numeric:tabular-nums;white-space:nowrap}
+.c-dif.arriba{color:var(--teal-dk)}.c-dif.abajo{color:var(--red)}.c-dif.igual{color:var(--suave)}
+.c-mapa{font-size:.65rem;line-height:1.5;color:var(--suave);margin:11px 0 0;padding:8px 10px;
+  background:var(--gris-card);box-shadow:inset 3px 0 0 var(--sel)}
+.c-mapa b{color:var(--tx);font-weight:600}
+/* 2 · los municipios: barras gruesas, casi pegadas, y la tapa de cada una
+   unida a la de la vecina por un escalón (el estilo Foronda que Carlos eligió
+   para el tablero de la Gobernación). El país, punteado y sin rótulo. */
+.fr{position:relative;--fr-l:142px;--fr-r:58px}
+.fr-f,.fr-h{display:grid;grid-template-columns:134px minmax(0,1fr) 50px;column-gap:8px;align-items:center;
+  height:23px;width:100%;padding:0;border:0;background:none;color:inherit;font:inherit;text-align:left}
+.fr-f{cursor:pointer}
+.fr-f:hover{background:var(--card-hov)}
+.fr-n{font:500 .66rem/1.2 var(--f);color:var(--suave);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;padding-left:5px}
+.fr-n i{font-style:normal;color:var(--faint);font-size:.9em;font-variant-numeric:tabular-nums;margin-right:5px}
+.fr-f.sel .fr-n{color:var(--tx);font-weight:700;box-shadow:inset 3px 0 0 var(--amber)}
+.fr-b{position:relative;height:100%}
+.fr-b i{position:absolute;top:2px;bottom:2px;left:0;background:color-mix(in srgb,var(--sel) 46%,var(--card-solid))}
+.fr-f.sel .fr-b i{background:var(--sel)}
+.fr-f b{font:700 .66rem/1 var(--f);color:var(--tx);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.fr-h{grid-template-columns:1fr;font:italic 500 .62rem/1 var(--f);color:var(--faint);padding-left:5px;cursor:default}
+.fr-tapa{position:absolute;top:0;bottom:0;left:var(--fr-l);right:var(--fr-r);width:calc(100% - var(--fr-l) - var(--fr-r));
+  height:100%;overflow:visible;pointer-events:none}
+.fr-tapa polyline{fill:none;stroke:var(--sel);stroke-width:1.8;stroke-linejoin:miter}
+.fr-tapa .fr-pais{stroke:var(--tx);stroke-width:1;stroke-dasharray:2 3;opacity:.55}
+/* 3 · dónde cae en el país: el histograma enciende en el mapa su tramo */
+.cmp.pf .pf-hit{fill:transparent;cursor:pointer}
+.cmp.pf .pf-hit:hover,.cmp.pf .pf-hit.on{fill:var(--tx);fill-opacity:.06}
+.cmp.pf rect.dim{opacity:.22}
+/* 4 · la categoría del municipio elegido */
+#kg-h:not(:empty){margin-top:14px}
+/* 5 · cómo leer el mapa */
+.guia{margin-top:16px;border:1px solid var(--linea)}
+.guia summary{cursor:pointer;list-style:none;padding:9px 11px;font:700 .58rem/1.3 var(--f);
+  letter-spacing:.12em;text-transform:uppercase;color:var(--tx);display:flex;justify-content:space-between}
+.guia summary::-webkit-details-marker{display:none}
+.guia summary::after{content:"+";font-weight:600;color:var(--suave)}
+.guia[open] summary::after{content:"−"}
+.guia ul{margin:0;padding:0 11px 10px;list-style:none}
+.guia li{font-size:.64rem;line-height:1.5;color:var(--suave);padding:6px 0 6px 14px;position:relative;border-top:1px solid var(--linea-2)}
+.guia li::before{content:"";position:absolute;left:0;top:.72rem;width:6px;height:6px;background:var(--sel)}
+.guia li b{color:var(--tx);font-weight:600}
+.guia .rampa-mini{display:inline-block;width:52px;height:7px;vertical-align:middle;margin:0 3px}
+/* el panel derecho, opaco: translúcido, el color del mapa se filtraba detrás
+   de los gráficos */
+#panel-det{background:var(--card-solid)!important;-webkit-backdrop-filter:none;backdrop-filter:none}
+/* ocultar el panel derecho en la PC */
+.det-head{position:relative;padding-right:84px}
+.det-ocultar{position:absolute;top:13px;right:12px;height:26px;padding:0 10px;border:1px solid var(--linea);
+  background:transparent;color:var(--suave);font:600 .62rem/1 var(--f);cursor:pointer;transition:background .18s,color .18s}
+.det-ocultar:hover{background:var(--card-hov);color:var(--tx)}
+.det-mostrar{position:fixed;top:72px;right:12px;z-index:40;height:30px;padding:0 12px;background:var(--card-solid);
+  color:var(--tx);border:1px solid var(--linea);box-shadow:var(--sh);font:600 .66rem/1 var(--f);cursor:pointer}
+.det-mostrar:hover{background:var(--card-hov)}
+.det-mostrar[hidden]{display:none}
+body.det-oculto{--det-w:0px}
+body.det-oculto #panel-det{display:none!important}
+/* el tooltip: entra con un desplazamiento corto y sigue al puntero */
+#pop{box-shadow:0 16px 38px rgba(0,18,25,.22);transform:translateY(5px);transition:opacity .14s ease,transform .16s ease}
+#pop.ver{transform:translateY(0)}
+#pop .pgr{font-size:.6rem;line-height:1.4;color:var(--suave);margin-top:6px}
+/* los botones nuevos de la barra, con el lenguaje de «Ir a» y el tema */
+.tb-btn{display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 11px;flex:none;
+  border:1px solid rgba(255,255,255,.32);background:transparent;color:#fff;font:600 .66rem/1 var(--f);
+  cursor:pointer;transition:background .18s,border-color .18s}
+.tb-btn:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.55)}
+.tb-btn[hidden]{display:none}
+.tb-btn svg{width:18px;height:13px;flex:none}
+.tb-btn[aria-pressed="true"]{background:#fff;color:var(--topbar);border-color:#fff}
+/* las pistas: una franja chica, abajo al centro del mapa */
+.pista{position:fixed;z-index:60;bottom:118px;left:calc((100vw + var(--panel-w) - var(--det-w)) / 2);
+  transform:translate(-50%,8px);opacity:0;width:max-content;max-width:min(460px,calc(100vw - var(--panel-w) - var(--det-w) - 56px));
+  display:flex;align-items:center;gap:14px;padding:10px 10px 10px 14px;background:var(--card-solid);color:var(--tx);
+  border:1px solid var(--linea);box-shadow:0 14px 34px rgba(0,18,25,.18),inset 3px 0 0 var(--amber);
+  font:500 .72rem/1.45 var(--f);transition:opacity .2s ease,transform .2s ease}
+.pista.ver{opacity:1;transform:translate(-50%,0)}
+.pista[hidden]{display:none}
+.pista .pi-x{flex:none;border:1px solid var(--linea);background:none;color:var(--tx);font:600 .62rem/1 var(--f);padding:7px 10px;cursor:pointer}
+.pista .pi-x:hover{background:var(--card-hov)}
+/* la caja de preguntas */
+.preg{position:fixed;inset:0;z-index:95;background:rgba(0,18,25,.38);display:grid;place-items:start center;padding:70px 16px 24px;overflow:auto}
+.preg[hidden]{display:none}
+.preg-caja{width:min(720px,100%);background:var(--card-solid);color:var(--tx);border:1px solid var(--linea);box-shadow:0 22px 60px rgba(0,18,25,.26)}
+.preg-cab{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 14px;border-bottom:1px solid var(--linea-2)}
+.preg-cab h2{margin:0;font:600 1.3rem/1.1 var(--fd)}
+.preg-x{width:30px;height:30px;border:1px solid var(--linea);background:none;color:var(--tx);font:400 1.1rem/1 var(--f);cursor:pointer}
+.preg-x:hover{background:var(--card-hov)}
+.preg-cuerpo{padding:2px 20px 22px}
+.preg-cuerpo h3{font:700 .56rem/1 var(--f);letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:20px 0 6px}
+.preg-ir{display:grid;grid-template-columns:1fr 1fr;column-gap:22px;border-top:1px solid var(--linea-2)}
+.preg-ir button{text-align:left;border:0;border-bottom:1px solid var(--linea-2);background:none;cursor:pointer;
+  padding:11px 0 10px;color:var(--tx);font:600 .8rem/1.3 var(--f)}
+.preg-ir button small{display:block;font-weight:500;font-size:.66rem;color:var(--suave);margin-top:3px}
+.preg-ir button:hover{color:var(--sel)}
+.preg-faq{margin:0;border-top:1px solid var(--linea-2)}
+.preg-faq dt{font:700 .78rem/1.3 var(--f);margin-top:13px}
+.preg-faq dd{margin:4px 0 0;font:500 .74rem/1.55 var(--f);color:var(--suave);max-width:64ch}
+/* el panel de indicadores: la descripción en tres renglones en la PC */
+@media (min-width:821px){
+  .ind .i-df{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  #z-zon{display:none!important}
+}
+.tb-btn .tb-q{display:none;font:700 .8rem/1 var(--f)}
+#z-zon svg{width:17px;height:12px;display:block;margin:auto}
+#z-zon[aria-pressed="true"]{background:var(--zn-tinta);color:var(--zn-papel)}
+#z-zon[hidden]{display:none}
+
+/* ═══ COMPARAR ZONAS (2026-10-30) ════════════════════════════════════════════
+   A con trazo LLENO y B con trazo PUNTEADO, en el mapa, las tarjetas y las
+   barras: la letra y el trazo las distinguen sin gastar un color de la rampa,
+   que en este mapa ya quiere decir mejor o peor. */
+:root{--zn-papel:#f2efe8;--zn-tinta:#001219;--zn-relleno:color-mix(in srgb,var(--sel) 46%,var(--card-solid));
+  --zn-relleno2:color-mix(in srgb,var(--sel) 18%,var(--card-solid));--zn-tapa:var(--sel)}
+body.dark{--zn-papel:#0b1318;--zn-tinta:#e9eff2}
+#zonas{display:none}
+body.zonas-on #zonas{display:block}
+body.zonas-on #cifra,body.zonas-on #cmp,body.zonas-on #dist,body.zonas-on #serie,body.zonas-on #kg-h,
+body.zonas-on #kgrid,body.zonas-on #guia{display:none!important}
+.zn-cab{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.zn-t{margin:4px 0 0;font:600 1.12rem/1.2 var(--fd);color:var(--tx)}
+.zn-x{flex:none;height:26px;padding:0 10px;border:1px solid var(--linea);background:transparent;color:var(--suave);
+  font:600 .62rem/1 var(--f);cursor:pointer;transition:background .18s,color .18s}
+.zn-x:hover{background:var(--card-hov);color:var(--tx)}
+.zn-carga{font-size:.66rem;color:var(--suave);padding:14px 0 4px}
+.zn-zz{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;margin-top:8px}
+.zn-z{border:1px solid var(--linea);padding:9px 10px 8px;min-width:0;background:var(--card-solid)}
+.zn-z[data-z="b"]{border-style:dashed}
+.zn-zc{display:flex;align-items:center;gap:7px;min-width:0}
+.zn-l{display:inline-grid;place-items:center;flex:none;width:19px;height:19px;font:700 .64rem/1 var(--f);
+  background:var(--zn-tinta);color:var(--zn-papel)}
+.zn-l.b{background:transparent;color:var(--tx);outline:1.5px dashed var(--tx);outline-offset:-1.5px}
+.zn-mun{font:600 .76rem/1.2 var(--f);color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.zn-zd{font-size:.61rem;line-height:1.45;color:var(--suave);margin-top:5px}
+.zn-rr{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:.58rem;color:var(--suave)}
+.zn-rr input{flex:1;min-width:0;height:16px;margin:0;accent-color:var(--sel);cursor:pointer}
+.zn-rr output{font:700 .62rem/1 var(--f);color:var(--tx);font-variant-numeric:tabular-nums;min-width:40px;text-align:right}
+.zn-av{font-size:.6rem;line-height:1.4;color:var(--red);margin-top:5px}
+.zn-av[hidden]{display:none}
+.zn-pir{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;margin-top:4px}
+.zn-pc-h{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:.6rem;color:var(--suave);margin-bottom:5px}
+.zn-pc-h b{color:var(--tx);font-variant-numeric:tabular-nums}
+.zn-pf{display:grid;grid-template-columns:minmax(0,1fr) 34px minmax(0,1fr);align-items:center;height:15px}
+.zn-pf + .zn-pf{margin-top:2px}
+.zn-pf > span{font:600 .55rem/1 var(--f);color:var(--suave);text-align:center;font-variant-numeric:tabular-nums}
+.zn-pf .h,.zn-pf .m{height:100%;display:flex}
+.zn-pf .h{justify-content:flex-end}
+.zn-pf i{display:block;height:100%;width:0;transition:width .14s ease-out}
+.zn-pf .h i{background:var(--teal-dk)}
+.zn-pf .m i{background:var(--orange)}
+.zn-pie{font-size:.58rem;color:var(--suave);margin-top:6px;line-height:1.45}
+.zn-lg{display:inline-flex;align-items:center;gap:10px}
+.zn-lg i{display:inline-block;width:8px;height:8px;margin-right:4px;vertical-align:-1px}
+.zn-tabs{display:flex;flex-wrap:wrap;gap:4px;margin:2px 0 6px}
+.zn-tabs button{border:1px solid var(--linea);background:transparent;color:var(--suave);padding:5px 8px;
+  font:600 .6rem/1 var(--f);cursor:pointer;transition:background .15s,color .15s}
+.zn-tabs button:hover{color:var(--tx);background:var(--card-hov)}
+.zn-tabs button.on{background:var(--sel);color:#fff;border-color:var(--sel)}
+.zn-f{display:block;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--linea-2);
+  padding:8px 6px 7px 8px;cursor:pointer;color:inherit;font:inherit}
+.zn-f:hover{background:var(--card-hov)}
+.zn-f.on{box-shadow:inset 3px 0 0 var(--amber)}
+.zn-fh{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.zn-fl{font:600 .68rem/1.3 var(--f);color:var(--tx);min-width:0}
+.zn-dif{flex:none;font:700 .58rem/1 var(--f);padding:2px 5px;border:1px solid currentColor;font-variant-numeric:tabular-nums;white-space:nowrap}
+.zn-dif.arriba{color:var(--teal-dk)}.zn-dif.abajo{color:var(--red)}.zn-dif.igual{color:var(--suave)}
+.zn-dif.vacio{border-color:transparent;color:var(--faint)}
+.zn-bb{position:relative;margin-top:5px}
+.zn-b{display:grid;grid-template-columns:14px minmax(0,1fr) 56px;align-items:center;height:13px}
+.zn-b + .zn-b{margin-top:2px}
+.zn-b > span{font:700 .54rem/1 var(--f);color:var(--suave)}
+.zn-bt{position:relative;height:11px}
+.zn-bt i{position:absolute;top:0;bottom:0;left:0;width:0;background:var(--zn-relleno);
+  box-shadow:inset -2px 0 0 var(--zn-tapa);transition:width .14s ease-out,left .14s ease-out}
+.zn-bt i.neg{box-shadow:inset 2px 0 0 var(--zn-tapa)}
+.zn-b.b .zn-bt i{background:repeating-linear-gradient(135deg,var(--zn-relleno) 0 2.5px,var(--zn-relleno2) 2.5px 4.5px)}
+.zn-b b{font:700 .64rem/1 var(--f);color:var(--tx);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.zn-ref{position:absolute;top:-2px;bottom:-2px;width:0;border-left:1px dashed var(--tx);opacity:.5;pointer-events:none;
+  left:calc(14px + (100% - 70px) * var(--x,0));transition:left .14s ease-out}
+.zn-ref[hidden]{display:none}
+.zn-pin{width:28px;height:28px;display:grid;place-items:center;cursor:grab;touch-action:none;
+  background:var(--zn-tinta);color:var(--zn-papel);font:700 .8rem/1 var(--f);
+  box-shadow:0 0 0 2px var(--zn-papel),0 6px 16px rgba(0,18,25,.35)}
+.zn-pin-b{background:var(--zn-papel);color:var(--zn-tinta);outline:2px dashed var(--zn-tinta);outline-offset:-2px}
+.zn-asa{width:14px;height:14px;cursor:ew-resize;touch-action:none;position:relative;
+  background:var(--zn-papel);box-shadow:inset 0 0 0 2px var(--zn-tinta),0 3px 8px rgba(0,18,25,.3)}
+.zn-asa::before{content:"";position:absolute;inset:-9px}
+.zn-asa span{position:absolute;left:50%;bottom:calc(100% + 6px);transform:translateX(-50%);white-space:nowrap;pointer-events:none;
+  font:700 .62rem/1 var(--f);color:var(--zn-tinta);background:var(--zn-papel);padding:3px 5px;font-variant-numeric:tabular-nums;
+  box-shadow:0 2px 6px rgba(0,18,25,.18)}
+body.zn-arrastra,body.zn-arrastra *{cursor:grabbing!important}
+@media (max-width:820px){
+  #zon-btn{display:none!important}
+  .tb-btn .tb-q{display:inline}
+  .zn-pin{width:32px;height:32px}
+  .zn-asa{width:18px;height:18px}
+  .zn-zz{gap:6px}
+  .zn-z{padding:8px 8px 7px}
+}
+@media (max-width:820px){
+  .det-ocultar,.det-mostrar{display:none!important}
+  .det-head{padding-right:14px}
+  body.det-oculto #panel-det{display:flex!important}
+  .c-v{font-size:2.1rem}
+  #cifra .c-k,#cifra .c-t,#cifra .c-fila{display:none}
+  #cifra .c-mapa{margin-top:0}
+  .pista{left:8px;right:8px;bottom:auto;top:calc(var(--franja,214px) + 10px);transform:translateY(-8px);width:auto;max-width:none}
+  .pista.ver{transform:none}
+  .tb-btn{width:28px;padding:0;justify-content:center}
+  .tb-btn .tb-l{display:none}
+  .preg-ir{grid-template-columns:1fr}
+  .fr{--fr-l:122px;--fr-r:54px}
+  .fr-f,.fr-h{grid-template-columns:114px minmax(0,1fr) 46px}
+}
 /* ── Mancuerna 2012 → 2024 ───────────────────────────────────────────────────
    Todo más fino que el comparativo de barras: la mancuerna es una lectura de
    precisión —dos puntos y la distancia entre ellos— y a cuerpo grande se
@@ -637,6 +872,13 @@ body.dark{--ser-mun:#43b3bd;--ser-reg:#c3d0d6}
     <button class="tbbtn" type="button"><span id="dept-lab">Bolivia</span><span class="ar">▾</span></button>
     <div class="tbdrop" id="dept-drop"></div>
   </div>
+  <!-- ★ (2026-10-30) «Comparar zonas» (lo muestra el JS cuando el mapa está
+       listo; en el teléfono vive en los controles del mapa) y «Preguntas» -->
+  <button class="tb-btn" id="zon-btn" type="button" aria-pressed="false" hidden
+          title="Dos círculos en el mapa: compará lo que vive adentro de cada uno">
+    <svg viewBox="0 0 34 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="12" r="8.5"/><circle cx="23" cy="12" r="8.5" stroke-dasharray="3 2.4"/></svg>
+    <span class="tb-l">Comparar zonas</span></button>
+  <button class="tb-btn" id="preg-btn" type="button" aria-haspopup="dialog" aria-label="Preguntas"><span class="tb-l">Preguntas</span><span aria-hidden="true" class="tb-q">?</span></button>
   <button class="tbtog" id="theme-btn" title="Modo oscuro">
     <svg class="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
     <svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
@@ -691,7 +933,10 @@ body.dark{--ser-mun:#43b3bd;--ser-reg:#c3d0d6}
          ella no hay nada de dónde tirar ni pista de que la hoja se mueve. En
          escritorio está oculta por `.grip-bar{display:none}`. -->
     <div class="grip-bar" aria-hidden="true"></div>
-    <div class="det-head"><div class="d-mun" id="d-mun">Bolivia</div><div class="d-sub" id="d-sub">343 municipios</div></div>
+    <div class="det-head"><div class="d-mun" id="d-mun">Bolivia</div><div class="d-sub" id="d-sub">343 municipios</div>
+      <!-- ★ (2026-10-30) sólo en la PC; en el teléfono el panel es la hoja de
+           abajo y ya se baja con el asa -->
+      <button class="det-ocultar" id="det-ocultar" type="button" aria-controls="panel-det" aria-expanded="true">Ocultar</button></div>
     <div class="pk" id="pk"></div>
     <!-- ✂ SE FUE «COMPARAR CON…» (decisión de Carlos, 2026-09-04). Cruzar dos
          indicadores en una dispersión tenía sentido con nueve municipios, donde
@@ -709,10 +954,36 @@ body.dark{--ser-mun:#43b3bd;--ser-reg:#c3d0d6}
     </div>
   </div>
   <div class="p-body">
+    <!-- ★ (2026-10-30) el panel nuevo: la cifra arriba de todo, la
+         comparación, dónde cae en el país, la categoría del municipio elegido
+         y la guía de lectura al pie. Con «Comparar zonas» prendido, `#zonas`
+         ocupa el lugar de todo eso. -->
+    <div id="zonas"></div>
+    <div id="cifra"></div>
     <div id="cmp"></div>
     <div id="dist"></div>
     <div id="serie"></div>
+    <div id="kg-h"></div>
     <div class="kgrid" id="kgrid"></div>
+    <div id="guia"></div>
+  </div>
+</div>
+<button class="det-mostrar" id="det-mostrar" type="button" aria-controls="panel-det" hidden>Mostrar panel</button>
+
+<!-- ★ PREGUNTAS (2026-10-30, el molde del tablero de la Gobernación). Dos cosas
+     en una caja: preguntas que llevan el mapa directo a una lectura (cada una
+     es un estado del tablero, el mismo que guarda la URL) y las dudas de
+     lectura de siempre. -->
+<div class="preg" id="preg" role="dialog" aria-modal="true" aria-labelledby="preg-t" hidden>
+  <div class="preg-caja">
+    <div class="preg-cab"><h2 id="preg-t">Preguntas</h2>
+      <button class="preg-x" id="preg-x" type="button" aria-label="Cerrar">×</button></div>
+    <div class="preg-cuerpo">
+      <h3>Para empezar a mirar</h3>
+      <div class="preg-ir" id="preg-ir"></div>
+      <h3>Cómo se lee</h3>
+      <dl class="preg-faq" id="preg-faq"></dl>
+    </div>
   </div>
 </div>
 
@@ -727,7 +998,10 @@ body.dark{--ser-mun:#43b3bd;--ser-reg:#c3d0d6}
         lado opuesto a la botonera de zoom para no pelearse con ella. -->
 <div id="lamina"></div>
 
-<div class="zc"><button id="z-in">+</button><button id="z-out">−</button><button id="z-rst">⤢</button></div>
+<div class="zc"><button id="z-in">+</button><button id="z-out">−</button><button id="z-rst">⤢</button><!--
+  ★ (2026-10-30) en el teléfono «Comparar zonas» vive acá: en la barra de
+  arriba no entra
+  --><button id="z-zon" type="button" aria-pressed="false" aria-label="Comparar zonas" title="Comparar zonas" hidden><svg viewBox="0 0 34 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="12" r="8.5"/><circle cx="23" cy="12" r="8.5" stroke-dasharray="3 2.4"/></svg></button></div>
 
 <div class="termo">
   <div class="tm-top"><div class="tm-t" id="tm-t">—</div>
@@ -809,6 +1083,8 @@ const SENAL = "#ee9b00";
    —un gris a este grosor se lee como suciedad— y su equivalente apagado sobre
    el fondo oscuro, donde un negro no existiría. */
 const BORDE_MUN = {claro: "#11110f", oscuro: "#e6e3d8"};
+/* (2026-10-30) el contorno de lo que está bajo el cursor: la tinta del OFPDT */
+const TINTA_HOV = {claro: "#001219", oscuro: "#e9eff2"};
 
 /* `dir === 1` significa que más es PEOR, así que la rampa se da vuelta y el
    verde queda del lado bueno en los dos casos. */
@@ -1016,19 +1292,33 @@ function valorCol(k, id){
   return x === null || x === undefined ? null : x;
 }
 /* Fija el estado `v` de cada manzana CARGADA (las teselas en memoria) con la
-   columna activa. Se llama al cambiar de indicador y cada vez que entran
-   teselas nuevas (`sourcedata`), con un rAF para juntar la ráfaga. Las
-   manzanas sin dato NO se fijan: el estado ausente ya pinta gris, y son
-   la mitad —la mitad de llamadas que ahorrar. */
-function pintarCargadas(){
-  _colRAF = 0;
-  const k = COL_ACTIVA;
-  if (!k || !map || !map.getSource("mz")) return;
-  const a = COL.get(k);
-  if (!a) return;
-  const fs = map.querySourceFeatures("mz", {sourceLayer: "manzanas"});
-  for (const f of fs){
-    const id = f.id;
+   columna activa. Las manzanas sin dato NO se fijan: el estado ausente ya
+   pinta gris, y son la mitad —la mitad de llamadas que ahorrar.
+   ★★ (2026-10-30, «más fluido») TESELA POR TESELA, SIN GEOMETRÍA. Antes cada
+   ráfaga de teselas nuevas llamaba a `querySourceFeatures`, que decodifica de
+   nuevo TODAS las manzanas en memoria —con su geometría— sólo para leerles el
+   `id`; y `setPaintProperty` también dispara `sourcedata`, así que pasar el
+   cursor por la leyenda o el panel lo repetía a cada cuadro. Ahora se leen
+   sólo los `id` de la tesela que acaba de llegar (`idsDeTesela`).
+   ⚠️ No se fija el estado de las 247.429 de una vez (lo que sí hace el tablero
+   de la Gobernación con sus 38.892): MapLibre recorre TODO el estado guardado
+   cada vez que carga una tesela, y a escala país eso pesa más de lo que ahorra.
+   Medido antes de elegir (ver `ESTADO.md`). */
+const _colTeselas = new Set();
+function idsDeTesela(t){
+  /* API interna de MapLibre 4.7 (la versión está fijada en el <script>): el
+     índice de la tesela da cada feature con su `id` sin tocar la geometría.
+     Si algún día no existe, `pintarCargadas` vuelve a la consulta pública. */
+  try {
+    const capa = t && t.latestFeatureIndex && t.latestFeatureIndex.loadVTLayers().manzanas;
+    if (!capa) return null;
+    const ids = new Array(capa.length);
+    for (let i = 0; i < capa.length; i++) ids[i] = capa.feature(i).id;
+    return ids;
+  } catch (_){ return null; }
+}
+function fijarIds(ids, a){
+  for (const id of ids){
     if (id === undefined || COL_HECHAS.has(id)) continue;
     COL_HECHAS.add(id);
     const v = a[id];
@@ -1036,18 +1326,58 @@ function pintarCargadas(){
       map.setFeatureState({source: "mz", sourceLayer: "manzanas", id}, {v});
   }
 }
-function programarPintado(){
+let _colTodas = true;            // al cambiar de indicador: todas las teselas en memoria
+let _colVistas = new WeakSet();  // teselas ya recorridas para COL_ACTIVA
+function pintarCargadas(){
+  _colRAF = 0;
+  const k = COL_ACTIVA;
+  if (!k || !map || !map.getSource("mz")) return;
+  const a = COL.get(k);
+  if (!a){ _colTeselas.clear(); return; }
+  const sc = map.style && map.style.sourceCaches && map.style.sourceCaches.mz;
+  let lista;
+  if (_colTodas){ lista = sc && sc._tiles ? Object.values(sc._tiles) : null; _colTodas = false; }
+  else lista = [..._colTeselas];
+  _colTeselas.clear();
+  const publica = () => fijarIds(map.querySourceFeatures("mz", {sourceLayer: "manzanas"}).map(f => f.id), a);
+  if (!lista) return publica();
+  let reserva = false;
+  for (const t of lista){
+    if (_colVistas.has(t)) continue;
+    const ids = idsDeTesela(t);
+    if (ids){ fijarIds(ids, a); _colVistas.add(t); }
+    else if (t && t.latestFeatureIndex) reserva = true;
+  }
+  if (reserva) publica();
+}
+/* ⚠️ Una tesela que VUELVE DE LA CACHÉ de MapLibre no dispara `sourcedata`:
+   si se fue antes del último cambio de indicador, sus manzanas quedarían
+   grises. Al quedar quieto el mapa se revisan las que están a la vista y no
+   se recorrieron todavía (son una docena; las ya vistas se saltan). */
+function revisarVisibles(){
+  const sc = map && map.style && map.style.sourceCaches && map.style.sourceCaches.mz;
+  if (!sc || !COL.get(COL_ACTIVA)) return;
+  for (const id of sc.getRenderableIds()){
+    const t = sc.getTileByID(id);
+    if (t && !_colVistas.has(t)) _colTeselas.add(t);
+  }
+  if (_colTeselas.size) programarPintado();
+}
+function programarPintado(t){
+  if (t) _colTeselas.add(t);
   if (!_colRAF) _colRAF = requestAnimationFrame(pintarCargadas);
 }
 async function aplicarColumna(k){
   if (!map) return;
   if (!_colEscucha){
     _colEscucha = true;
-    map.on("sourcedata", ev => { if (ev.sourceId === "mz" && ev.tile) programarPintado(); });
+    map.on("sourcedata", ev => { if (ev.sourceId === "mz" && ev.tile) programarPintado(ev.tile); });
+    map.on("idle", revisarVisibles);
   }
   if (COL_ACTIVA !== k){
     COL_ACTIVA = k; COL_HECHAS = new Set();
     if (map.getSource("mz")) map.removeFeatureState({source: "mz", sourceLayer: "manzanas"});
+    _colTodas = true; _colVistas = new WeakSet();
   }
   const a = await columna(k);
   if (!a || COL_ACTIVA !== k) return;
@@ -1128,7 +1458,12 @@ function aplicarTema(oscuro, guardar){
       map.setPaintProperty("mun-fill", "fill-opacity",
         hayManzana() ? fundidoMun(opacidades().mun) : opacidades().mun);
     if (map.getLayer("mz-fill"))
-      map.setPaintProperty("mz-fill", "fill-opacity", fundidoMz(opacidades().mz));
+      map.setPaintProperty("mz-fill", "fill-opacity",
+        typeof opacidadMz === "function" ? opacidadMz() : fundidoMz(opacidades().mz));
+    const tinta = TINTA_HOV[oscuro ? "oscuro" : "claro"];
+    ["mz-hov", "mun-hov"].forEach(id => { if (map.getLayer(id)) map.setPaintProperty(id, "line-color", tinta); });
+    if (map.getLayer("mun-halo")) map.setPaintProperty("mun-halo", "line-color", oscuro ? "#0b1318" : "#f2efe8");
+    if (typeof zonasTema === "function") zonasTema();
   }
   if (map) pintar();
   if (typeof CAT !== "undefined" && CAT && cat_actual) montarIndicadores();
@@ -1870,13 +2205,27 @@ Promise.all([
         paint: {"line-color": esOscuro() ? "#12181c" : "#ffffff",
                 "line-width": ["interpolate", ["linear"], ["zoom"], 12, .15, 15, .7],
                 "line-opacity": ["interpolate", ["linear"], ["zoom"], Z0, 0, Z1, .3]}});
+      /* ★ (2026-10-30) el contorno de la manzana bajo el cursor */
+      nuevaCapa({id: "mz-hov", type: "line", source: "mz", "source-layer": "manzanas", minzoom: Z0,
+        paint: {"line-color": TINTA_HOV[esOscuro() ? "oscuro" : "claro"], "line-width": 1.8,
+                "line-opacity": ["case", ["boolean", ["feature-state", "hov"], false], .95, 0]}});
     }
+    /* ★ (2026-10-30) un halo del color del papel debajo del límite municipal,
+       sólo a escala de manzana: la línea sigue fina, pero se lee sobre
+       cualquier color de la rampa. Y el contorno del municipio bajo el cursor. */
+    nuevaCapa({id: "mun-halo", type: "line", source: "mun",
+      paint: {"line-color": esOscuro() ? "#0b1318" : "#f2efe8",
+              "line-width": ["interpolate", ["linear"], ["zoom"], Z0, 0, Z1, 3, 15.5, 4],
+              "line-opacity": ["interpolate", ["linear"], ["zoom"], Z0, 0, Z1, .55]}});
+    nuevaCapa({id: "mun-hov", type: "line", source: "mun",
+      paint: {"line-color": TINTA_HOV[esOscuro() ? "oscuro" : "claro"], "line-width": 2.6,
+              "line-opacity": ["case", ["boolean", ["feature-state", "hov"], false], .9, 0]}});
     /* ★ EL BORDE MUNICIPAL VA ARRIBA DE TODO (2026-08-26). Se monta antes que
        las capas de manzana —tiene que existir aunque no haya manzanas—, así que
        sin esto las 38.892 manzanas se dibujan ENCIMA y se comen la división
        justo al bajar, que es cuando se pidió que sobreviviera. `moveLayer` sin
        segundo argumento la manda al final del orden de pintado. */
-    ["mun-line", "mun-sel"].forEach(id => { if (map.getLayer(id)) map.moveLayer(id); });
+    ["mun-halo", "mun-line", "mun-hov", "mun-sel"].forEach(id => { if (map.getLayer(id)) map.moveLayer(id); });
     /* ★ Y LOS RÓTULOS POR ENCIMA DE TODO (2026-09-26). Con OpenFreeMap son capas
        vectoriales `symbol` (`MAPA_BASE.rotulos`): arriba de la coropleta se
        leen nítidos, en vez de quedar lavados por su transparencia como la
@@ -1890,7 +2239,13 @@ Promise.all([
        allá todavía puede no haber contexto WebGL, y `map.jumpTo` sobre un mapa
        inexistente tira. Si la dirección no trae encuadre, se encuadra la
        región como siempre. */
-    const _e = leerURL();
+    /* ⛔ SE USA EL ESTADO LEÍDO AL ARRANCAR (`_est`), NO SE VUELVE A LEER LA URL
+       (arreglado 2026-10-30, el mismo bug que ya se corrigió en el tablero de
+       la Gobernación). Para cuando el mapa está listo, `elegirCategoria()` ya
+       escribió en la dirección el zoom y el centro del CONSTRUCTOR, así que
+       releerla encontraba siempre un «encuadre guardado» y `encuadrar()` no se
+       ejecutaba nunca en una carga limpia. */
+    const _e = _est;
     if (_e && _e.z && _e.c){
       const [_lng, _lat] = _e.c.split(",").map(Number);
       if (isFinite(_lng) && isFinite(_lat)) map.jumpTo({center: [_lng, _lat], zoom: +_e.z});
@@ -1907,6 +2262,7 @@ Promise.all([
     interacciones();
     vigilarZoom();            // el nivel es función del zoom: hay que escucharlo
     pintar();                 // el panel ya eligió indicador; acá recién hay capas
+    if (typeof zonasListo === "function") zonasListo();   // «Comparar zonas» (2026-10-30)
     /* Ya no hay nada que precargar. Antes acá se bajaban los nueve pares
        geo+dat en segundo plano —24,1 MB descomprimidos— para que el botón de
        nivel no se sintiera trabado. Sin botón y con teselas, MapLibre pide lo
@@ -2392,6 +2748,8 @@ function estadoActual(){
     e.z = map.getZoom().toFixed(2);
     e.c = c.lng.toFixed(4) + "," + c.lat.toFixed(4);
   }
+  // las dos zonas, si están: centro y radio de cada una (2026-10-30)
+  if (typeof zonasEstado === "function") Object.assign(e, zonasEstado());
   return e;
 }
 
@@ -2467,6 +2825,7 @@ function aplicarEstado(e, encuadrar_){
       const [lng, lat] = e.c.split(",").map(Number);
       if (isFinite(lng) && isFinite(lat)) map.jumpTo({center: [lng, lat], zoom: +e.z});
     }
+    if (typeof zonasDesdeEstado === "function") zonasDesdeEstado(e);
   } finally { _urlQuieta = false; }
 }
 
@@ -2944,6 +3303,7 @@ function montarHoja(){
 function pintarAsomo(m, i, e, v){
   const pk = document.getElementById("pk");
   if (!pk) return;
+  if (typeof zonasActivas === "function" && zonasActivas()) return zonasAsomo(i);
   if (!i){ pk.innerHTML = ""; return; }
   const hay = v !== null && v !== undefined && isFinite(v);
   pk.innerHTML = `<span class="pk-chip" style="background:${tonoDe(e, hay ? v : null)}"></span>
@@ -2951,8 +3311,10 @@ function pintarAsomo(m, i, e, v){
     <span class="pk-val">${hay ? fmtM(v, i) : "s/d"}</span>`;
 }
 
+let _pintado = 0;      // cambia con cada pintado: invalida la ficha del tooltip
 function pintar(){
   if (!ind_actual) return;
+  _pintado++;
   const i = ind_actual;
   /* La precondición para pintar es que la FUENTE exista, y nada más.
      Tener `isStyleLoaded()` en esta condición fue el error que más costó
@@ -3572,9 +3934,21 @@ function perfilPais(ind, st){
     if (mm <= 0) return;
     const h = (mm / tope) * HP;
     const v = lo + ((c + .5) / NB) * rango;
-    s += `<rect x="${(LX + c * anchoB).toFixed(2)}" y="${(HP - h).toFixed(2)}"
+    s += `<rect class="pf-c" data-c="${c}" x="${(LX + c * anchoB).toFixed(2)}" y="${(HP - h).toFixed(2)}"
             width="${(anchoB - .12).toFixed(2)}" height="${h.toFixed(2)}"
             fill="${tonoDe(e, v)}" fill-opacity=".9"/>`;
+  });
+  /* ★ (2026-10-30) CADA TRAMO SE SEÑALA: pasar el cursor (o tocar) enciende
+     en el mapa las manzanas de ese tramo y apaga el resto (`FOCO`). Es lo que
+     conecta el histograma con el mapa, igual que «cuánta gente vive en cada
+     color» en el tablero de la Gobernación. El primero y el último abarcan
+     también lo que la escala recorta por fuera. */
+  const totalM = masa.reduce((a, b) => a + b, 0) || 1;
+  PERFIL_ACT = {ind, lo, rango, NB, masa, totalM};
+  masa.forEach((mm, c) => {
+    if (mm <= 0) return;
+    s += `<rect class="pf-hit" data-c="${c}" x="${(LX + c * anchoB).toFixed(2)}" y="0"
+            width="${anchoB.toFixed(2)}" height="${HP}"/>`;
   });
   /* ⚠️ EL MISMO «PAÍS» QUE LA LEYENDA, y no el de `mz_stats`. Son dos números
      distintos —el del microdato municipal y el promedio ponderado de las
@@ -3622,10 +3996,11 @@ function perfilPais(ind, st){
   const boton = st.dist && Object.keys(st.dist).length > 1
     ? `<button class="ver-mas" data-ver="dist">ver municipio por municipio (${
         nf(Object.keys(st.dist).length, 0)})</button>` : "";
-  return `<div class="cmp-t">Dónde cae en el país<span>${nf(st.esc.n, 0)} manzanas con ficha</span></div>
-    <svg class="cmp pf" viewBox="0 0 ${W} ${alto}" preserveAspectRatio="xMidYMin meet">${s}</svg>
+  return `<section class="sec"><div class="cmp-t">Dónde cae en el país<span>${nf(st.esc.n, 0)} manzanas con ficha</span></div>
+    <p class="sec-q">Cada barra junta las manzanas del país con ese valor, en el color del mapa. Pasá el cursor por una barra —o tocala— para encontrarlas en el mapa.</p>
+    <svg class="cmp pf" id="pf-svg" viewBox="0 0 ${W} ${alto}" preserveAspectRatio="xMidYMin meet">${s}</svg>
     <div class="pf-ax"><span>${fmtM(lo, ind)}</span><span>${fmtM(hi, ind)}</span></div>
-    ${frase}${boton}`;
+    ${frase}${boton}</section>`;
 }
 /* La inversa del mapeo, para saber qué valor pintar en cada tramo del perfil. */
 function invX(px, lo, rango, LX, VX){ return lo + ((px - LX) / (VX - LX)) * rango; }
@@ -3680,12 +4055,12 @@ function distribucionMunicipios(ind){
   const yb = filas.length * H + 8;
   s += `<text x="${LX}" y="${yb}" class="ds-ax">${fmtM(lo, ind)}</text>`
      + `<text x="${VX}" y="${yb}" class="ds-ax" text-anchor="end">${fmtM(hi, ind)}</text>`;
-  return `<div class="cmp-t">Cómo se reparte dentro de cada uno<span>${
+  return `<section class="sec"><div class="cmp-t">Cómo se reparte dentro de cada uno<span>${
       nf(st.esc.n, 0)} manzanas con ficha</span></div>
     <svg class="cmp" viewBox="0 0 ${W} ${alto}" preserveAspectRatio="xMidYMin meet">${s}</svg>
     <div class="ds-ley"><span class="ds-k1"></span>80% central de las manzanas
       <span class="ds-k2"></span>mitad más común <span class="ds-k3"></span>mediana</div>
-    <button class="ver-mas" data-ver="dist">volver al perfil del país</button>`;
+    <button class="ver-mas" data-ver="dist">volver al perfil del país</button></section>`;
 }
 
 function serieDe(sigep, ind){
@@ -3794,14 +4169,27 @@ function ficha(e, i){
   /* Con un segundo indicador elegido, este lugar lo ocupa la dispersión: es la
      lectura que contesta la pregunta que se acaba de hacer. La mancuerna vuelve
      apenas se apaga la comparación. */
-  /* Sin «comparar con», no hay segundo indicador: queda la mancuerna cuando hay
-     dos censos y las barras cuando no. */
-  document.getElementById("cmp").innerHTML =
-    (i.s12 && i.fuente !== "fiscal" && i.k_mun) ? mancuerna(e, i) : comparativo(e, i);
-  /* La distribución va SIEMPRE que el indicador baje a manzana: es la lectura
-     que el panel no tenía. Con un municipio elegido queda resaltado, así que
-     sirve igual en los dos estados. */
-  document.getElementById("dist").innerHTML = distribucion(i);
+  /* ★ (2026-10-30) con «Comparar zonas» prendido el panel es el de las zonas:
+     armar el de siempre debajo, oculto, sería trabajo tirado en cada cambio. */
+  const _zonas = typeof zonasActivas === "function" && zonasActivas();
+  if (_zonas) zonasTrasPintar(e, i);
+  else {
+    /* ★ (2026-10-30) EL PANEL NUEVO, de arriba abajo: la cifra que se está
+       mirando, la comparación entre municipios (barras con escalón), dónde
+       cae en el país (que enciende su tramo en el mapa) y la guía al pie. */
+    document.getElementById("cifra").innerHTML = cifraHTML(e, i);
+    /* Sin «comparar con», no hay segundo indicador: queda la mancuerna cuando hay
+       dos censos y las barras cuando no. */
+    document.getElementById("cmp").innerHTML =
+      (i.s12 && i.fuente !== "fiscal" && i.k_mun) ? mancuerna(e, i) : comparativoForonda(e, i);
+    /* La distribución va SIEMPRE que el indicador baje a manzana: es la lectura
+       que el panel no tenía. Con un municipio elegido queda resaltado, así que
+       sirve igual en los dos estados. */
+    document.getElementById("dist").innerHTML = distribucion(i);
+    document.getElementById("guia").innerHTML = guiaHTML(e, i);
+    activarPerfil();
+  }
+  document.getElementById("kg-h").innerHTML = "";
   if (sel){
     const m = MUN.find(x => x.sigep === sel);
     /* La serie es la trayectoria de UN municipio, así que sólo aparece con uno
@@ -3819,6 +4207,9 @@ function ficha(e, i){
        existe, así que los 343 salían rotulados «Área de influencia». Lo que
        ubica a un municipio en el país es su DEPARTAMENTO. */
     document.getElementById("d-sub").textContent = m.dpto || "";
+    document.getElementById("kg-h").innerHTML =
+      `<section class="sec"><div class="cmp-t">${cat_actual.label} en ${nombreCorto(m.nombre)}<span>contra el país</span></div>
+       <p class="sec-q">Todos los indicadores de la categoría para este municipio. Tocá uno para verlo en el mapa.</p></section>`;
     g.innerHTML = cat_actual.indicadores.filter(x => x.k_mun).map((x, n) => {
       const sinSerie = mudo(x);
       const v = valorMunicipal(m, x);
@@ -3869,7 +4260,10 @@ function ficha(e, i){
          Sólo se callan cuando no hay nada que poner en ellas: con un indicador
          sin serie 2012, en modo Cambio salían nueve veces «s/d» debajo de un
          motivo que ya está escrito arriba una vez y bien. */
-    if (mudo(i)){
+    /* ✂ (2026-10-30) SIN MUNICIPIO ELEGIDO YA NO VAN TARJETAS: acá se armaban
+       las 343, una por municipio, debajo de una comparación que ya los recorre
+       con nombre, valor, orden y fila clicable. */
+    if (mudo(i) || hayManzana()){
       g.innerHTML = "";
     } else {
       g.innerHTML = MUN.slice().sort((a,b) => {
@@ -4241,32 +4635,60 @@ function mancuernaPop(m, i){
 
 function mostrarPop(html, x, y){
   if (!popEl) return;
-  popEl.innerHTML = html;
-  popEl.style.opacity = "1";
-  const r = popEl.getBoundingClientRect();
+  /* ★ (2026-10-30, «más fluido») con el mismo contenido NO se reescribe ni se
+     vuelve a medir (antes, cada movimiento del cursor reemplazaba el HTML y
+     forzaba un cálculo de diseño); y en vez de saltar, entra con un
+     desplazamiento corto y SIGUE al puntero con suavidad (cada cuadro recorre
+     el 45 % de lo que falta). Recién aparecido, se planta directo donde va. */
+  if (html !== _popHtml){ popEl.innerHTML = html; _popHtml = html; _popTam = null; }
+  const yaVisible = popEl.classList.contains("ver");
+  if (!yaVisible){ popEl.style.opacity = "1"; popEl.classList.add("ver"); }
+  if (!_popTam){ const r = popEl.getBoundingClientRect(); _popTam = [r.width, r.height]; }
   let L = x + 16, T = y + 16;
-  if (L + r.width > innerWidth - 10) L = x - 16 - r.width;
-  if (T + r.height > innerHeight - 10) T = y - 16 - r.height;
-  popEl.style.left = Math.max(10, L) + "px";
-  popEl.style.top = Math.max(10, T) + "px";
+  if (L + _popTam[0] > innerWidth - 10) L = x - 16 - _popTam[0];
+  if (T + _popTam[1] > innerHeight - 10) T = y - 16 - _popTam[1];
+  _popObj = [Math.max(10, L), Math.max(10, T)];
+  if (!yaVisible || !_popXY){
+    _popXY = _popObj.slice();
+    popEl.style.left = _popXY[0] + "px"; popEl.style.top = _popXY[1] + "px";
+    return;
+  }
+  if (!_popRaf) _popRaf = requestAnimationFrame(function paso(){
+    _popXY = [_popXY[0] + (_popObj[0] - _popXY[0]) * .45, _popXY[1] + (_popObj[1] - _popXY[1]) * .45];
+    popEl.style.left = _popXY[0].toFixed(1) + "px"; popEl.style.top = _popXY[1].toFixed(1) + "px";
+    _popRaf = Math.abs(_popObj[0] - _popXY[0]) + Math.abs(_popObj[1] - _popXY[1]) > .6 ? requestAnimationFrame(paso) : 0;
+  });
 }
-function ocultarPop(){ if (popEl) popEl.style.opacity = "0"; }
+let _popHtml = null, _popTam = null, _popXY = null, _popObj = null, _popRaf = 0;
+function ocultarPop(){ if (popEl){ popEl.style.opacity = "0"; popEl.classList.remove("ver"); } }
 
 /* ── INTERACCIÓN ─────────────────────────────────────────────────────────── */
 function interacciones(){
-  map.on("click", "mun-fill", ev => { if (nivel === "municipio") seleccionar(ev.features[0].properties.sigep); });
+  // con «Comparar zonas» prendido, tocar el mapa mueve una zona: no elige municipio
+  const conZonas = () => typeof ZONAS !== "undefined" && ZONAS.on;
+  map.on("click", "mun-fill", ev => { if (nivel === "municipio" && !conZonas()) seleccionar(ev.features[0].properties.sigep); });
+  /* ★ (2026-10-30) la ficha del tooltip se arma UNA vez por manzana (o
+     municipio) y por estado del tablero (`_pintado` cambia con cada
+     `pintar()`): mientras el cursor se mueve dentro del mismo polígono sólo se
+     reubica. */
+  let _tipK = null, _tipH = null;
   const mostrar = (ev, esMz) => {
-    const f0 = ev.features[0], p = Object.assign({}, f0.properties);
-    /* El valor ya no viene en la geometría: la manzana lo toma de la columna
-       activa por su `id`; el municipio, de MUN (antes era `properties.v`,
-       escrito por el `setData` que ya no existe). */
-    if (ind_actual){
-      if (esMz) p[ind_actual.k_mz] = valorCol(ind_actual.k_mz, f0.id);
-      else { const m = MUN.find(x => x.sigep === p.sigep); p.v = m ? valorMunicipal(m, ind_actual) : null; }
+    if (conZonas() && ZONAS.arrastra) return ocultarPop();   // arrastrando una zona
+    const f0 = ev.features[0];
+    const clave = (esMz ? "z" + f0.id : "m" + f0.properties.sigep) + "|" + _pintado;
+    if (clave !== _tipK){
+      const p = Object.assign({}, f0.properties);
+      /* El valor ya no viene en la geometría: la manzana lo toma de la columna
+         activa por su `id`; el municipio, de MUN (antes era `properties.v`,
+         escrito por el `setData` que ya no existe). */
+      if (ind_actual){
+        if (esMz) p[ind_actual.k_mz] = valorCol(ind_actual.k_mz, f0.id);
+        else { const m = MUN.find(x => x.sigep === p.sigep); p.v = m ? valorMunicipal(m, ind_actual) : null; }
+      }
+      _tipK = clave; _tipH = tooltipHTML(p, esMz);
     }
-    const html = tooltipHTML(p, esMz);
-    if (!html) return ocultarPop();
-    mostrarPop(html, ev.originalEvent.clientX, ev.originalEvent.clientY);
+    if (!_tipH) return ocultarPop();
+    mostrarPop(_tipH, ev.originalEvent.clientX, ev.originalEvent.clientY);
   };
   map.on("mousemove", "mun-fill", ev => { if (nivel === "municipio") mostrar(ev, false); });
   map.on("mouseleave", "mun-fill", ocultarPop);
@@ -4279,10 +4701,883 @@ function interacciones(){
   // polígono que ya no es el de abajo.
   map.on("dragstart", ocultarPop);
   map.on("zoomstart", ocultarPop);
+  /* ★ (2026-10-30) el contorno de lo que está bajo el cursor: la manzana a
+     escala de manzana, el municipio a escala de municipio. Se cambia el
+     estado sólo cuando el cursor pasa a OTRO polígono. */
+  let hovMz = null, hovMun = null;
+  const limpiarHov = () => {
+    if (hovMz !== null) map.setFeatureState({source: "mz", sourceLayer: "manzanas", id: hovMz}, {hov: false});
+    if (hovMun !== null) map.setFeatureState({source: "mun", id: hovMun}, {hov: false});
+    hovMz = hovMun = null;
+  };
+  if (map.getLayer("mz-fill")){
+    map.on("mousemove", "mz-fill", ev => {
+      if (nivel !== "manzana" || ev.features[0].id === undefined) return;
+      const id = ev.features[0].id;
+      if (id !== hovMz){ limpiarHov(); hovMz = id; map.setFeatureState({source: "mz", sourceLayer: "manzanas", id}, {hov: true}); }
+    });
+    map.on("mouseleave", "mz-fill", limpiarHov);
+  }
+  map.on("mousemove", "mun-fill", ev => {
+    if (nivel !== "municipio") return;
+    const id = ev.features[0].properties.sigep;
+    if (id !== hovMun){ limpiarHov(); hovMun = id; map.setFeatureState({source: "mun", id}, {hov: true}); }
+  });
+  map.on("mouseleave", "mun-fill", limpiarHov);
+  map.on("dragstart", limpiarHov);
   // Los municipios se pueden clicar; las manzanas no, y el cursor lo dice.
   map.on("mouseenter", "mun-fill", () => { if (nivel === "municipio") map.getCanvas().style.cursor = "pointer"; });
   map.on("mouseleave", "mun-fill", () => { map.getCanvas().style.cursor = ""; });
   map.getCanvas().style.cursor = "";
+}
+</script>
+<script>
+/* ═══ UPGRADE DE LOS PANELES (2026-10-30, pedido de Carlos) ═══════════════════
+   «Conservando su tipografía y paleta, pero dándole este upgrade total de
+   ambos paneles así como el comparar»: lo aprendido en el tablero de la
+   Gobernación, adaptado a la escala país y con la identidad del OFPDT.
+   ═════════════════════════════════════════════════════════════════════════ */
+const difTxtR = (d, i) => (d > 0 ? "+" : d < 0 ? "−" : "±") + nf(Math.abs(d), 1) +
+  (i.unit === "%" ? " pp" : " " + (i.unit || ""));
+const claseDif = (d, i) => !i.dir || Math.abs(d) < .05 ? "igual" : (d > 0) === (i.dir >= 0) ? "arriba" : "abajo";
+
+/* ── 1 · LA CIFRA ─────────────────────────────────────────────────────────
+   Lo que se está mirando, arriba de todo: el indicador, el valor (del
+   municipio elegido o del país), contra qué se lee, y qué pinta el mapa en
+   ese momento. Antes el panel abría directo en las barras y la cifra del país
+   había que buscarla en el encabezado del gráfico. */
+function cifraHTML(e, i){
+  const rg = refRegion(i), rv = rg && rg.v !== null && isFinite(rg.v) ? rg.v : null;
+  const m = sel ? MUN.find(x => x.sigep === sel) : null;
+  const v = m ? valorParaMini(m, i) : rv;
+  let ctx;
+  if (m){
+    if (rv === null || v === null || !isFinite(v)) ctx = `<b>${m.nombre}</b>${m.dpto ? " · " + m.dpto : ""}`;
+    else if (esConteo(i)) ctx = `<b>${m.nombre}</b> · el <b>${nf(100 * v / rv, 1)}%</b> del país`;
+    else {
+      const d = v - rv;
+      ctx = `<b>${m.nombre}</b> · país ${fmtM(rv, i)}<span class="c-dif ${claseDif(d, i)}">${difTxtR(d, i)}</span>`;
+    }
+  } else ctx = `<b>Bolivia</b> · ${i.k_mun ? `los ${MUN.length} municipios, urbano y rural` : "la suma de las manzanas urbanas"}`;
+  const mapa = nivel === "manzana"
+    ? "Cada manzana tiene el color de su propio valor; las grises son las que el INE no publica. Alejá el mapa para volver a los municipios."
+    : `El mapa muestra los ${MUN.length} municipios. Acercá el mapa a una ciudad —o buscá un municipio— para ver cada manzana.`;
+  return `<div class="c-k">${cat_actual ? cat_actual.label : ""}</div><div class="c-t">${i.label}</div>
+    <div class="c-fila"><div class="c-v">${v === null || v === undefined || !isFinite(v) ? "s/d" : fmtM(v, i)}</div>
+      <div class="c-c">${ctx}</div></div><p class="c-mapa">${mapa}</p>`;
+}
+
+/* ── 2 · LA COMPARACIÓN ENTRE MUNICIPIOS ──────────────────────────────────
+   La misma lista corta de siempre (`recorte`: las puntas del país y el
+   vecindario del elegido, con el recorte DICHO), dibujada como en el tablero
+   de la Gobernación: barras gruesas de UN tono, casi pegadas, y la tapa de
+   cada una unida a la de la vecina por un escalón, así el contorno se lee
+   como una sola línea. Antes cada barra iba en el color de la rampa: largo y
+   color decían dos veces lo mismo. El elegido, en tono pleno y con el ámbar
+   del contorno del mapa. El país, punteado y sin rótulo: su cifra va arriba. */
+function comparativoForonda(e, ind){
+  const todas = filasComparativo(ind);
+  const con = todas.filter(f => f.v !== null && isFinite(f.v));
+  if (!con.length) return `<div class="sin">${mudo(ind) ? motivoSinSerie(ind) : "Sin datos para este indicador."}</div>`;
+  const filas = VER_TODOS.cmp ? con.map((f, k) => Object.assign({pos: k + 1}, f)) : recorte(todas).filas;
+  const pais = ind.ref && ind.ref.pais != null ? ind.ref.pais : ((refRegion(ind) || {}).v);
+  const hayPais = pais !== null && pais !== undefined && isFinite(pais);
+  const vals = con.map(f => f.v).concat(hayPais ? [pais] : []);
+  let lo = Math.min(0, ...vals), hi = Math.max(0, ...vals);
+  const pad = (hi - lo) * .03;
+  if (hi > 0) hi += pad; if (lo < 0) lo -= pad;
+  const X = v => 100 * (v - lo) / ((hi - lo) || 1), z0 = X(0);
+  let html = "";
+  const tramos = [];
+  let tramo = [];
+  filas.forEach((f, k) => {
+    if (f.hueco !== undefined){
+      html += `<div class="fr-h">··· ${nf(f.hueco, 0)} municipios más ···</div>`;
+      if (tramo.length) tramos.push(tramo);
+      tramo = [];
+      return;
+    }
+    const x = X(f.v), esSel = f.m.sigep === sel;
+    html += `<button type="button" class="fr-f${esSel ? " sel" : ""}" data-s="${f.m.sigep}" title="${f.m.nombre}${f.m.dpto ? " · " + f.m.dpto : ""}">
+      <span class="fr-n">${f.pos ? `<i>${f.pos}</i>` : ""}${f.m.nombre}</span>
+      <span class="fr-b"><i style="left:${Math.min(z0, x).toFixed(2)}%;width:${Math.max(.4, Math.abs(x - z0)).toFixed(2)}%"></i></span>
+      <b>${fmtM(f.v, ind)}</b></button>`;
+    tramo.push([x, k]);
+  });
+  if (tramo.length) tramos.push(tramo);
+  const N = filas.length;
+  const tapas = tramos.map(t => `<polyline vector-effect="non-scaling-stroke" points="${
+    t.map(([x, k]) => `${x.toFixed(2)},${k} ${x.toFixed(2)},${k + 1}`).join(" ")}"/>`).join("");
+  const xp = hayPais ? X(pais) : null;
+  const linea = xp === null ? "" : `<line class="fr-pais" vector-effect="non-scaling-stroke" x1="${xp.toFixed(2)}" y1="0" x2="${xp.toFixed(2)}" y2="${N}"/>`;
+  const boton = con.length > 12 ? `<button class="ver-mas" data-ver="cmp">${VER_TODOS.cmp
+    ? "ver sólo las puntas y el vecindario" : "ver los " + nf(con.length, 0) + " ordenados"}</button>` : "";
+  const que = (VER_TODOS.cmp ? "Los " + nf(con.length, 0) + " municipios, en orden."
+    : sel ? "Las puntas del país y el vecindario del municipio elegido, en orden."
+          : "Las cinco puntas de cada lado, en orden.")
+    + (ind.k_mun ? " Cada barra es el municipio entero —urbano y rural—" : " Cada barra suma las manzanas urbanas del municipio")
+    + "; la línea punteada es el país. Tocá uno para ir a él.";
+  const rg = refRegion(ind);
+  return `<section class="sec"><div class="cmp-t">Comparación entre municipios<span>${hayPais ? "país " + fmtM(pais, ind) : ""}</span></div>
+    <p class="sec-q">${que}</p>
+    <div class="fr"><svg class="fr-tapa" viewBox="0 0 100 ${N}" preserveAspectRatio="none" aria-hidden="true">${linea}${tapas}</svg>${html}</div>
+    ${boton}${lecturaPanel(con.map(f => ({m: f.m, act: f.v})), ind, rg ? rg.v : null)}</section>`;
+}
+
+/* ── 3 · EL FOCO DEL MAPA ─────────────────────────────────────────────────
+   Pasar el cursor por un tramo de «Dónde cae en el país» (o tocarlo, y queda
+   fijo) deja con su color sólo a las manzanas de ese tramo y apaga el resto.
+   Se arma como opacidad por manzana DENTRO del fundido por zoom —MapLibre
+   exige el ["zoom"] arriba de todo—, así el cruce municipio ↔ manzana no
+   cambia. ⚠️ Cambiar la opacidad hace que MapLibre vuelva a procesar las
+   teselas: por eso se manda sólo cuando cambia el tramo, nunca a cada
+   movimiento del cursor. */
+let PERFIL_ACT = null;
+const FOCO = {rango: null, fija: false, c: null, k: null};
+function opacidadMz(){
+  const b = opacidades().mz;
+  if (!FOCO.rango) return fundidoMz(b);
+  const v = ["to-number", ["feature-state", "v"]];
+  const conds = [["!=", ["feature-state", "v"], null]];
+  if (isFinite(FOCO.rango[0])) conds.push([">=", v, FOCO.rango[0]]);
+  if (isFinite(FOCO.rango[1])) conds.push(["<", v, FOCO.rango[1]]);
+  const cond = ["all", ...conds];
+  const F = x => ["case", cond, x, +(x * .12).toFixed(3)];
+  return ["interpolate", ["linear"], ["zoom"], Z0, 0, Z0 + (Z1 - Z0) * .4, F(b * .7), Z1, F(b)];
+}
+function aplicarFoco(){
+  if (map && map.getLayer && map.getLayer("mz-fill")) map.setPaintProperty("mz-fill", "fill-opacity", opacidadMz());
+}
+function enfocarRango(r){ FOCO.rango = r; aplicarFoco(); }
+function activarPerfil(){
+  document.querySelectorAll("#cmp .fr-f[data-s]").forEach(el => el.onclick = () => seleccionar(el.dataset.s));
+  const svg = document.getElementById("pf-svg"), P = PERFIL_ACT;
+  if (!svg || !P){ if (FOCO.rango){ FOCO.fija = false; FOCO.c = null; enfocarRango(null); } return; }
+  // otro indicador: el tramo de antes ya no significa nada
+  if (FOCO.k !== P.ind.key){ FOCO.k = P.ind.key; FOCO.fija = false; FOCO.c = null; if (FOCO.rango) enfocarRango(null); }
+  const tramo = c => [c === 0 ? -Infinity : P.lo + c / P.NB * P.rango,
+                      c === P.NB - 1 ? Infinity : P.lo + (c + 1) / P.NB * P.rango];
+  const dice = c => { const [a, b] = tramo(c);
+    return !isFinite(a) ? `hasta ${fmtM(b, P.ind)}` : !isFinite(b) ? `desde ${fmtM(a, P.ind)}` : `de ${fmtM(a, P.ind)} a ${fmtM(b, P.ind)}`; };
+  const marcar = c => svg.querySelectorAll("rect.pf-c").forEach(r => r.classList.toggle("dim", c !== null && +r.dataset.c !== c));
+  const eMz = escalaManzana(P.ind);
+  let encima = null, tip = "";
+  const ficha_ = c => {
+    const pct = 100 * P.masa[c] / P.totalM, medio = P.lo + (c + .5) / P.NB * P.rango;
+    return `<div class="pd">Dónde cae en el país</div><div class="pn">${P.ind.label}</div>
+      <div class="pind">manzanas ${dice(c)}</div>
+      <div class="pv"><span class="pchip" style="background:${tonoDe(eMz, medio)}"></span><b>${nf(pct, pct < 1 ? 1 : 0)}%</b></div>
+      <div class="pr"><span>de las manzanas del país con ficha</span></div>
+      <div class="pgr">${nivel !== "manzana" ? "Acercá el mapa a una ciudad para verlas." : FOCO.fija ? "Tocá de nuevo para soltarlo." : "Tocá para dejarlo fijo en el mapa."}</div>`;
+  };
+  svg.addEventListener("mousemove", ev => {
+    const h = ev.target.closest(".pf-hit");
+    if (!h){
+      if (encima !== null){ encima = null; ocultarPop(); if (!FOCO.fija){ enfocarRango(null); marcar(null); } }
+      return;
+    }
+    const c = +h.dataset.c;
+    if (c !== encima){
+      encima = c;
+      if (!FOCO.fija){ enfocarRango(tramo(c)); marcar(c); }
+      tip = ficha_(c);
+    }
+    mostrarPop(tip, ev.clientX, ev.clientY);
+  });
+  svg.addEventListener("mouseleave", () => {
+    encima = null; ocultarPop();
+    if (!FOCO.fija){ enfocarRango(null); marcar(null); }
+  });
+  svg.addEventListener("click", ev => {
+    const h = ev.target.closest(".pf-hit");
+    if (!h) return;
+    const c = +h.dataset.c;
+    if (FOCO.fija && FOCO.c === c){ FOCO.fija = false; FOCO.c = null; enfocarRango(null); marcar(null); }
+    else { FOCO.fija = true; FOCO.c = c; enfocarRango(tramo(c)); marcar(c); pista(nivel === "manzana" ? "foco" : "foco_lejos"); }
+    encima = null;
+  });
+  if (FOCO.fija && FOCO.c !== null) marcar(FOCO.c);
+}
+
+/* ── 4 · CÓMO LEER EL MAPA ──────────────────────────────────────────────── */
+function guiaHTML(e, i){
+  const r = rampa(i.dir || 0);
+  const grad = `<span class="rampa-mini" style="background:linear-gradient(to right,${r.join(",")})"></span>`;
+  const lado = i.dir
+    ? `${grad} Hacia el <b>petróleo</b>, mejor; hacia el <b>rojo</b>, peor.`
+    : `${grad} Del <b>petróleo</b> (lo más bajo) al <b>rojo</b> (lo más alto): este indicador no tiene un lado bueno.`;
+  const items = [
+    `${lado} Una sola escala para todo el país y para los dos niveles: el mismo color quiere decir lo mismo en un municipio y en una manzana. La marca <b>ámbar</b> de la leyenda es el país.`,
+    `Las manzanas <b>grises</b> son las que el INE no publica por privacidad (muy pocas personas o viviendas). No son ceros.`,
+    `<b>Alejado</b> se ven los ${MUN.length} municipios; al <b>acercarte</b> a una ciudad, cada manzana. El cambio lo decide el zoom.`,
+    `Con un municipio elegido, la leyenda ofrece <b>«esta ciudad»</b>: reparte la rampa entre sus manzanas. Mientras está activa, el color ya no se compara con el resto del país.`,
+    `El contorno <b>ámbar</b> del mapa es el municipio elegido. Pasá el cursor por «Dónde cae en el país» para encontrar en el mapa las manzanas de un tramo.`,
+    `<b>«Comparar zonas»</b> pone dos círculos en el mapa y compara lo que vive adentro de cada uno.`,
+  ];
+  return `<details class="guia"><summary>Cómo leer el mapa</summary><ul>${items.map(t => `<li>${t}</li>`).join("")}</ul></details>`;
+}
+
+/* ── OCULTAR EL PANEL DERECHO EN LA PC ──────────────────────────────────── */
+(function(){
+  const ocultar = document.getElementById("det-ocultar"), mostrar = document.getElementById("det-mostrar");
+  if (!ocultar || !mostrar) return;
+  const poner = (oculto, guardar) => {
+    document.body.classList.toggle("det-oculto", oculto);
+    mostrar.hidden = !oculto;
+    ocultar.setAttribute("aria-expanded", String(!oculto));
+    mostrar.setAttribute("aria-expanded", String(!oculto));
+    if (guardar) try { localStorage.setItem("rc-panel-der", oculto ? "oculto" : "visible"); } catch (_) {}
+    if (typeof map !== "undefined" && map && map.resize) map.resize();
+  };
+  ocultar.addEventListener("click", () => { poner(true, true); mostrar.focus(); pista("oculto"); });
+  mostrar.addEventListener("click", () => { poner(false, true); ocultar.focus(); });
+  let previo = null; try { previo = localStorage.getItem("rc-panel-der"); } catch (_) {}
+  if (previo === "oculto" && !ES_MOVIL()) poner(true, false);
+})();
+
+/* ── LAS PISTAS ───────────────────────────────────────────────────────────
+   Avisos cortos para orientarse, uno a la vez, cada uno UNA sola vez (se
+   recuerda en el navegador). Se van solos a los nueve segundos. */
+const PISTAS = {
+  inicio: "Acercá el mapa a una ciudad para ver cada manzana. «Ir a» te lleva a un departamento; en el panel de la derecha, buscá un municipio.",
+  foco: "Quedaron con color sólo las manzanas de ese tramo. Tocalo de nuevo para ver todas.",
+  foco_lejos: "Acercá el mapa a una ciudad para ver las manzanas de ese tramo.",
+  oculto: "El panel quedó oculto. «Mostrar panel», arriba a la derecha, lo trae de vuelta.",
+  zonas: "Arrastrá la letra A o B para mover cada círculo, y el cuadradito del borde para cambiar su tamaño. El panel compara lo que vive adentro.",
+};
+function pista(clave){
+  const el = document.getElementById("pista");
+  if (!el || !PISTAS[clave]) return;
+  let vistas = {};
+  try { vistas = JSON.parse(localStorage.getItem("rc-pistas") || "{}"); } catch (_) {}
+  if (vistas[clave]) return;
+  vistas[clave] = 1;
+  try { localStorage.setItem("rc-pistas", JSON.stringify(vistas)); } catch (_) {}
+  el.querySelector(".pi-t").textContent = PISTAS[clave];
+  el.hidden = false;
+  requestAnimationFrame(() => el.classList.add("ver"));
+  clearTimeout(pista._t);
+  pista._t = setTimeout(cerrarPista, 9000);
+}
+function cerrarPista(){
+  const el = document.getElementById("pista");
+  if (!el) return;
+  el.classList.remove("ver");
+  setTimeout(() => { if (!el.classList.contains("ver")) el.hidden = true; }, 220);
+}
+(function(){
+  const el = document.createElement("div");
+  el.id = "pista"; el.className = "pista"; el.hidden = true; el.setAttribute("role", "status");
+  el.innerHTML = `<span class="pi-t"></span><button type="button" class="pi-x">Entendido</button>`;
+  document.body.appendChild(el);
+  el.querySelector(".pi-x").addEventListener("click", cerrarPista);
+  addEventListener("load", () => setTimeout(() => { try { pista("inicio"); } catch (_) {} }, 2200));
+})();
+
+/* ── PREGUNTAS ────────────────────────────────────────────────────────────
+   Cada pregunta es un estado del tablero (indicador y encuadre de una
+   ciudad), el mismo que guarda la URL. Se muestran sólo las que el catálogo
+   tiene. Y las dudas de lectura de siempre. */
+const PREGUNTAS = [
+  ["¿Dónde no llega el alcantarillado en El Alto?", "Desagüe a alcantarillado, manzana por manzana", {i: "pct_alcantarillado", z: "12.40", c: "-68.1900,-16.5100"}],
+  ["¿Qué barrios de Santa Cruz tienen más estudios superiores?", "Personas de 19 años y más con educación superior", {i: "pct_edu_superior", z: "11.90", c: "-63.1700,-17.7900"}],
+  ["¿Dónde se cocina todavía con leña?", "Cocina con leña o guano, en todo el país", {i: "pct_lena_guano"}],
+  ["¿Dónde falta internet en casa en Cochabamba?", "Hogares con internet", {i: "pct_internet", z: "12.20", c: "-66.1600,-17.3900"}],
+  ["¿Dónde se vive más apretado en La Paz?", "Hacinamiento: más de tres personas por dormitorio", {i: "pct_hacinamiento", z: "12.60", c: "-68.1300,-16.5000"}],
+  ["¿Qué barrios de Sucre alquilan más?", "Vivienda en alquiler", {i: "pct_viv_alquilada", z: "13.00", c: "-65.2600,-19.0400"}],
+  ["¿Dónde viven más adultos mayores en Oruro?", "60 años y más", {i: "pct_60_mas", z: "12.80", c: "-67.1100,-17.9700"}],
+  ["¿Dónde falta agua por cañería en Tarija?", "Agua por cañería de red", {i: "pct_agua_caneria", z: "12.80", c: "-64.7300,-21.5300"}],
+  ["¿Dónde estudian más las mujeres que los hombres?", "Brecha en educación superior, mujeres menos hombres", {i: "brecha_edu_superior", z: "12.40", c: "-68.1300,-16.5000"}],
+  ["¿Dónde se quema la basura?", "Basura quemada, en todo el país", {i: "pct_basura_quema"}],
+];
+const DUDAS = [
+  ["¿Qué es el Retrato Censal?", "El Censo de Población y Vivienda 2024 en dos niveles con la misma definición: los 343 municipios y, al acercarse, cada manzana de las ciudades. Es un producto del Observatorio de Finanzas Públicas y Desarrollo Territorial."],
+  ["¿De dónde salen los datos?", "Del Censo 2024 del INE: el nivel municipal, del microdato; el de manzana, de las fichas por manzano que publica el INE, verificadas contra el microdato."],
+  ["¿Qué dicen los colores?", "Una sola escala para todo el país y los dos niveles: hacia el petróleo, mejor; hacia el rojo, peor. La marca ámbar de la leyenda es el país. Con un municipio elegido, «esta ciudad» reparte la rampa entre sus manzanas."],
+  ["¿Por qué hay manzanas grises?", "Son las que el INE no publica por privacidad (muy pocas personas o viviendas). No son ceros: se dibujan para que el hueco no se lea como «acá no vive nadie»."],
+  ["¿Cómo comparo dos barrios?", "Con «Comparar zonas»: dos círculos que se arrastran y se agrandan; el panel compara lo que vive adentro de cada uno, indicador por indicador. La dirección guarda las zonas, así que se pueden compartir."],
+  ["¿Dónde están los demás indicadores municipales?", "En el Atlas Socioeconómico del Observatorio: 215 indicadores municipales, con la serie 2012. Acá están los 91 que existen también por manzana."],
+];
+(function(){
+  const caja = document.getElementById("preg"), boton = document.getElementById("preg-btn");
+  if (!caja || !boton) return;
+  const hay = k => typeof CAT !== "undefined" && CAT && CAT.grupos.some(g => g.indicadores.some(x => x.key === k));
+  const lista = () => PREGUNTAS.filter(p => hay(p[2].i));
+  const abrir = () => {
+    document.getElementById("preg-ir").innerHTML = lista().map((p, n) =>
+      `<button type="button" data-n="${n}">${p[0]}<small>${p[1]}</small></button>`).join("");
+    document.getElementById("preg-faq").innerHTML = DUDAS.map(([q, r]) => `<dt>${q}</dt><dd>${r}</dd>`).join("");
+    caja.hidden = false; document.getElementById("preg-x").focus();
+  };
+  const cerrar = () => { caja.hidden = true; boton.focus(); };
+  boton.addEventListener("click", abrir);
+  document.getElementById("preg-x").addEventListener("click", cerrar);
+  caja.addEventListener("click", e => { if (e.target === caja) cerrar(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && !caja.hidden) cerrar(); });
+  document.getElementById("preg-ir").addEventListener("click", e => {
+    const b = e.target.closest("button[data-n]"); if (!b) return;
+    const p = lista()[+b.dataset.n];
+    caja.hidden = true;
+    aplicarEstado(Object.assign({a: "2024"}, p[2]), true);
+    if (!p[2].z) encuadrar();
+    escribirURL(true);
+  });
+})();
+</script>
+<script>
+/* ═══ COMPARAR ZONAS (2026-10-30) ══════════════════════════════════════════════
+   El mismo modo del tablero de la Gobernación, a escala país. Dos círculos
+   —A y B— que el lector arrastra y agranda; el panel compara lo que vive
+   adentro de cada uno, indicador por indicador de la categoría en pantalla, y
+   la estructura de edad de su gente.
+   ★ SE SUMAN CONTEOS, NUNCA PORCENTAJES (`scripts/zonas_manzana.py` →
+     `datos/zonas/`): el valor de una zona es Σnum / Σden de las manzanas cuyo
+     punto representativo cae dentro del círculo.
+   ★ POR PEDAZOS. Las 247.429 manzanas no se bajan juntas: van partidas en las
+     teselas z8 del mapa (~150 km de lado) y cada zona pide sólo los pedazos
+     que toca, y de cada uno sólo la categoría en pantalla.
+   ★ FLUIDEZ. Arrastrar no rehace nada: cada cuadro (rAF) recalcula sólo la
+     zona que se mueve, manda tres polígonos a una fuente GeoJSON y cambia
+     largos y cifras de un panel que se arma una sola vez por categoría.
+   ⚠️ Con menos de ZN_MIN manzanas con ficha el valor no se publica.          */
+const ZN_MIN = 10, ZN_RMIN = .2, ZN_RMAX = 5, ZN_KY = 110.57;
+const znKX = lat => 111.32 * Math.cos(lat * Math.PI / 180);
+const ZONAS = {on: false, idx: null, _pi: null, ped: new Map(), pend: new Map(),
+  z: {a: null, b: null}, marcas: {}, arrastra: null, ultimo: 0, raf: 0, sucias: new Set(),
+  grupo: null, firma: "", dom: null, pendiente: null};
+const zonasActivas = () => ZONAS.on;
+
+/* ── LOS DATOS ───────────────────────────────────────────────────────────── */
+function znIndice(){
+  if (ZONAS.idx) return Promise.resolve(ZONAS.idx);
+  if (!ZONAS._pi) ZONAS._pi = fetch("datos/zonas/indice.json")
+    .then(r => { if (!r.ok) throw new Error("zonas"); return r.json(); })
+    .then(j => (ZONAS.idx = j))
+    .catch(e => { ZONAS._pi = null; throw e; });
+  return ZONAS._pi;
+}
+function znPedazo(clave){
+  if (ZONAS.ped.has(clave)) return Promise.resolve(ZONAS.ped.get(clave));
+  const k = "b|" + clave;
+  if (ZONAS.pend.has(k)) return ZONAS.pend.get(k);
+  const p = fetch(`datos/zonas/${clave}/base.json`).then(r => { if (!r.ok) throw 0; return r.json(); })
+    .then(b => {
+      const n = b.n, q = ZONAS.idx.q, lon = new Float64Array(n), lat = new Float64Array(n), fi = new Int32Array(n);
+      let id = 0, x = 0, y = 0, nf_ = 0;
+      const ids = new Int32Array(n);
+      for (let j = 0; j < n; j++){
+        id += b.id[j]; x += b.x[j]; y += b.y[j];
+        ids[j] = id; lon[j] = x / q; lat[j] = y / q;
+        fi[j] = b.f[j] ? nf_++ : -1;          // fila en las columnas de la categoría
+      }
+      const P = {clave, n, ids, lon, lat, fi, s: Uint16Array.from(b.s), f: Uint8Array.from(b.f),
+        base: {p: Int32Array.from(b.p), v: Int32Array.from(b.v), a: Float64Array.from(b.a)},
+        eh: b.eh.map(a => Int32Array.from(a)), em: b.em.map(a => Int32Array.from(a)), grupos: new Map()};
+      ZONAS.ped.set(clave, P); ZONAS.pend.delete(k);
+      return P;
+    })
+    .catch(() => { ZONAS.pend.delete(k); return null; });
+  ZONAS.pend.set(k, p);
+  return p;
+}
+function znGrupoDe(P, g){
+  if (P.grupos.has(g)) return Promise.resolve(P.grupos.get(g));
+  const k = "g|" + P.clave + "|" + g;
+  if (ZONAS.pend.has(k)) return ZONAS.pend.get(k);
+  const pr = fetch(`datos/zonas/${P.clave}/g_${g}.json`).then(r => { if (!r.ok) throw 0; return r.json(); })
+    .then(j => { const c = j.cols.map(a => Int32Array.from(a)); P.grupos.set(g, c); ZONAS.pend.delete(k); return c; })
+    .catch(() => { ZONAS.pend.delete(k); return null; });
+  ZONAS.pend.set(k, pr);
+  return pr;
+}
+/* Qué pedazos toca una zona: los que tienen alguna manzana dentro de su caja. */
+function znPedazosDe(z){
+  const I = ZONAS.idx, dx = z.r / znKX(z.c[1]), dy = z.r / ZN_KY;
+  const x0 = z.c[0] - dx, x1 = z.c[0] + dx, y0 = z.c[1] - dy, y1 = z.c[1] + dy;
+  return Object.keys(I.pedazos).filter(c => { const b = I.pedazos[c].caja;
+    return b[0] <= x1 && b[2] >= x0 && b[1] <= y1 && b[3] >= y0; });
+}
+/* Pide lo que falta para las dos zonas y recalcula al llegar. */
+function znAsegurar(){
+  if (!ZONAS.idx) return;
+  const g = ZONAS.grupo;
+  for (const k of ["a", "b"]){
+    const z = ZONAS.z[k];
+    if (!z) continue;
+    z.claves = znPedazosDe(z);
+    for (const c of z.claves){
+      const P = ZONAS.ped.get(c);
+      if (!P) znPedazo(c).then(Q => { if (Q && ZONAS.on){ if (g) znGrupoDe(Q, g).then(() => znProgramar("ab")); else znProgramar("ab"); } });
+      else if (g && !P.grupos.has(g)) znGrupoDe(P, g).then(() => { if (ZONAS.on) znProgramar("ab"); });
+    }
+  }
+}
+
+/* ── QUIÉN ESTÁ ADENTRO Y CUÁNTO SUMA ────────────────────────────────────── */
+function znCalcular(z){
+  const g = ZONAS.grupo, kx = znKX(z.c[1]), cx = z.c[0], cy = z.c[1], r2 = z.r * z.r;
+  z.claves = ZONAS.idx ? znPedazosDe(z) : [];
+  const listos = z.claves.map(c => ZONAS.ped.get(c));
+  z.listo = listos.every(Boolean) && (!g || listos.every(P => P.grupos.has(g)));
+  let p = 0, v = 0, a = 0, f = 0, n = 0;
+  const eh = [0, 0, 0, 0], em = [0, 0, 0, 0], mun = new Map();
+  const ncol = g && listos.length && listos[0] && listos[0].grupos.get(g) ? listos[0].grupos.get(g).length : 0;
+  const cols = new Float64Array(ncol);
+  for (const P of listos){
+    if (!P) continue;
+    const C = g ? P.grupos.get(g) : null, lon = P.lon, lat = P.lat;
+    for (let j = 0; j < P.n; j++){
+      const dx = (lon[j] - cx) * kx, dy = (lat[j] - cy) * ZN_KY;
+      if (dx * dx + dy * dy > r2) continue;
+      n++;
+      const pj = P.base.p[j];
+      p += pj; v += P.base.v[j]; a += P.base.a[j];
+      mun.set(P.s[j], (mun.get(P.s[j]) || 0) + pj);
+      if (!P.f[j]) continue;
+      f++;
+      for (let t = 0; t < 4; t++){ eh[t] += P.eh[t][j]; em[t] += P.em[t][j]; }
+      if (C){ const fj = P.fi[j]; for (let c = 0; c < ncol; c++) cols[c] += C[c][fj]; }
+    }
+  }
+  Object.assign(z, {n, p, nf: f, eh, em, mun, base: {p, v, a}, cols: ncol ? cols : null, colsDe: g});
+}
+function znValorK(z, k){
+  const I = ZONAS.idx, G = I && I.grupos[ZONAS.grupo], d = G && k ? G[k] : null;
+  if (!d || !z || !z.listo || z.colsDe !== ZONAS.grupo || z.nf < ZN_MIN) return null;
+  if (d[0] === "bre"){
+    const m = znValorK(z, d[1]), h = znValorK(z, d[2]);
+    return m === null || h === null ? null : m - h;
+  }
+  const col = c => typeof c === "string" ? z.base[c] : (z.cols ? z.cols[c] : NaN);
+  const num = col(d[0]);
+  if (d[1] === -1) return isFinite(num) ? num : null;
+  const den = col(d[1]);
+  return den > 0 ? d[2] * num / den : null;
+}
+
+/* ── LA GEOMETRÍA EN EL MAPA ─────────────────────────────────────────────── */
+function znArco(c, r, a0, a1){
+  const kx = znKX(c[1]), n = Math.max(2, Math.ceil((a1 - a0) / (Math.PI / 48))), pts = [];
+  for (let k = 0; k <= n; k++){
+    const t = a0 + (a1 - a0) * k / n;
+    pts.push([c[0] + r * Math.cos(t) / kx, c[1] + r * Math.sin(t) / ZN_KY]);
+  }
+  return pts;
+}
+/* El velo apaga todo lo que queda FUERA de los dos círculos: un polígono del
+   mundo con dos huecos. Si los círculos se pisan, el hueco es la UNIÓN (el
+   arco de A fuera de B seguido del de B fuera de A): dos huecos superpuestos
+   rompen la triangulación. Los huecos van en sentido contrario al anillo
+   exterior: así los reconoce MapLibre. */
+function znGeo(){
+  const A = ZONAS.z.a, B = ZONAS.z.b;
+  const circ = z => { const r = znArco(z.c, z.r, 0, 2 * Math.PI); r[r.length - 1] = r[0]; return r; };
+  const ra = circ(A), rb = circ(B), kx = znKX((A.c[1] + B.c[1]) / 2);
+  const dx = (B.c[0] - A.c[0]) * kx, dy = (B.c[1] - A.c[1]) * ZN_KY, d = Math.hypot(dx, dy);
+  let huecos;
+  if (d >= A.r + B.r) huecos = [ra, rb];
+  else if (d + B.r <= A.r) huecos = [ra];
+  else if (d + A.r <= B.r) huecos = [rb];
+  else {
+    const f = Math.atan2(dy, dx), lim = x => Math.min(1, Math.max(-1, x));
+    const al = Math.acos(lim((A.r * A.r + d * d - B.r * B.r) / (2 * A.r * d)));
+    const be = Math.acos(lim((B.r * B.r + d * d - A.r * A.r) / (2 * B.r * d)));
+    const u = znArco(A.c, A.r, f + al, f + 2 * Math.PI - al).concat(znArco(B.c, B.r, f + Math.PI + be, f + 3 * Math.PI - be));
+    u.push(u[0]);
+    huecos = [u];
+  }
+  return {type: "FeatureCollection", features: [
+    {type: "Feature", properties: {rol: "velo"}, geometry: {type: "Polygon",
+      coordinates: [[[-180, -85], [180, -85], [180, 85], [-180, 85], [-180, -85]], ...huecos.map(h => h.slice().reverse())]}},
+    {type: "Feature", properties: {rol: "a"}, geometry: {type: "LineString", coordinates: ra}},
+    {type: "Feature", properties: {rol: "b"}, geometry: {type: "LineString", coordinates: rb}}]};
+}
+const znTintas = () => esOscuro() ? {papel: "#0b1318", tinta: "#e9eff2", velo: .6} : {papel: "#f2efe8", tinta: "#001219", velo: .55};
+function znCapas(){
+  if (!map.getSource("zonas")) map.addSource("zonas", {type: "geojson", data: {type: "FeatureCollection", features: []}});
+  const C = znTintas(), rot = MAPA_BASE.rotulos || {};
+  const antesRot = [...(rot.claro || []), ...(rot.oscuro || [])].find(id => map.getLayer(id));
+  if (!map.getLayer("zn-velo"))
+    map.addLayer({id: "zn-velo", type: "fill", source: "zonas", filter: ["==", ["get", "rol"], "velo"],
+      paint: {"fill-color": C.papel, "fill-opacity": C.velo}}, map.getLayer("mun-halo") ? "mun-halo" : antesRot);
+  if (!map.getLayer("zn-halo"))
+    map.addLayer({id: "zn-halo", type: "line", source: "zonas", filter: ["!=", ["get", "rol"], "velo"],
+      paint: {"line-color": C.papel, "line-width": 6, "line-opacity": .85}}, antesRot);
+  if (!map.getLayer("zn-a"))
+    map.addLayer({id: "zn-a", type: "line", source: "zonas", filter: ["==", ["get", "rol"], "a"],
+      paint: {"line-color": C.tinta, "line-width": 2.2}}, antesRot);
+  if (!map.getLayer("zn-b"))
+    map.addLayer({id: "zn-b", type: "line", source: "zonas", filter: ["==", ["get", "rol"], "b"],
+      paint: {"line-color": C.tinta, "line-width": 2.2, "line-dasharray": [2, 1.4]}}, antesRot);
+}
+function zonasTema(){
+  if (!map || !map.getLayer || !map.getLayer("zn-velo")) return;
+  const C = znTintas();
+  map.setPaintProperty("zn-velo", "fill-color", C.papel);
+  map.setPaintProperty("zn-velo", "fill-opacity", C.velo);
+  map.setPaintProperty("zn-halo", "line-color", C.papel);
+  map.setPaintProperty("zn-a", "line-color", C.tinta);
+  map.setPaintProperty("zn-b", "line-color", C.tinta);
+}
+const znPuntoAsa = z => [z.c[0] + z.r * Math.cos(z.ang || 0) / znKX(z.c[1]), z.c[1] + z.r * Math.sin(z.ang || 0) / ZN_KY];
+function znMarcas(){
+  for (const k of ["a", "b"]){
+    if (ZONAS.marcas[k]) continue;
+    const L = k.toUpperCase();
+    const pin = document.createElement("div");
+    pin.className = "zn-pin zn-pin-" + k; pin.innerHTML = `<b>${L}</b>`;
+    pin.title = `Zona ${L}: arrastrala para moverla`;
+    const asa = document.createElement("div");
+    asa.className = "zn-asa"; asa.innerHTML = "<span></span>";
+    asa.title = `Tamaño de la zona ${L}: tirá para agrandarla o achicarla`;
+    const mc = new maplibregl.Marker({element: pin, draggable: true});
+    const ma = new maplibregl.Marker({element: asa, draggable: true});
+    const empieza = q => () => { ZONAS.arrastra = q; ocultarPop(); document.body.classList.add("zn-arrastra"); };
+    const termina = () => {
+      ZONAS.arrastra = null; ZONAS.ultimo = performance.now();
+      document.body.classList.remove("zn-arrastra");
+      ma.setLngLat(znPuntoAsa(ZONAS.z[k]));
+      znAsegurar();
+      escribirURL(false);
+    };
+    mc.on("dragstart", empieza(k + "c")); ma.on("dragstart", empieza(k + "r"));
+    mc.on("drag", () => { const ll = mc.getLngLat(), z = ZONAS.z[k]; z.c = [ll.lng, ll.lat]; ma.setLngLat(znPuntoAsa(z)); znProgramar(k); });
+    ma.on("drag", () => {
+      const ll = ma.getLngLat(), z = ZONAS.z[k];
+      const dx = (ll.lng - z.c[0]) * znKX(z.c[1]), dy = (ll.lat - z.c[1]) * ZN_KY;
+      z.r = Math.min(ZN_RMAX, Math.max(ZN_RMIN, Math.hypot(dx, dy))); z.ang = Math.atan2(dy, dx);
+      znProgramar(k);
+    });
+    mc.on("dragend", termina); ma.on("dragend", termina);
+    ZONAS.marcas[k] = {mc, ma, txt: asa.querySelector("span")};
+  }
+  for (const k of ["a", "b"]){
+    const M = ZONAS.marcas[k], z = ZONAS.z[k];
+    M.mc.setLngLat(z.c).addTo(map); M.ma.setLngLat(znPuntoAsa(z)).addTo(map);
+  }
+}
+
+/* ── EL CUADRO: lo único que corre mientras se arrastra ──────────────────── */
+function znProgramar(k){
+  (k === "ab" ? ["a", "b"] : [k]).forEach(x => ZONAS.sucias.add(x));
+  if (!ZONAS.raf) ZONAS.raf = requestAnimationFrame(zonasRecalcular);
+}
+function zonasRecalcular(){
+  ZONAS.raf = 0;
+  if (!ZONAS.on){ ZONAS.sucias.clear(); return; }
+  if (ZONAS.idx) ZONAS.sucias.forEach(k => znCalcular(ZONAS.z[k]));
+  ZONAS.sucias.clear();
+  zonasDibujar();
+  if (ZONAS.idx && ZONAS.dom) zonasActualizarPanel();
+}
+function zonasDibujar(){
+  const s = map && map.getSource("zonas");
+  if (s) s.setData(znGeo());
+  for (const k of ["a", "b"]){
+    const M = ZONAS.marcas[k], z = ZONAS.z[k];
+    if (!M) continue;
+    if (ZONAS.arrastra !== k + "c") M.mc.setLngLat(z.c);
+    if (ZONAS.arrastra !== k + "r") M.ma.setLngLat(znPuntoAsa(z));
+    const t = nf(z.r, 1) + " km";
+    if (M.txt.textContent !== t) M.txt.textContent = t;
+  }
+}
+
+/* ── EL PANEL ────────────────────────────────────────────────────────────── */
+const znSet = (el, t) => { if (el && el.textContent !== t) el.textContent = t; };
+const znEstilo = (el, p, v) => { if (el && el.style[p] !== v) el.style[p] = v; };
+function znMun(si){ const sg = ZONAS.idx.sigeps[si]; return MUN.find(m => m.sigep === sg) || null; }
+function znDonde(z){
+  if (!z.mun || !z.p) return {txt: "Sin manzanas habitadas", m: null, p: 0};
+  const o = [...z.mun.entries()].filter(x => x[1] > 0).sort((a, b) => b[1] - a[1]);
+  const m0 = znMun(o[0][0]), nom = m => m ? nombreCorto(m.nombre) : "—";
+  const txt = o.length > 1 && o[1][1] / z.p >= .15 ? `${nom(m0)} y ${nom(znMun(o[1][0]))}` : nom(m0);
+  return {txt, m: m0, p: o[0][1]};
+}
+function znTope(x){
+  if (!(x > 0)) return 1;
+  const e = Math.pow(10, Math.floor(Math.log10(x * 1.06)));
+  for (const m of [1, 1.2, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]) if (m * e >= x * 1.06) return m * e;
+  return 10 * e;
+}
+function znTarjeta(k){
+  const L = k.toUpperCase();
+  return `<div class="zn-z" data-z="${k}">
+      <div class="zn-zc"><span class="zn-l ${k}">${L}</span><b class="zn-mun">…</b></div>
+      <div class="zn-zd" title="La gente que vive en las manzanas del círculo, como parte de la población urbana del municipio donde cae la mayoría; y la parte de esas manzanas que tiene ficha del INE (las demás no se publican por privacidad)."><span class="zn-gente">…</span><br><span class="zn-mz">…</span></div>
+      <label class="zn-rr"><span>Radio</span><input type="range" min="${ZN_RMIN}" max="${ZN_RMAX}" step="0.1" data-z="${k}" aria-label="Radio de la zona ${L}"><output>…</output></label>
+      <div class="zn-av" hidden>Muy pocas manzanas con dato: agrandá el círculo.</div>
+    </div>`;
+}
+function znPiramide(k){
+  const L = k.toUpperCase(), fila = t => `<div class="zn-pf" data-t="${t}"><span class="h"><i></i></span><span>${ZONAS.idx.tramos[t]}</span><span class="m"><i></i></span></div>`;
+  return `<div class="zn-pc" data-z="${k}"><div class="zn-pc-h"><span class="zn-l ${k}">${L}</span><span><b class="zn-muj">…</b> mujeres</span></div>
+      ${[3, 2, 1, 0].map(fila).join("")}<div class="zn-pie">…</div></div>`;
+}
+function zonasPintarPanel(){
+  const el = document.getElementById("zonas");
+  if (!el) return;
+  if (!ZONAS.idx){ el.innerHTML = `<div class="zn-carga">Cargando las manzanas…</div>`; ZONAS.dom = null; return; }
+  el.innerHTML = `<header class="zn-cab"><div><div class="c-k">Comparar zonas</div><h2 class="zn-t">Dos lugares, lado a lado</h2></div>
+      <button type="button" class="zn-x" id="zn-x">Salir</button></header>
+    <p class="sec-q" style="margin-top:6px">Arrastrá la letra para mover cada círculo y el cuadradito del borde para cambiar su tamaño; tocá el mapa para llevar ahí el círculo más cercano. Se suman las manzanas cuyo centro cae adentro.</p>
+    <div class="zn-zz">${znTarjeta("a")}${znTarjeta("b")}</div>
+    <section class="sec"><div class="cmp-t">Quiénes viven<span class="zn-lg"><span><i style="background:var(--teal-dk)"></i>hombres</span><span><i style="background:var(--orange)"></i>mujeres</span></span></div>
+      <p class="sec-q">Cada barra es la parte de la gente de la zona que tiene esa edad y ese sexo. La ficha del INE trae cuatro tramos.</p>
+      <div class="zn-pir">${znPiramide("a")}${znPiramide("b")}</div></section>
+    <section class="sec"><div class="cmp-t"><span id="zn-cat" style="font:inherit;color:inherit;letter-spacing:inherit;text-transform:inherit">…</span><span>A · B · ┆ país</span></div>
+      <div class="zn-tabs" id="zn-tabs">${CAT.grupos.map(g => `<button type="button" data-g="${g.key}">${g.label}</button>`).join("")}</div>
+      <div id="zn-filas"></div>
+      <p class="pf-frase">A y B se leen sobre la misma escala en cada renglón; la línea punteada es el país. El recuadro dice cuánto le saca B a A. Tocá un renglón para verlo en el mapa.</p></section>`;
+  const D = ZONAS.dom = {cards: {}, pir: {}, filas: []};
+  for (const k of ["a", "b"]){
+    const c = el.querySelector(`.zn-z[data-z="${k}"]`), p = el.querySelector(`.zn-pc[data-z="${k}"]`);
+    D.cards[k] = {mun: c.querySelector(".zn-mun"), gente: c.querySelector(".zn-gente"), mz: c.querySelector(".zn-mz"),
+      rango: c.querySelector("input"), out: c.querySelector("output"), av: c.querySelector(".zn-av")};
+    D.pir[k] = {muj: p.querySelector(".zn-muj"), pie: p.querySelector(".zn-pie"),
+      t: [0, 1, 2, 3].map(t => { const f = p.querySelector(`.zn-pf[data-t="${t}"]`);
+        return {f, h: f.querySelector(".h i"), m: f.querySelector(".m i")}; })};
+    D.cards[k].rango.addEventListener("input", ev => { ZONAS.z[k].r = +ev.target.value; znProgramar(k); });
+    D.cards[k].rango.addEventListener("change", () => { znAsegurar(); escribirURL(false); });
+  }
+  el.querySelector("#zn-x").addEventListener("click", () => zonasCerrar(true));
+  el.querySelector("#zn-tabs").addEventListener("click", ev => {
+    const b = ev.target.closest("button[data-g]");
+    if (b && (!cat_actual || b.dataset.g !== cat_actual.key)) elegirCategoria(b.dataset.g);
+  });
+  ZONAS.firma = "";
+  znFilas();
+}
+function znFilas(){
+  const D = ZONAS.dom;
+  if (!D) return;
+  const g = CAT.grupos.find(x => x.key === ZONAS.grupo) || cat_actual;
+  if (g.key === ZONAS.firma) return;
+  ZONAS.firma = g.key;
+  znSet(document.getElementById("zn-cat"), g.label);
+  document.querySelectorAll("#zn-tabs button").forEach(b => b.classList.toggle("on", b.dataset.g === g.key));
+  const cont = document.getElementById("zn-filas");
+  const inds = g.indicadores.filter(i => i.k_mz);
+  cont.innerHTML = inds.map(i => `<button type="button" class="zn-f" data-k="${i.key}">
+      <span class="zn-fh"><span class="zn-fl">${i.label}</span><span class="zn-dif vacio">…</span></span>
+      <span class="zn-bb"><span class="zn-b a"><span>A</span><span class="zn-bt"><i></i></span><b>…</b></span>
+        <span class="zn-b b"><span>B</span><span class="zn-bt"><i></i></span><b>…</b></span><i class="zn-ref" hidden></i></span></button>`).join("");
+  D.filas = inds.map(i => {
+    const el = cont.querySelector(`.zn-f[data-k="${i.key}"]`), b = el.querySelectorAll(".zn-b");
+    return {i, el, dif: el.querySelector(".zn-dif"), ref: el.querySelector(".zn-ref"),
+      a: {bar: b[0].querySelector("i"), val: b[0].querySelector("b")}, b: {bar: b[1].querySelector("i"), val: b[1].querySelector("b")}};
+  });
+  cont.onclick = ev => { const f = ev.target.closest(".zn-f[data-k]"); if (f) elegirIndicador(f.dataset.k); };
+  znMarcarActivo();
+}
+function znMarcarActivo(){
+  if (ZONAS.dom) ZONAS.dom.filas.forEach(F => F.el.classList.toggle("on", !!ind_actual && F.i.key === ind_actual.key));
+}
+function zonasActualizarPanel(){
+  const D = ZONAS.dom;
+  if (!D || !ZONAS.idx) return;
+  const Z = ZONAS.z;
+  for (const k of ["a", "b"]){
+    const z = Z[k], C = D.cards[k], dn = znDonde(z);
+    znSet(C.mun, z.listo ? dn.txt : "Cargando…");
+    const m = dn.m, pc = m && m.personas_urbano ? 100 * dn.p / m.personas_urbano : null;
+    znSet(C.gente, !z.listo ? "bajando las manzanas de esta zona" : !z.p ? "Nadie vive en estas manzanas"
+      : pc === null ? "" : `${pc < .1 ? "menos del 0,1" : nf(pc, pc < 10 ? 1 : 0)} % de la gente urbana de ${nombreCorto(m.nombre)}`);
+    znSet(C.mz, z.n ? `${nf(100 * z.nf / z.n, 0)} % de manzanas con ficha` : (z.listo ? "Sin manzanas adentro" : ""));
+    znSet(C.out, nf(z.r, 1) + " km");
+    if (document.activeElement !== C.rango && +C.rango.value !== z.r) C.rango.value = z.r;
+    const poca = z.listo && z.nf < ZN_MIN;
+    if (C.av.hidden !== !poca) C.av.hidden = !poca;
+  }
+  const sh = k => { const z = Z[k], T = z.eh.reduce((a, b) => a + b, 0) + z.em.reduce((a, b) => a + b, 0);
+    return z.listo && T && z.nf >= ZN_MIN ? {h: z.eh.map(x => 100 * x / T), m: z.em.map(x => 100 * x / T)} : null; };
+  const S = {a: sh("a"), b: sh("b")};
+  const hi = Math.max(1, ...["a", "b"].flatMap(k => S[k] ? S[k].h.concat(S[k].m) : []));
+  for (const k of ["a", "b"]){
+    const P = D.pir[k], s = S[k];
+    P.t.forEach((T, t) => {
+      znEstilo(T.h, "width", s ? (100 * s.h[t] / hi).toFixed(2) + "%" : "0%");
+      znEstilo(T.m, "width", s ? (100 * s.m[t] / hi).toFixed(2) + "%" : "0%");
+      const ti = s ? `${ZONAS.idx.tramos[t]} años: hombres ${nf(s.h[t], 1)} %, mujeres ${nf(s.m[t], 1)} %` : "";
+      if (T.f.title !== ti) T.f.title = ti;
+    });
+    znSet(P.muj, s ? nf(s.m.reduce((a, b) => a + b, 0), 1) + " %" : "s/d");
+    znSet(P.pie, s ? `0-19: ${nf(s.h[0] + s.m[0], 1)} % · 60+: ${nf(s.h[3] + s.m[3], 1)} %` : (Z[k].listo ? "Muy pocas manzanas con dato." : "…"));
+  }
+  for (const F of D.filas){
+    const ie = F.i, va = znValorK(Z.a, ie.k_mz), vb = znValorK(Z.b, ie.k_mz);
+    const rg = refRegion(ie), rv = ie.ref && ie.ref.pais != null ? ie.ref.pais : (rg && rg.v !== null && isFinite(rg.v) ? rg.v : null);
+    const vs = [va, vb, rv].filter(x => x !== null && isFinite(x));
+    const hi_ = znTope(Math.max(0, ...vs)), lo = Math.min(0, ...vs) < 0 ? -znTope(-Math.min(0, ...vs)) : 0;
+    const pos = v => (v - lo) / (hi_ - lo || 1), z0 = pos(0);
+    const barra = (X, v) => {
+      if (v === null || !isFinite(v)){ znEstilo(X.bar, "width", "0%"); znSet(X.val, Z.a.listo && Z.b.listo ? "s/d" : "…"); return; }
+      const p = pos(v);
+      znEstilo(X.bar, "left", (100 * Math.min(z0, p)).toFixed(2) + "%");
+      znEstilo(X.bar, "width", (100 * Math.abs(p - z0)).toFixed(2) + "%");
+      X.bar.classList.toggle("neg", v < 0);
+      znSet(X.val, fmtM(v, ie));
+    };
+    barra(F.a, va); barra(F.b, vb);
+    if (rv === null) F.ref.hidden = true;
+    else { F.ref.hidden = false; F.ref.style.setProperty("--x", pos(rv).toFixed(4)); }
+    if (va === null || vb === null){
+      if (F.dif.className !== "zn-dif vacio") F.dif.className = "zn-dif vacio";
+      znSet(F.dif, "—");
+    } else if (esConteo(ie)){
+      if (F.dif.className !== "zn-dif igual") F.dif.className = "zn-dif igual";
+      znSet(F.dif, va ? `B = ${nf(100 * vb / va, 0)} % de A` : "—");
+    } else {
+      const d = vb - va, igual = Math.abs(d) < .05, cls = igual ? "igual" : claseDif(d, ie);
+      if (F.dif.className !== "zn-dif " + cls) F.dif.className = "zn-dif " + cls;
+      znSet(F.dif, igual ? "B = A" : "B " + difTxtR(d, ie));
+      F.dif.title = igual ? "A y B tienen el mismo valor" : `B frente a A: ${difTxtR(d, ie)}`;
+    }
+  }
+  zonasAsomoValor();
+}
+
+/* ── LA TIRA DEL TELÉFONO ────────────────────────────────────────────────── */
+function zonasAsomo(i){
+  const pk = document.getElementById("pk");
+  if (!pk) return;
+  pk.innerHTML = `<span class="pk-chip" style="background:none;outline:1.5px dashed var(--tx);outline-offset:-1.5px"></span>
+    <span class="pk-lab">Comparar zonas<b>${i ? i.label : ""}</b></span><span class="pk-val" id="zn-pk">…</span>`;
+  zonasAsomoValor();
+}
+function zonasAsomoValor(){
+  const el = document.getElementById("zn-pk");
+  if (!el || !ind_actual || !ZONAS.idx || !ZONAS.z.a) return;
+  const f = v => v === null ? "s/d" : fmtM(v, ind_actual);
+  znSet(el, `A ${f(znValorK(ZONAS.z.a, ind_actual.k_mz))} · B ${f(znValorK(ZONAS.z.b, ind_actual.k_mz))}`);
+}
+
+/* Lo llama `ficha()` en vez de armar el panel de siempre. */
+function zonasTrasPintar(e, i){
+  const g = CAT.grupos.find(x => x.indicadores.includes(i)) || cat_actual;
+  if (g && g.key !== ZONAS.grupo){ ZONAS.grupo = g.key; znAsegurar(); }
+  if (!ZONAS.dom && ZONAS.idx) zonasPintarPanel();
+  znFilas();
+  znMarcarActivo();
+  znProgramar("ab");
+}
+
+/* ── ENTRAR Y SALIR ──────────────────────────────────────────────────────── */
+function znColocar(){
+  const cv = map.getCanvas(), w = cv.clientWidth, h = cv.clientHeight, pad = padPaneles();
+  const hw = Math.max(120, w - pad.left - pad.right), hh = Math.max(120, h - pad.top - pad.bottom);
+  const cx = pad.left + hw / 2, cy = pad.top + hh / 2;
+  const centro = map.unproject([cx, cy]);
+  const kmpx = 40075.016686 * Math.cos(centro.lat * Math.PI / 180) / (512 * Math.pow(2, map.getZoom()));
+  const r = Math.round(Math.min(3, Math.max(.3, Math.min(hw * .17, hh * .3) * kmpx)) * 10) / 10;
+  const ll = x => { const p = map.unproject([x, cy]); return [p.lng, p.lat]; };
+  ZONAS.z.a = {c: ll(cx - hw * .22), r, ang: 0};
+  ZONAS.z.b = {c: ll(cx + hw * .22), r, ang: 0};
+}
+function zonasEstado(){
+  if (!ZONAS.on || !ZONAS.z.a) return {};
+  const t = z => `${z.c[0].toFixed(4)},${z.c[1].toFixed(4)},${z.r.toFixed(1)}`;
+  return {za: t(ZONAS.z.a), zb: t(ZONAS.z.b)};
+}
+function znLeer(t){
+  const v = String(t || "").split(",").map(Number);
+  if (v.length !== 3 || !v.every(isFinite)) return null;
+  return {c: [v[0], v[1]], r: Math.min(ZN_RMAX, Math.max(ZN_RMIN, v[2])), ang: 0};
+}
+const ZN_BOTONES = ["zon-btn", "z-zon"];
+function znBotones(){
+  ZN_BOTONES.forEach(id => { const b = document.getElementById(id); if (b) b.setAttribute("aria-pressed", String(ZONAS.on)); });
+}
+async function zonasAbrir(desde){
+  if (!hayManzana() || !map || !map.getSource("mz")) return;
+  const nuevo = !ZONAS.on;
+  ZONAS.on = true;
+  document.body.classList.add("zonas-on");
+  znBotones();
+  if (FOCO.rango){ FOCO.fija = false; FOCO.c = null; enfocarRango(null); }
+  znCapas();
+  if (desde){ ZONAS.z.a = desde.a; ZONAS.z.b = desde.b; }
+  else {
+    /* lejos de una ciudad un círculo de un kilómetro es un punto: se baja
+       primero a la ciudad elegida o a la más cercana al centro del mapa */
+    if (map.getZoom() < 11.6){
+      const m = sel && MUN.find(x => x.sigep === sel);
+      let c = m && m.centro_urbano;
+      if (!c){
+        const k = map.getCenter();
+        let mejor = null, dmin = Infinity;
+        for (const x of MUN){
+          if (!x.centro_urbano || !(x.personas_urbano > 20000)) continue;
+          const d = Math.hypot(x.centro_urbano[0] - k.lng, x.centro_urbano[1] - k.lat);
+          if (d < dmin){ dmin = d; mejor = x.centro_urbano; }
+        }
+        c = mejor || [-68.13, -16.5];
+      }
+      await new Promise(ok => { map.once("moveend", ok); map.easeTo({center: c, zoom: ES_MOVIL() ? 12.1 : 12.6, duration: 800}); });
+    }
+    znColocar();
+  }
+  znMarcas();
+  zonasDibujar();
+  zonasPintarPanel();
+  zonasAsomo(ind_actual);
+  if (nuevo && !desde) escribirURL(true);
+  if (nuevo) pista("zonas");
+  try { await znIndice(); }
+  catch (_){
+    const el = document.getElementById("zonas");
+    if (el) el.innerHTML = `<div class="zn-carga">No se pudieron cargar las manzanas: recargá la página.</div>`;
+    return;
+  }
+  if (!ZONAS.on) return;
+  ZONAS.grupo = null;
+  zonasPintarPanel();
+  zonasTrasPintar(ESC, ind_actual);
+  if (ES_MOVIL() && nuevo && !desde) hojaIr("peek", true);
+}
+function zonasCerrar(escribir){
+  if (!ZONAS.on) return;
+  ZONAS.on = false;
+  document.body.classList.remove("zonas-on", "zn-arrastra");
+  znBotones();
+  for (const k of ["a", "b"]) if (ZONAS.marcas[k]){ ZONAS.marcas[k].mc.remove(); ZONAS.marcas[k].ma.remove(); }
+  const s = map && map.getSource("zonas");
+  if (s) s.setData({type: "FeatureCollection", features: []});
+  ZONAS.dom = null; ZONAS.firma = "";
+  const el = document.getElementById("zonas");
+  if (el) el.innerHTML = "";
+  pintar();
+  if (escribir) escribirURL(true);
+}
+function zonasDesdeEstado(e){
+  const a = e && znLeer(e.za), b = e && znLeer(e.zb);
+  if (a && b){
+    if (!map || !map.getSource("mz")){ ZONAS.pendiente = {a, b}; return; }
+    if (ZONAS.on){ ZONAS.z.a = a; ZONAS.z.b = b; znAsegurar(); znProgramar("ab"); }
+    else zonasAbrir({a, b});
+  } else if (ZONAS.on) zonasCerrar(false);
+}
+function zonasListo(){
+  if (!hayManzana()) return;
+  ZN_BOTONES.forEach(id => {
+    const b = document.getElementById(id);
+    if (!b) return;
+    b.hidden = false;
+    b.onclick = () => ZONAS.on ? zonasCerrar(true) : zonasAbrir(null);
+  });
+  map.on("click", ev => {
+    if (!ZONAS.on || ZONAS.arrastra || performance.now() - ZONAS.ultimo < 350) return;
+    const t = ev.originalEvent && ev.originalEvent.target;
+    if (t && t.closest && t.closest(".zn-pin,.zn-asa")) return;
+    const p = [ev.lngLat.lng, ev.lngLat.lat], kx = znKX(p[1]);
+    const dist = z => Math.hypot((z.c[0] - p[0]) * kx, (z.c[1] - p[1]) * ZN_KY);
+    const k = dist(ZONAS.z.a) <= dist(ZONAS.z.b) ? "a" : "b";
+    ZONAS.z[k].c = p;
+    znAsegurar();
+    znProgramar(k);
+    escribirURL(false);
+  });
+  if (ZONAS.pendiente){ const d = ZONAS.pendiente; ZONAS.pendiente = null; zonasAbrir(d); }
 }
 </script>
 </body>

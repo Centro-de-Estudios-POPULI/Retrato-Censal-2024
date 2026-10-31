@@ -187,6 +187,57 @@ SIN_ESP = ("sinespecificar",)
 DEN_PROPIO = {"tics_": ["viviendatipo_personaspresentes"]}
 
 
+# ★ (2026-10-30, para «Comparar zonas») traído TAL CUAL del motor de la
+#   Gobernación (`scz-metropolitana-gobernacion/catalogo/motor_manzana.py`):
+#   numerador y denominador de cada indicador por manzana, para sumar manzanas
+#   en grupos que no son municipios. No cambia nada de lo que este motor ya
+#   calcula: `calcular_manzana()` no lo usa.
+BRECHA_DE = {
+ "pct_edu_superior":  "brecha_edu_superior",
+ "pct_sin_educacion": "brecha_edu_ninguno",
+ "pct_sin_seguro":    "brecha_sin_seguro",
+ "pct_cuenta_propia": "brecha_cuenta_propia",
+}
+
+
+def partes_por_sexo(cols):
+    """(clave canónica, sexo, columnas del numerador, columnas del denominador)
+    para cada indicador de personas de `IND`."""
+    from alias import ALIAS
+    out = []
+    for k, (pref, sufijos) in IND.items():
+        if not all(s.endswith(("_hombre", "_mujer")) for s in sufijos):
+            continue
+        cats = sorted({s.rsplit("_", 1)[0] for s in sufijos})
+        grupo = [c for c in cols if c.startswith(pref) and not any(s in c for s in SIN_ESP)]
+        for sx, suf in (("muj", "_mujer"), ("hom", "_hombre")):
+            num = [pref + c + suf for c in cats if pref + c + suf in cols]
+            den = [c for c in grupo if c.endswith(suf)]
+            if num and den:
+                out.append((ALIAS.get(k, k), sx, num, den))
+    return out
+
+
+def numeradores(f):
+    """{clave canónica: (numerador, denominador)} por manzana, para todo
+    indicador que sea un COCIENTE de `IND` y sus mitades por sexo. Las mismas
+    columnas que `calcular_manzana()`, así que el cociente de una sola manzana
+    da su valor publicado (lo verifica `scripts/zonas_manzana.py`)."""
+    from alias import ALIAS
+    cols = list(f.columns)
+    out = {}
+    for k, (pref, sufijos) in IND.items():
+        grupo = [c for c in cols if c.startswith(pref) and not any(s in c for s in SIN_ESP)]
+        num = [c for c in grupo if any(c == pref + s for s in sufijos)]
+        if not num:
+            continue
+        den = DEN_PROPIO[pref] if pref in DEN_PROPIO else grupo
+        out[ALIAS.get(k, k)] = (f[num].sum(axis=1), f[den].sum(axis=1))
+    for kc, sx, num, den in partes_por_sexo(cols):
+        out[f"{kc}__{sx}"] = (f[num].sum(axis=1), f[den].sum(axis=1))
+    return out
+
+
 def areas_m2():
     """Superficie de cada manzano, en m². Sale de la geometría del geoportal.
 
