@@ -417,9 +417,9 @@ body.dark .aviso b{color:var(--orange)}
 .c-mapa{font-size:.65rem;line-height:1.5;color:var(--suave);margin:11px 0 0;padding:8px 10px;
   background:var(--gris-card);box-shadow:inset 3px 0 0 var(--sel)}
 .c-mapa b{color:var(--tx);font-weight:600}
-/* 2 · los lugares: barras gruesas y pegadas, cada una con su borde fino; el
-   contorno de afuera forma el escalón (el estilo Foronda que Carlos eligió
-   para el tablero de la Gobernación). El país, punteado y sin rótulo. */
+/* 2 · los lugares: barras gruesas con poco aire entre ellas, relleno claro y
+   la tapa del tono pleno en la punta (el molde del Atlas de la Niñez). El
+   país, punteado y sin rótulo. */
 .fr{position:relative;--fr-l:142px;--fr-r:58px}
 .fr-f,.fr-h{display:grid;grid-template-columns:134px minmax(0,1fr) 50px;column-gap:8px;align-items:center;
   height:22px;width:100%;padding:0;border:0;background:none;color:inherit;font:inherit;text-align:left}
@@ -429,18 +429,20 @@ body.dark .aviso b{color:var(--orange)}
 .fr-n i{font-style:normal;color:var(--faint);font-size:.9em;font-variant-numeric:tabular-nums;margin-right:5px}
 .fr-f.sel .fr-n{color:var(--tx);font-weight:700;box-shadow:inset 3px 0 0 var(--amber)}
 .fr-b{position:relative;height:100%}
-/* (2026-10-31, Carlos: «menos espacio entre las barras» y después «que sea una
-   línea delgada, que se note, y que sea el mismo grosor en todos los bordes»)
-   las barras van PEGADAS, cada una con un borde de 1 px en sus cuatro lados, y
-   bajan 1 px sobre la siguiente (`bottom:-1px`): donde se tocan, los dos
-   bordes caen en el mismo píxel y se ve una sola línea. El borde es CSS y no un
-   trazo de SVG estirado, así el navegador lo ajusta al píxel y sale igual de
-   fino en horizontal y en vertical. */
-.fr-b i{position:absolute;top:0;bottom:-1px;left:0;box-sizing:border-box;
-  border:1px solid var(--sel);background:color-mix(in srgb,var(--sel) 30%,var(--card-solid));
+/* ★ LAS BARRAS DEL ATLAS DE LA NIÑEZ (2026-10-31, Carlos: «un poco de
+   separación y que los bordes sean como el estilo de otros dashboard, por
+   ejemplo de niñez, en el extremo del gráfico, no rodeando todo el gráfico»):
+   relleno CLARO del tono —42 % sobre la tarjeta, 50 % en oscuro, la cuenta de
+   `gasto-ninez/sitio/estilo/comun.js`— y una TAPA de 2 px del tono pleno sólo
+   en la punta de cada barra (a la izquierda en las negativas). Con 3 px de aire
+   entre barras. La tapa es un borde CSS, no un trazo de SVG: el navegador lo
+   ajusta al píxel y sale nítido. */
+.fr-b i{position:absolute;top:1.5px;bottom:1.5px;left:0;box-sizing:border-box;
+  background:color-mix(in srgb,var(--sel) 42%,var(--card-solid));border-right:2px solid var(--sel);
   transition:background-color .14s ease,opacity .14s ease}
-.fr-f.sel{position:relative;z-index:1}
-.fr-f.sel .fr-b i{background:var(--sel)}
+body.dark .fr-b i{background:color-mix(in srgb,var(--sel) 50%,var(--card-solid))}
+.fr-b i.neg{border-right:0;border-left:2px solid var(--sel)}
+.fr-f.sel .fr-b i{background:var(--sel);border-color:var(--sel)}
 .fr-f b{font:700 .66rem/1 var(--f);color:var(--tx);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .fr-h{grid-template-columns:1fr;font:italic 500 .62rem/1 var(--f);color:var(--faint);padding-left:5px;cursor:default}
 .fr-tapa{position:absolute;top:0;bottom:0;left:var(--fr-l);right:var(--fr-r);width:calc(100% - var(--fr-l) - var(--fr-r));
@@ -908,10 +910,9 @@ body.dark{--ser-mun:#43b3bd;--ser-reg:#c3d0d6}
    un puntero que pasa por encima: en el teléfono se toca y se va. */
 @media (hover:hover){
   .fr .fr-n{transition:color .14s ease}
-  .fr:hover .fr-f:not(:hover) .fr-b i{opacity:.38}
-  .fr:hover .fr-f.sel:not(:hover) .fr-b i{opacity:.7}
-  /* la señalada va arriba de sus vecinas: su borde no queda debajo del de ellas */
-  .fr .fr-f:hover{background:none;position:relative;z-index:1}
+  .fr:hover .fr-f:not(:hover) .fr-b i{opacity:.45}
+  .fr:hover .fr-f.sel:not(:hover) .fr-b i{opacity:.75}
+  .fr .fr-f:hover{background:none}
   .fr .fr-f:hover .fr-b i{background:var(--sel);opacity:1}
   .fr .fr-f:hover .fr-n{color:var(--tx);font-weight:700}
 }
@@ -931,17 +932,18 @@ body.dark{--ser-mun:#43b3bd;--ser-reg:#c3d0d6}
    por su nombre, y los colores al 80 %, que es además como se ven en el mapa
    (allá van translúcidos sobre el mapa base). Al pasar el cursor, el color
    señalado vuelve a su tono pleno: no hace falta más. */
-.cls .cls-f{display:grid;grid-template-columns:112px minmax(0,1fr);align-items:center;column-gap:9px;min-height:15px}
-.cls .cls-f + .cls-f{margin-top:2px}
-.cls .cls-f.ref{margin:0 0 7px}
+.cls .cls-f{display:grid;grid-template-columns:112px minmax(0,1fr);align-items:center;column-gap:9px;min-height:16px}
+.cls .cls-f + .cls-f{margin-top:3px}
+.cls .cls-f.ref{margin:0 0 8px}
 .cls .cls-n{font:500 .62rem/1.2 var(--f);color:var(--suave);text-align:left;background:none;border:0;padding:0 0 0 5px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .cls button.cls-n{cursor:pointer}
 .cls button.cls-n:hover{color:var(--tx)}
 .cls .cls-f.ref .cls-n{font-weight:600;color:var(--tx)}
 .cls .cls-f.on .cls-n{color:var(--tx);font-weight:600;box-shadow:inset 2px 0 0 var(--amber)}
-.cls .cls-b{display:flex;height:9px;background:var(--linea-2);min-width:0}
-.cls .cls-f.ref .cls-b{height:11px}
+/* (2026-10-31, Carlos: «está bien lo sutil que son, pero un poco más gruesas») */
+.cls .cls-b{display:flex;height:13px;background:var(--linea-2);min-width:0}
+.cls .cls-f.ref .cls-b{height:15px}
 .cls .cls-b i{display:block;min-width:0;overflow:hidden;font-style:normal;cursor:pointer;opacity:.8;
   box-shadow:inset -1px 0 0 var(--card-solid);transition:opacity .15s ease}
 .cls .cls-b i:last-child{box-shadow:none}
@@ -950,7 +952,7 @@ body.dark{--ser-mun:#43b3bd;--ser-reg:#c3d0d6}
   .cls .cls-f:hover .cls-n{color:var(--tx)}
   .cls .cls-b i:hover{opacity:1}
 }
-.cls .cls-sin{font:italic 500 .58rem/9px var(--f);color:var(--faint);padding-left:6px;white-space:nowrap}
+.cls .cls-sin{font:italic 500 .58rem/13px var(--f);color:var(--faint);padding-left:6px;white-space:nowrap}
 .cls.anima .cls-b{transform-origin:left center;animation:rc-crece .55s cubic-bezier(.2,.75,.25,1) both;
   animation-delay:calc(var(--k, 0) * 24ms)}
 .cls-ley{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:7px;margin:9px 0 0 121px;
@@ -965,6 +967,44 @@ body.dark{--ser-mun:#43b3bd;--ser-reg:#c3d0d6}
 @media (prefers-reduced-motion:reduce){
   .fr.anima .fr-b i,.fr.anima .fr-tapa,.cls.anima .cls-b{animation:none}
 }
+
+/* ── LOS TOOLTIPS (2026-10-31, Carlos: «mejora igual los tooltip donde se pueda
+      hacer un upgrade visual») ────────────────────────────────────────────────
+   El molde del Atlas de la Niñez (`gasto-ninez/sitio/estilo/identidad.css`,
+   `.tt-*`) con la identidad del OFPDT: caja opaca con un filete petróleo
+   arriba, rótulo chico en versalitas, el nombre en Newsreader con su línea, la
+   cifra grande con el color que le toca en el mapa, y las comparaciones en
+   filas alineadas —nombre a la izquierda, cifra a la derecha—. Vale para los
+   tres: el del mapa, el de la leyenda y el de «cuánta gente vive en cada
+   color». A escuadra, como todo el tablero. */
+#pop{background:var(--card-solid);-webkit-backdrop-filter:none;backdrop-filter:none;
+  border:1px solid var(--linea);border-top:2px solid var(--sel);padding:9px 12px 10px;min-width:12.5rem;max-width:17rem;
+  box-shadow:0 14px 34px -12px rgba(0,18,25,.34),0 1px 2px rgba(0,18,25,.08)}
+body.dark #pop{box-shadow:0 16px 36px -12px rgba(0,0,0,.66),0 1px 2px rgba(0,0,0,.3)}
+#pop .pd{font:700 .5rem/1.35 var(--f);letter-spacing:.11em;text-transform:uppercase;color:var(--faint);margin:0 0 3px}
+#pop .pn{font-family:var(--fd);font-size:.9rem;font-weight:600;line-height:1.22;letter-spacing:-.005em;color:var(--tx);
+  margin:0 0 7px;padding-bottom:6px;border-bottom:1px solid var(--linea-2)}
+#pop .pind{font:600 .58rem/1.35 var(--f);letter-spacing:0;text-transform:none;color:var(--suave);margin:0}
+#pop .pv{display:flex;align-items:center;gap:7px;margin:.2rem 0 0}
+#pop .pv b{font-family:var(--fd);font-size:1.4rem;font-weight:600;line-height:1.05;color:var(--tx);
+  font-variant-numeric:tabular-nums lining-nums;letter-spacing:-.01em}
+#pop .pv small{font:500 .58rem/1 var(--f);color:var(--suave);align-self:flex-end;margin-bottom:4px}
+#pop .pv.prango b{font-size:1.02rem}
+#pop .pchip{width:12px;height:12px;box-shadow:inset 0 0 0 1px rgba(0,18,25,.2)}
+#pop .pramp{height:6px;margin:.5rem 0 .1rem;border:0}
+#pop .pramp i{top:-3px;bottom:-3px;width:2px;margin-left:-1px;background:var(--tx);box-shadow:0 0 0 1.5px var(--card-solid)}
+#pop .pgr{font-size:.58rem;line-height:1.4;color:var(--suave);margin:.3rem 0 0}
+#pop .pgr b{color:var(--tx);font-weight:700}
+#pop .prs{margin-top:.5rem;padding-top:.35rem;border-top:1px solid var(--linea-2)}
+#pop .pr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:baseline;margin:0;padding:2.5px 0;border:0;
+  font-size:.6rem;line-height:1.35;color:var(--suave)}
+#pop .pr>span:first-child{color:var(--suave)}
+#pop .pr>span:last-child{text-align:right;white-space:nowrap}
+#pop .pr b{color:var(--tx);font-weight:700;font-variant-numeric:tabular-nums}
+#pop .pnota{margin-top:.5rem;padding-top:.4rem}
+#pop .ppie{margin-top:.55rem;font-size:.56rem;line-height:1.4;color:var(--faint)}
+/* la diferencia de un indicador sin lado bueno (`flecha` con dir 0), en neutro */
+#pop .pr .eq,.k-c .eq{color:var(--suave);font-weight:700;margin-left:.15rem}
 </style>
 </head>
 <body>
@@ -3992,11 +4032,10 @@ function marcarLeyenda(){
   const tipCasillero = k => {
     const e = ESC, i = ind_actual, n = e.clases.length;
     const fijo = FOCO.fija && FOCO.clase === k && FOCO.nivel === nivel;
-    return `<div class="pd">${nivel === "municipio" ? "Municipios" : e.local ? "Manzanas de la ciudad" : "Manzanas del país"}</div>
+    return `<div class="pd">${nivel === "municipio" ? "Municipios" : e.local ? "Manzanas de la ciudad" : "Manzanas del país"} · grupo ${k + 1} de ${n}</div>
       <div class="pn">${i.label}</div>
-      <div class="pind">grupo <b>${k + 1}</b> de ${n}</div>
-      <div class="pv"><span class="pchip" style="background:${e.clases[k]}"></span><b>${rangoClaseTxt(e, k, i)}</b></div>
-      <div class="pgr">${fijo ? "Tocá de nuevo para soltarlo." : "Tocá para dejarlo fijo en el mapa."}</div>`;
+      <div class="pv prango"><span class="pchip" style="background:${e.clases[k]}"></span><b>${rangoClaseTxt(e, k, i)}</b></div>
+      <div class="ppie">${fijo ? "Tocá de nuevo para soltarlo." : "Tocá para dejarlo fijo en el mapa."}</div>`;
   };
   bar.addEventListener("mousemove", ev => {
     const c = ev.target.closest(".tm-c");
@@ -4582,7 +4621,7 @@ function ficha(e, i){
              + `<span>${v !== null && ref.v ? "es el <b>" + nf(100 * v / ref.v, 1) + "%</b>" : ""}</span>`;
       else
         comp = `<span>${ref.tipo} <b>${fmtM(ref.v, x)}</b></span>`
-             + flecha(v === null ? null : v - ref.v, uMode(x));
+             + flecha(v === null ? null : v - ref.v, uMode(x), x.dir || 0);
       return `<div class="kpi ${x.key === i.key ? "on" : ""}${sinSerie ? " sin12" : ""}" data-k="${x.key}" style="--d:${Math.min(n,14)*14}ms">
         <div class="k-l">${x.label}</div><div class="k-v">${sinSerie ? "s/d" : fmtM(v, x)}</div>
         <div class="k-c">${comp}</div></div>`;
@@ -4858,7 +4897,7 @@ function tituloCaso(s){
 /* La diferencia entre dos porcentajes NO es un porcentaje, son puntos
    porcentuales: "▲ 3,5%" para un salto de 38,2% a 41,7% es otro número. */
 const unidadDif = u => u === "%" ? "pp" : u;
-function flecha(d, u){
+function flecha(d, u, dir){
   if (d === null || d === undefined || !isFinite(d)) return "";
   const uu = unidadDif(u);
   /* Con unidad "pp" `fmt` antepone el signo, y acá el signo ya lo lleva la
@@ -4866,7 +4905,15 @@ function flecha(d, u){
      sola. Para el resto de unidades `fmt` sigue mandando (redondea los conteos,
      pone el símbolo). */
   const txt = uu === "pp" ? nf(Math.abs(d), 1) + " pp" : fmt(Math.abs(d), uu);
-  return `<span class="${d >= 0 ? "up" : "dn"}">${d > 0 ? "▲" : d < 0 ? "▼" : "="} ${txt}</span>`;
+  /* ★ (2026-10-31) EL COLOR DICE MEJOR O PEOR, NO ARRIBA O ABAJO. Pintaba ▲ de
+     verde y ▼ de naranja siempre: en «piso de tierra» o «sin seguro», donde más
+     es peor, un municipio por encima del país salía en verde. Con `dir` (el
+     del indicador) el color sigue a la dirección buena —la misma regla de
+     `claseDif`—, y un indicador sin lado bueno (`dir` 0) va en neutro. La flecha
+     sigue diciendo el signo. Sin `dir`, como antes. */
+  const cls = dir === undefined ? (d >= 0 ? "up" : "dn")
+    : (!dir || Math.abs(d) < .05) ? "eq" : (d > 0) === (dir > 0) ? "up" : "dn";
+  return `<span class="${cls}">${d > 0 ? "▲" : d < 0 ? "▼" : "="} ${txt}</span>`;
 }
 function tooltipHTML(p, esMz){
   const i = ind_actual;
@@ -4906,7 +4953,7 @@ function tooltipHTML(p, esMz){
     // la cifra municipal del INE, que incluye lo rural y no es comparable.
     const ref = m && m.urbano ? m.urbano[i.k_mz] : null;
     if (hay && ref !== null && ref !== undefined && isFinite(ref))
-      filas += `<div class="pr"><span>urbano de ${m.nombre}</span><span><b>${fmt(ref, i.unit)}</b> ${flecha(v - ref, i.unit)}</span></div>`;
+      filas += `<div class="pr"><span>urbano de ${m.nombre}</span><span><b>${fmt(ref, i.unit)}</b> ${flecha(v - ref, i.unit, i.dir || 0)}</span></div>`;
     const q = hay && e && !e.local ? percentilRejilla(e.q, v) : null;
     if (q !== null)
       filas += `<div class="pr"><span>en el país</span><span>supera al <b>${nf(Math.round(q * 100), 0)}%</b> de las manzanas</span></div>`;
@@ -4931,17 +4978,17 @@ function tooltipHTML(p, esMz){
               +  `<div class="pr"><span>2024</span><span><b>${fmt(b, i.unit)}</b></span></div>`;
         const r = refRegion(i);
         if (r && r.v !== null)
-          filas += `<div class="pr"><span>${r.tipo}</span><span><b>${fmtM(r.v, i)}</b> ${flecha(v - r.v, uMode(i))}</span></div>`;
+          filas += `<div class="pr"><span>${r.tipo}</span><span><b>${fmtM(r.v, i)}</b> ${flecha(v - r.v, uMode(i), i.dir || 0)}</span></div>`;
       } else {
         /* ★ (2026-10-31) contra el PAÍS y contra su DEPARTAMENTO, con su
            diferencia. Antes decía «centro», que era el punto de diseño de la
            rampa continua y no una cifra de nada. */
         const rp = refPais(i);
         if (rp !== null)
-          filas += `<div class="pr"><span>país</span><span><b>${fmtM(rp, i)}</b> ${esConteo(i) ? "" : flecha(v - rp, uMode(i))}</span></div>`;
+          filas += `<div class="pr"><span>país</span><span><b>${fmtM(rp, i)}</b> ${esConteo(i) ? "" : flecha(v - rp, uMode(i), i.dir || 0)}</span></div>`;
         const dd = TERR && m.dcod ? TERR.dptos[m.dcod] : null, vd = dd ? valorTerr(dd, i) : null;
         if (vd !== null && !esConteo(i))
-          filas += `<div class="pr"><span>${dd.nombre}</span><span><b>${fmtM(vd, i)}</b> ${flecha(v - vd, uMode(i))}</span></div>`;
+          filas += `<div class="pr"><span>${dd.nombre}</span><span><b>${fmtM(vd, i)}</b> ${flecha(v - vd, uMode(i), i.dir || 0)}</span></div>`;
       }
       /* ✂ SE FUE EL PUESTO (pedido de Carlos, 2026-08-26). Decía «3.º más alto
          de 9» y convertía una comparación en un RANKING: pone a los municipios
@@ -4965,11 +5012,15 @@ function tooltipHTML(p, esMz){
     ? `<div class="pgr">grupo <b>${claseDe(v, e.dec.cortes) + 1}</b> de ${e.clases.length} · ${
         esMz ? (e.local ? "entre las manzanas de la ciudad" : "entre las manzanas del país") : `entre los ${MUN.length} municipios`}</div>`
     : "";
-  return `<div class="pn">${nom}</div><div class="pd">${sub}</div>
+  /* ★ (2026-10-31) el molde del Atlas de la Niñez: rótulo chico arriba, el
+     nombre en la letra de títulos con su filete, la cifra grande con el color
+     que le toca en el mapa, la rampa y el grupo, y las comparaciones en un
+     bloque de filas alineadas (nombre a la izquierda, cifra a la derecha). */
+  return `<div class="pd">${sub}</div><div class="pn">${nom}</div>
     <div class="pind">${kicker}</div>
     <div class="pv"><span class="pchip" style="background:${tonoDe(e, v)}"></span>
       <b>${hay ? fmtM(v, i) : "s/d"}</b></div>
-    ${rampa}${grupo}${mcHTML}${filas}${nota ? `<div class="pnota">${nota}</div>` : ""}`;
+    ${rampa}${grupo}${mcHTML}${filas ? `<div class="prs">${filas}</div>` : ""}${nota ? `<div class="pnota">${nota}</div>` : ""}`;
 }
 /* Sigue al cursor y se planta del otro lado cuando no entra: contra el borde
    derecho o el inferior, un tooltip anclado siempre abajo-a-la-derecha se sale
@@ -5297,22 +5348,18 @@ function comparacionHTML(e, ind){
   const firma = ind.key + "|" + a.nivel + a.dpto + a.prov + a.lista;
   const anima = firma !== _firmaCmp; _firmaCmp = firma;
   const baja = {dpto: "ver sus provincias", prov: "ver sus municipios", mun: "ir a él"};
-  /* ★ EL BORDE, PAREJO EN LOS CUATRO LADOS (2026-10-31, Carlos: «que sea una
-     línea delgada, que se note, y que sea el mismo grosor en todos los
-     bordes»). Antes el contorno era un escalón en SVG estirado (`viewBox` 100 ×
-     N con `preserveAspectRatio="none"`): el tramo vertical caía entero sobre
-     la punta de la barra y el horizontal en medio píxel, así que uno se veía
-     grueso y el otro tenue. Ahora cada barra lleva su propio borde de 1 px
-     (CSS) y se monta 1 px sobre la de abajo: donde se tocan, las dos líneas
-     son UNA sola, y el contorno de afuera —el escalón— sale igual de fino en
-     horizontal y en vertical. */
+  /* ★ LA TAPA EN LA PUNTA (2026-10-31, el molde del Atlas de la Niñez que
+     pidió Carlos): relleno claro y una línea del tono pleno sólo en el extremo
+     de cada barra (`.neg` = del lado izquierdo). Se fue el escalón en SVG
+     estirado (`viewBox` 100 × N con `preserveAspectRatio="none"`), que rodeaba
+     el gráfico y salía más grueso en vertical que en horizontal. */
   let html = "";
   filas.forEach((f, k) => {
     const hay = f.v !== null && isFinite(f.v);
     const x = hay ? X(f.v) : z0, esSel = filaElegida(f);
     html += `<button type="button" class="fr-f${esSel ? " sel" : ""}${f.tipo !== "mun" ? " baja" : ""}" data-t="${f.tipo}" data-c="${f.cod}" title="${f.nombre}: ${baja[f.tipo]}" style="--k:${Math.min(k, 14)}">
       <span class="fr-n">${f.nombre}</span>
-      <span class="fr-b">${hay ? `<i style="left:${Math.min(z0, x).toFixed(2)}%;width:${Math.max(.4, Math.abs(x - z0)).toFixed(2)}%"></i>` : ""}</span>
+      <span class="fr-b">${hay ? `<i${x < z0 ? ' class="neg"' : ""} style="left:${Math.min(z0, x).toFixed(2)}%;width:${Math.max(.4, Math.abs(x - z0)).toFixed(2)}%"></i>` : ""}</span>
       <b>${hay ? fmtM(f.v, ind) : "s/d"}</b></button>`;
   });
   const N = filas.length;
@@ -5489,11 +5536,15 @@ function sincronizarIrA(nombre){
       const nom = fila.querySelector(".cls-n").textContent;
       clsTip = `<div class="pd">${fila.dataset.t === "pais" ? "Todo el país" : fila.dataset.t === "dpto" ? "Departamento" : fila.dataset.t === "prov" ? "Provincia" : "Municipio"}</div>
         <div class="pn">${nom}</div>
-        <div class="pind">${i.label}: manzanas ${rangoClaseTxt(e, k, i)}</div>
-        <div class="pv"><span class="pchip" style="background:${e.clases[k]}"></span><b>${nf(+s.dataset.p, +s.dataset.p < 1 ? 1 : 0)}%</b></div>
-        <div class="pr"><span>de su gente vive en manzanas de este color</span><span><b>${nf(+s.dataset.n, 0)}</b> pers.</span></div>
-        <div class="pgr">grupo <b>${k + 1}</b> de ${e.clases.length} · ${nivel !== "manzana" ? "acercá el mapa a una ciudad para verlas"
-          : FOCO.fija ? "tocá de nuevo para soltarlo" : "tocá para dejarlo fijo en el mapa"}</div>`;
+        <div class="pind">${i.label}</div>
+        <div class="pv"><span class="pchip" style="background:${e.clases[k]}"></span><b>${nf(+s.dataset.p, +s.dataset.p < 1 ? 1 : 0)}%</b><small>de su gente</small></div>
+        <div class="prs">
+          <div class="pr"><span>vive en manzanas de</span><span><b>${rangoClaseTxt(e, k, i)}</b></span></div>
+          <div class="pr"><span>personas</span><span><b>${nf(+s.dataset.n, 0)}</b></span></div>
+          <div class="pr"><span>grupo</span><span><b>${k + 1}</b> de ${e.clases.length}</span></div>
+        </div>
+        <div class="ppie">${nivel !== "manzana" ? "Acercá el mapa a una ciudad para verlas."
+          : FOCO.fija ? "Tocá de nuevo para soltarlo." : "Tocá para dejarlo fijo en el mapa."}</div>`;
     }
     mostrarPop(clsTip, ev.clientX, ev.clientY);
   });
