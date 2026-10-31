@@ -417,24 +417,34 @@ body.dark .aviso b{color:var(--orange)}
 .c-mapa{font-size:.65rem;line-height:1.5;color:var(--suave);margin:11px 0 0;padding:8px 10px;
   background:var(--gris-card);box-shadow:inset 3px 0 0 var(--sel)}
 .c-mapa b{color:var(--tx);font-weight:600}
-/* 2 · los municipios: barras gruesas, casi pegadas, y la tapa de cada una
-   unida a la de la vecina por un escalón (el estilo Foronda que Carlos eligió
+/* 2 · los lugares: barras gruesas y pegadas, cada una con su borde fino; el
+   contorno de afuera forma el escalón (el estilo Foronda que Carlos eligió
    para el tablero de la Gobernación). El país, punteado y sin rótulo. */
 .fr{position:relative;--fr-l:142px;--fr-r:58px}
 .fr-f,.fr-h{display:grid;grid-template-columns:134px minmax(0,1fr) 50px;column-gap:8px;align-items:center;
-  height:23px;width:100%;padding:0;border:0;background:none;color:inherit;font:inherit;text-align:left}
+  height:22px;width:100%;padding:0;border:0;background:none;color:inherit;font:inherit;text-align:left}
 .fr-f{cursor:pointer}
 .fr-f:hover{background:var(--card-hov)}
 .fr-n{font:500 .66rem/1.2 var(--f);color:var(--suave);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;padding-left:5px}
 .fr-n i{font-style:normal;color:var(--faint);font-size:.9em;font-variant-numeric:tabular-nums;margin-right:5px}
 .fr-f.sel .fr-n{color:var(--tx);font-weight:700;box-shadow:inset 3px 0 0 var(--amber)}
 .fr-b{position:relative;height:100%}
-.fr-b i{position:absolute;top:2px;bottom:2px;left:0;background:color-mix(in srgb,var(--sel) 46%,var(--card-solid))}
+/* (2026-10-31, Carlos: «menos espacio entre las barras» y después «que sea una
+   línea delgada, que se note, y que sea el mismo grosor en todos los bordes»)
+   las barras van PEGADAS, cada una con un borde de 1 px en sus cuatro lados, y
+   bajan 1 px sobre la siguiente (`bottom:-1px`): donde se tocan, los dos
+   bordes caen en el mismo píxel y se ve una sola línea. El borde es CSS y no un
+   trazo de SVG estirado, así el navegador lo ajusta al píxel y sale igual de
+   fino en horizontal y en vertical. */
+.fr-b i{position:absolute;top:0;bottom:-1px;left:0;box-sizing:border-box;
+  border:1px solid var(--sel);background:color-mix(in srgb,var(--sel) 30%,var(--card-solid));
+  transition:background-color .14s ease,opacity .14s ease}
+.fr-f.sel{position:relative;z-index:1}
 .fr-f.sel .fr-b i{background:var(--sel)}
 .fr-f b{font:700 .66rem/1 var(--f);color:var(--tx);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .fr-h{grid-template-columns:1fr;font:italic 500 .62rem/1 var(--f);color:var(--faint);padding-left:5px;cursor:default}
 .fr-tapa{position:absolute;top:0;bottom:0;left:var(--fr-l);right:var(--fr-r);width:calc(100% - var(--fr-l) - var(--fr-r));
-  height:100%;overflow:visible;pointer-events:none}
+  height:100%;overflow:visible;pointer-events:none;z-index:2}
 .fr-tapa polyline{fill:none;stroke:var(--sel);stroke-width:1.8;stroke-linejoin:miter}
 .fr-tapa .fr-pais{stroke:var(--tx);stroke-width:1;stroke-dasharray:2 3;opacity:.55}
 /* 3 · dónde cae en el país: el histograma enciende en el mapa su tramo */
@@ -838,6 +848,123 @@ body.dark{--ser-mun:#43b3bd;--ser-reg:#c3d0d6}
 #panel-det .k-l,#panel-det .k-c{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #panel-det .k-c{display:flex;justify-content:space-between;gap:6px}
 #panel-det .k-c span{overflow:hidden;text-overflow:ellipsis}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DECILES Y ÁMBITOS (2026-10-31, pedido de Carlos): la leyenda en casilleros,
+   la comparación por ámbito (Bolivia › departamento › provincia) y «cuánta
+   gente vive en cada color». Misma identidad OFPDT: Inter para el texto,
+   Newsreader para las cifras, petróleo de selección, ámbar de señal, a escuadra.
+   ═════════════════════════════════════════════════════════════════════════ */
+/* ── la leyenda: centrada sobre el MAPA (no sobre la ventana), y su pie en
+      renglones que no se salen ── */
+@media (min-width:821px){
+  /* corrida 1,2rem a la izquierda y más angosta: a la derecha está la botonera
+     de zoom, y a 1.100 px de ancho se pisaban */
+  .termo{left:calc(var(--panel-w) + (100vw - var(--panel-w) - var(--det-w)) / 2 - 1.2rem);
+    width:min(34rem,calc(100vw - var(--panel-w) - var(--det-w) - 8.6rem))}
+}
+.tm-top{flex-wrap:wrap;row-gap:3px;align-items:center}
+.tm-st{flex:1 1 100%;order:3;display:flex;flex-wrap:wrap;gap:1px 10px;line-height:1.4}
+.tm-st .tm-g{color:var(--suave)}
+.tm-st .tm-q{white-space:nowrap}
+.tm-st .tm-sug{flex-basis:100%}
+.tm-bar{height:11px}
+/* cada casillero es un botón: dice su rango y enciende su grupo en el mapa */
+.tm-c{position:absolute;top:0;bottom:0;margin:0;padding:0;border:0;background:transparent;cursor:pointer;
+  transition:box-shadow .12s ease}
+.tm-c:hover{box-shadow:inset 0 0 0 2px var(--tx)}
+.tm-c.on{box-shadow:inset 0 0 0 2px var(--tx),0 0 0 2px var(--card-solid)}
+.tm-c:focus-visible{outline:2px solid var(--warm);outline-offset:1px}
+.tm-ref{top:-4px;bottom:-4px;pointer-events:none}
+@media (max-width:820px){ .tm-bar{height:14px} }
+
+/* ── 1 · la cifra: sus ámbitos de arriba, tocables ── */
+.c-arr{display:flex;flex-wrap:wrap;gap:5px;margin:9px 0 0}
+.c-amb{border:1px solid var(--linea);background:none;color:var(--suave);padding:3px 8px;
+  font:500 .62rem/1.3 var(--f);cursor:pointer;font-variant-numeric:tabular-nums}
+.c-amb b{color:var(--tx);font-weight:700;margin-left:3px}
+.c-amb:hover{border-color:var(--sel);color:var(--tx);background:var(--card-hov)}
+
+/* ── 2 · la comparación por ámbito ── */
+.amb-m{display:flex;flex-wrap:wrap;align-items:center;gap:2px 4px;margin:-1px 0 8px}
+.amb-c{border:0;background:none;padding:2px 0;font:600 .7rem/1.25 var(--f);color:var(--teal-dk);cursor:pointer;
+  border-bottom:1px solid transparent}
+.amb-c:hover{border-bottom-color:currentColor}
+.amb-c.on{color:var(--tx);font-weight:700;cursor:default;border-bottom:2px solid var(--warm)}
+.amb-s{color:var(--faint);font-size:.72rem}
+.amb-l{display:flex;border:1px solid var(--linea);margin:0 0 9px;width:max-content;max-width:100%}
+.amb-l button{border:0;background:none;padding:4px 10px;font:600 .6rem var(--f);color:var(--suave);cursor:pointer;white-space:nowrap}
+.amb-l button + button{border-left:1px solid var(--linea)}
+.amb-l button.on{background:var(--sel);color:#fff}
+.amb-l button:not(.on):hover{background:var(--gris-card)}
+/* una fila que baja un escalón lo avisa con una flecha al pasar */
+.fr-f.baja .fr-n::after{content:" ›";color:var(--faint);opacity:0;transition:opacity .12s}
+.fr-f.baja:hover .fr-n::after{opacity:1}
+.fr-f:focus-visible{outline:2px solid var(--warm);outline-offset:-2px}
+/* ★ LA BARRA QUE SEÑALA EL CURSOR SE RESALTA (2026-10-31, Carlos: «que se vaya
+   resaltando con el cursor la barra que señale»). Al recorrer la lista, la
+   barra de abajo del cursor toma el tono pleno y las demás se apagan —la del
+   municipio elegido, menos—, igual que el escalón; nombre en negrita. Sólo con
+   un puntero que pasa por encima: en el teléfono se toca y se va. */
+@media (hover:hover){
+  .fr .fr-n{transition:color .14s ease}
+  .fr:hover .fr-f:not(:hover) .fr-b i{opacity:.38}
+  .fr:hover .fr-f.sel:not(:hover) .fr-b i{opacity:.7}
+  /* la señalada va arriba de sus vecinas: su borde no queda debajo del de ellas */
+  .fr .fr-f:hover{background:none;position:relative;z-index:1}
+  .fr .fr-f:hover .fr-b i{background:var(--sel);opacity:1}
+  .fr .fr-f:hover .fr-n{color:var(--tx);font-weight:700}
+}
+/* las barras crecen cuando cambia lo que se compara (no en cada repintado) */
+@keyframes rc-crece{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes rc-aparece{from{opacity:0}to{opacity:1}}
+.fr.anima .fr-b i{transform-origin:left center;animation:rc-crece .5s cubic-bezier(.2,.75,.25,1) both;
+  animation-delay:calc(var(--k, 0) * 24ms)}
+.fr.anima .fr-tapa{animation:rc-aparece .4s .3s ease both}
+.fr-lec{font-size:.66rem;line-height:1.55;color:var(--suave);margin:9px 0 0}
+.fr-lec b{color:var(--tx);font-weight:700}
+
+/* ── 3 · cuánta gente vive en cada color ── */
+/* ★ MÁS SUTIL (2026-10-31, Carlos: «no quiero resaltar de forma tan notoria el
+   gráfico… que sea más sutil y elegante»): barras finas, sin cifras adentro
+   (van en el tooltip), separadores del color del papel, el elegido marcado sólo
+   por su nombre, y los colores al 80 %, que es además como se ven en el mapa
+   (allá van translúcidos sobre el mapa base). Al pasar el cursor, el color
+   señalado vuelve a su tono pleno: no hace falta más. */
+.cls .cls-f{display:grid;grid-template-columns:112px minmax(0,1fr);align-items:center;column-gap:9px;min-height:15px}
+.cls .cls-f + .cls-f{margin-top:2px}
+.cls .cls-f.ref{margin:0 0 7px}
+.cls .cls-n{font:500 .62rem/1.2 var(--f);color:var(--suave);text-align:left;background:none;border:0;padding:0 0 0 5px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.cls button.cls-n{cursor:pointer}
+.cls button.cls-n:hover{color:var(--tx)}
+.cls .cls-f.ref .cls-n{font-weight:600;color:var(--tx)}
+.cls .cls-f.on .cls-n{color:var(--tx);font-weight:600;box-shadow:inset 2px 0 0 var(--amber)}
+.cls .cls-b{display:flex;height:9px;background:var(--linea-2);min-width:0}
+.cls .cls-f.ref .cls-b{height:11px}
+.cls .cls-b i{display:block;min-width:0;overflow:hidden;font-style:normal;cursor:pointer;opacity:.8;
+  box-shadow:inset -1px 0 0 var(--card-solid);transition:opacity .15s ease}
+.cls .cls-b i:last-child{box-shadow:none}
+.cls .cls-b i.dim{opacity:.22}
+@media (hover:hover){
+  .cls .cls-f:hover .cls-n{color:var(--tx)}
+  .cls .cls-b i:hover{opacity:1}
+}
+.cls .cls-sin{font:italic 500 .58rem/9px var(--f);color:var(--faint);padding-left:6px;white-space:nowrap}
+.cls.anima .cls-b{transform-origin:left center;animation:rc-crece .55s cubic-bezier(.2,.75,.25,1) both;
+  animation-delay:calc(var(--k, 0) * 24ms)}
+.cls-ley{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:7px;margin:9px 0 0 121px;
+  font:500 .54rem/1 var(--f);color:var(--faint);font-variant-numeric:tabular-nums}
+.cls-ley-b{height:4px;opacity:.8}
+.cls-cargando{font-style:italic}
+@media (max-width:820px){
+  .cls .cls-f{grid-template-columns:96px minmax(0,1fr)}
+  .cls-ley{margin-left:105px}
+}
+/* el mapa vale más que el adorno: sin animaciones para quien las apaga */
+@media (prefers-reduced-motion:reduce){
+  .fr.anima .fr-b i,.fr.anima .fr-tapa,.cls.anima .cls-b{animation:none}
+}
 </style>
 </head>
 <body>
@@ -1067,6 +1194,8 @@ body.dark{--ser-mun:#43b3bd;--ser-reg:#c3d0d6}
 /* ⇩⇩ PALETA GENERADA — no editar a mano: sale de assets/paleta.json ⇩⇩ */
 const DIV_CLARA  = ["#00323d","#005f73","#0a9396","#94d2bd","#e9d8a6","#eda13e","#df5d25","#c71e1d","#8f1f22"];
 const DIV_OSCURO = ["#00323d","#005f73","#0a9396","#94d2bd","#e9d8a6","#eda13e","#df5d25","#c71e1d","#8f1f22"];
+const DEC_CLARA  = ["#00323d","#005a6d","#06878e","#71bdb0","#c6d6b1","#ecc07c","#e98b36","#da5123","#c11e1e","#8f1f22"];
+const DEC_OSCURO = ["#3f6b77","#428a9e","#44adb4","#87d3c6","#d1e2bd","#face8a","#ffa351","#ff7549","#f25449","#c75550"];
 const SIN_DATO = {claro:"#8c8378", oscuro:"#8c8378"};
 const SENAL = "#ee9b00";
 /* ⇧⇧ FIN DE LA PALETA GENERADA ⇧⇧ */
@@ -1256,6 +1385,9 @@ function difIntercensal(a, b, ind){
   return esConteo(ind) ? (a ? 100 * (b - a) / a : null) : b - a;
 }
 let MZS = null, sel = null;   // MZS = estadísticas precalculadas del nivel manzana
+/* provincias y departamentos: sus cifras, sus nombres y sus municipios
+   (`territorios.json`, 2026-10-31; lo arma `armarTerritorios`) */
+let TERR = null;
 /* ★★ LOS VALORES DE LAS MANZANAS YA NO VIAJAN EN LA TESELA (2026-09-16).
    Medido sobre la tesela más pesada (z10 de Santa Cruz, 27.584 manzanas):
    2.257 KB con los 91 indicadores como atributos, 325 KB con la geometría
@@ -1410,9 +1542,23 @@ function topoAFeatures(topo){
       ? {type: "MultiPolygon", coordinates: g.arcs.map(p => p.map(anillo))}
       : null;
   const obj = topo.objects[Object.keys(topo.objects)[0]];
+  /* ★ (2026-10-31) y de paso se guarda QUÉ ARCOS usa cada municipio: con eso
+     el borde de una provincia o un departamento son los arcos que usa uno solo
+     de sus municipios (`contornoDe`), sin bajar geometría nueva. */
+  const porMun = {};
+  obj.geometries.forEach(g => {
+    const s = g.properties && g.properties.sigep;
+    if (!s) return;
+    const usa = [];
+    const pols = g.type === "Polygon" ? [g.arcs] : g.type === "MultiPolygon" ? g.arcs : [];
+    pols.forEach(pol => pol.forEach(an => an.forEach(a => usa.push(a < 0 ? ~a : a))));
+    porMun[s] = usa;
+  });
+  TOPO_AMB = {arcos, porMun};
   return {type: "FeatureCollection",
           features: obj.geometries.map(g => ({type: "Feature", properties: g.properties || {}, geometry: geom(g)}))};
 }
+let TOPO_AMB = null;          // los arcos de cada municipio (ver arriba)
 let BANCO = null;             // qué láminas del banco existen, por ámbito
 // Escala vigente (la que acaba de pintar el mapa). El tooltip la lee para dar el
 // chip de color, la posición en la rampa y el percentil sin recalcular nada.
@@ -1454,15 +1600,11 @@ function aplicarTema(oscuro, guardar){
     /* Las opacidades cambian con el tema (ver OPACIDAD_*), así que hay que
        volver a declararlas acá: se fijan al montar la capa y no se enteran
        solas de que el fondo cambió. */
-    if (map.getLayer("mun-fill"))
-      map.setPaintProperty("mun-fill", "fill-opacity",
-        hayManzana() ? fundidoMun(opacidades().mun) : opacidades().mun);
-    if (map.getLayer("mz-fill"))
-      map.setPaintProperty("mz-fill", "fill-opacity",
-        typeof opacidadMz === "function" ? opacidadMz() : fundidoMz(opacidades().mz));
+    // las dos, con el foco de color si hay uno (ver `aplicarFoco`)
+    if (typeof aplicarFoco === "function") aplicarFoco(true);
     const tinta = TINTA_HOV[oscuro ? "oscuro" : "claro"];
-    ["mz-hov", "mun-hov"].forEach(id => { if (map.getLayer(id)) map.setPaintProperty(id, "line-color", tinta); });
-    if (map.getLayer("mun-halo")) map.setPaintProperty("mun-halo", "line-color", oscuro ? "#0b1318" : "#f2efe8");
+    ["mz-hov", "mun-hov", "amb-line"].forEach(id => { if (map.getLayer(id)) map.setPaintProperty(id, "line-color", tinta); });
+    ["mun-halo", "amb-halo"].forEach(id => { if (map.getLayer(id)) map.setPaintProperty(id, "line-color", oscuro ? "#0b1318" : "#f2efe8"); });
     if (typeof zonasTema === "function") zonasTema();
   }
   if (map) pintar();
@@ -1589,12 +1731,189 @@ function escala(valores, pesos, ind, ambito){
   const pivReal = piv, pad = (hi - lo) * .08;
   if (pad > 0) piv = Math.min(Math.max(piv, lo + pad), hi - pad);
   const tonos = rampa(ind.dir);
+  /* ★★ LOS MUNICIPIOS TAMBIÉN VAN POR DECILES (2026-10-31, Carlos: «la paleta
+     por deciles creo que está mejor, para hacer los contrastes»). Diez grupos
+     con la misma cantidad de municipios —34 cada uno—, con la misma regla de
+     las manzanas (`clasesDeciles`, = `scripts/deciles.py`). Cada nivel tiene
+     sus propios cortes y la leyenda dice cuáles: «municipios» o «manzanas».
+     ⚠️ Esto reemplaza la escala única entre niveles del 2026-09-04: con ella el
+     mismo valor tenía el mismo color arriba y abajo, pero en 24 de los 91
+     indicadores uno de los dos niveles quedaba casi de un color (contraste
+     bajo 0,20). Con deciles cada nivel usa la paleta entera. */
+  const dec = clasesDeciles(v);
+  const clases = dec.n > 1 ? clasesConMasa(dec, ind) : null;
   // `ord` viaja de vuelta —ya está calculado— porque el tooltip necesita saber a
   // qué percentil corresponde un valor, y reordenar 25.698 manzanas en cada
   // movimiento del mouse sería absurdo.
   return {lo, piv, hi, pivReal, tipo, tonos, ord,
+          dec: clases ? dec : null, clases,
           min: ord[0], max: ord[ord.length-1],
           recorte: ord[0] < lo || ord[ord.length-1] > hi, n: v.length};
+}
+
+/* ══ LOS DECILES (2026-10-31) ══════════════════════════════════════════════
+   Réplica EXACTA de `scripts/deciles.py` —la regla del tablero de la
+   Gobernación—: clases de igual cantidad, y un valor que junta a más de 1 de
+   cada 10 (casi siempre 100 % o 0 %) va en su propia clase con el resto
+   repartido en nueve. Se usa para los 343 municipios, que se calculan acá; las
+   manzanas traen sus cortes hechos en `mz_stats.json` (país) y en
+   `deciles/<clave>.json` (cada ciudad). La prueba de que son la misma cuenta
+   está en `scripts/prueba_deciles.js`. */
+const UMBRAL_MASA = .10, EPS_MASA = 1e-9;
+/* redondeo a 6 decimales como `round(x, 6)` de Python (mitad al par) */
+const _r6 = x => { const y = x * 1e6, f = Math.floor(y), d = y - f;
+  return (d > .5 || (d === .5 && f % 2 !== 0) ? f + 1 : f) / 1e6; };
+function clasesDeciles(vals){
+  const v = [];
+  for (const x of vals) if (x !== null && x !== undefined && isFinite(x)) v.push(+x);
+  if (!v.length) return {cortes: [], masa: null, n: 1, p_masa: null};
+  v.sort((a, b) => a - b);
+  // el valor más repetido; en empate, el menor (Counter.most_common de Python
+  // sobre la lista ordenada devuelve el primero que vio)
+  let masa = null, nMasa = 0;
+  for (let i = 0; i < v.length;){
+    let j = i;
+    while (j < v.length && v[j] === v[i]) j++;
+    if (j - i > nMasa){ nMasa = j - i; masa = v[i]; }
+    i = j;
+  }
+  if (nMasa / v.length <= UMBRAL_MASA) masa = null;
+  const resto = masa !== null ? v.filter(x => x !== masa) : v;
+  const k = masa !== null ? 9 : 10;
+  let cortes = [];
+  if (resto.length) for (let i = 1; i < k; i++){
+    const c = _r6(cuantil(resto, i / k));
+    if (c > resto[0] && (!cortes.length || c > cortes[cortes.length - 1])) cortes.push(c);
+  }
+  if (masa !== null){
+    cortes = cortes.filter(c => Math.abs(c - masa) > EPS_MASA);
+    cortes = cortes.concat(masa > v[0] ? [masa, masa + EPS_MASA] : [masa + EPS_MASA]);
+    cortes = [...new Set(cortes)].sort((a, b) => a - b);
+    if (masa >= v[v.length - 1]) cortes = cortes.filter(c => c <= masa);
+  }
+  return {cortes, masa, n: cortes.length + 1,
+          p_masa: masa !== null ? _rPar(1000 * nMasa / v.length) / 1000 : null};
+}
+/* Clase de un valor, como el `step` de MapLibre. = `clase_de()` de deciles.py */
+function claseDe(v, cortes){
+  let i = 0;
+  while (i < cortes.length && v >= cortes[i]) i++;
+  return i;
+}
+/* Los diez tonos de los deciles, orientados como la rampa continua. */
+const rampaDec = dir => {
+  const r = esOscuro() ? DEC_OSCURO : DEC_CLARA;
+  return dir === 1 ? r.slice().reverse() : r.slice();
+};
+/* `n` clases repartidas de punta a punta sobre los diez tonos: con menos
+   clases (cortes fundidos) el contraste no se pierde. = `colores()` de
+   deciles.py, con su mismo redondeo (mitad al par). */
+const _rPar = x => { const f = Math.floor(x), d = x - f;
+  return d > .5 || (d === .5 && f % 2 !== 0) ? f + 1 : f; };
+function coloresClases(n, paleta){
+  if (n <= 1) return [paleta[Math.floor(paleta.length / 2)]];
+  return Array.from({length: n}, (_, i) => paleta[_rPar(i * (paleta.length - 1) / (n - 1))]);
+}
+/* `a` llevado hacia `b`: con k = 1 queda `a`, con k = 0 queda `b`. */
+function mezclarHex(a, b, k){
+  const x = _rgb(a), y = _rgb(b);
+  return _hex([0, 1, 2].map(i => x[i] * k + y[i] * (1 - k)));
+}
+/* ★ CUANDO LA CLASE APARTE ES LA MAYORÍA, VA EN TINTE (la regla de la
+   Gobernación). En agua mejorada el 70 % de las manzanas está en 100 %:
+   pintado con la punta plena de la paleta el mapa entero sale petróleo y tapa
+   justo lo que interesa, el 30 % que no llega. Si la masa pasa de la mitad, su
+   color se aclara hacia el fondo —el mismo tono, más tenue— y las demás
+   clases resaltan encima. */
+function clasesConMasa(dec, ind){
+  const cl = coloresClases(dec.n, rampaDec(ind.dir));
+  if (dec.masa !== null && dec.p_masa >= .5){
+    const k = claseDe(dec.masa, dec.cortes);
+    cl[k] = tinteMasa(cl[k]);
+  }
+  return cl;
+}
+/* ⚠️ EL TINTE NO PUEDE SER UNA MEZCLA CON EL FONDO, como en la Gobernación:
+   la punta de esta rampa es un petróleo casi sin color (#00323d), y mezclado
+   con el papel daba #8a9d9c, un gris a ΔE 7,5 del gris de «sin dato» —el
+   grupo de la mayoría se leía como manzanas sin ficha—. Acá el tinte se arma
+   en OKLab: casi la luz del papel (0,84; 0,40 en oscuro) con el MISMO matiz y
+   un croma acotado (0,045–0,065), así sale un petróleo claro (o un coral claro
+   del lado rojo), lejos del gris de «sin dato» (ΔE ≈ 20). */
+function _oklab(hex){
+  const c = _rgb(hex).map(x => { x /= 255; return x <= .04045 ? x / 12.92 : Math.pow((x + .055) / 1.055, 2.4); });
+  const l = Math.cbrt(.4122214708 * c[0] + .5363325363 * c[1] + .0514459929 * c[2]);
+  const m = Math.cbrt(.2119034982 * c[0] + .6806995451 * c[1] + .1073969566 * c[2]);
+  const s = Math.cbrt(.0883024619 * c[0] + .2817188376 * c[1] + .6299787005 * c[2]);
+  return [.2104542553 * l + .7936177850 * m - .0040720468 * s,
+          1.9779984951 * l - 2.4285922050 * m + .4505937099 * s,
+          .0259040371 * l + .7827717662 * m - .8086757660 * s];
+}
+function _desdeOklab(L, a, b){
+  const l = Math.pow(L + .3963377774 * a + .2158037573 * b, 3);
+  const m = Math.pow(L - .1055613458 * a - .0638541728 * b, 3);
+  const s = Math.pow(L - .0894841775 * a - 1.2914855480 * b, 3);
+  const lin = [4.0767416621 * l - 3.3077115913 * m + .2309699292 * s,
+               -1.2684380046 * l + 2.6097574011 * m - .3413193965 * s,
+               -.0041960863 * l - .7034186147 * m + 1.7076147010 * s];
+  return _hex(lin.map(x => { x = Math.max(0, Math.min(1, x));
+    return 255 * (x <= .0031308 ? 12.92 * x : 1.055 * Math.pow(x, 1 / 2.4) - .055); }));
+}
+function tinteMasa(hex){
+  const [, a, b] = _oklab(hex), C = Math.hypot(a, b), h = Math.atan2(b, a);
+  const C2 = Math.min(.065, Math.max(.045, C * .5));
+  return _desdeOklab(esOscuro() ? .40 : .84, C2 * Math.cos(h), C2 * Math.sin(h));
+}
+/* El rango de una clase, para la leyenda, el tooltip y el foco del mapa. */
+function rangoClase(e, k){
+  const c = e.dec.cortes, n = e.clases.length;
+  return [k === 0 ? -Infinity : c[k - 1], k === n - 1 ? Infinity : c[k]];
+}
+function rangoClaseTxt(e, k, i){
+  const c = e.dec.cortes, n = e.clases.length;
+  const d = k === 0 ? e.min : c[k - 1], h = k === n - 1 ? e.max : c[k];
+  if (e.dec.masa !== null && Math.abs(d - e.dec.masa) < 1e-6 && (h - d) < 1e-5) return `exactamente ${fmtM(e.dec.masa, i)}`;
+  return `de ${fmtM(d, i)} a ${fmtM(h, i)}`;
+}
+/* El fondo de una rampa dibujada (leyenda, guía): continua, o en casilleros
+   iguales cuando el mapa pinta por clases. */
+function fondoRampa(e){
+  if (!e.clases) return `linear-gradient(to right,${e.tonos.join(",")})`;
+  const n = e.clases.length;
+  return `linear-gradient(to right,${e.clases.map((c, i) =>
+    `${c} ${(i * 100 / n).toFixed(3)}% ${((i + 1) * 100 / n).toFixed(3)}%`).join(",")})`;
+}
+/* Posición 0-1 de un valor sobre la rampa DIBUJADA: con clases, dentro del
+   casillero donde cae, en proporción a dónde cae dentro de su rango. */
+function posDibujada(e, v){
+  if (!e.clases) return posEnRampa(e, v);
+  const k = claseDe(v, e.dec.cortes), n = e.clases.length;
+  const [a, b] = rangoClase(e, k);
+  const d = isFinite(a) ? a : e.min, h = isFinite(b) ? b : e.max;
+  const f = h > d ? Math.max(0, Math.min(1, (v - d) / (h - d))) : .5;
+  return (k + .15 + .7 * f) / n;
+}
+
+/* ══ LOS DECILES DE CADA INDICADOR, CON EL INDICADOR ══════════════════════
+   `deciles/<clave>.json`: cuánta gente vive en cada color (por municipio) y
+   los deciles de cada ciudad. Se baja al elegir el indicador, no al abrir el
+   tablero (antes viajaba la distribución de 277 municipios × 91 indicadores
+   en `mz_stats.json`: 2,3 MB para abrir). */
+const DECS = new Map(), DECS_PEND = new Map();
+function decilesDe(k){
+  if (!k) return null;
+  if (DECS.has(k)) return DECS.get(k);
+  if (!DECS_PEND.has(k))
+    DECS_PEND.set(k, fetch(`datos/deciles/${k}.json`)
+      .then(r => { if (!r.ok) throw 0; return r.json(); })
+      .then(d => { DECS.set(k, d); })
+      .catch(() => { DECS.set(k, null); })
+      .finally(() => {
+        DECS_PEND.delete(k);
+        // llegó lo que el panel o la escala de la ciudad estaban esperando
+        if (ind_actual && ind_actual.k_mz === k) pintar();
+      }));
+  return null;
 }
 /* ★ LA ESCALA DEL NIVEL MANZANA, PRECALCULADA.
    `escala()` necesita todos los valores para sacar cuantiles, y en el nivel
@@ -1609,41 +1928,41 @@ function escalaManzana(ind){
 
 let ESC_LOCAL = false;      // el conmutador de la leyenda
 
-/* La escala de las manzanas de UN municipio. Sale de los deciles que ya viajan
-   en `mz_stats.dist`. El dominio es p10–p90 —el 80% central— porque con el
-   mínimo y el máximo una sola manzana extrema vuelve a aplastar la rampa, que
-   es el problema que esto viene a resolver; las puntas saturan y la leyenda lo
-   dice con sus «≤» y «≥», igual que en la escala nacional. */
+/* La escala de las manzanas de UN municipio: SUS deciles (2026-10-31; antes,
+   el p10–p90 de la ciudad estirado sobre la rampa continua). Vienen hechos en
+   `deciles/<clave>.json` para cada municipio con 30 manzanas o más, con la
+   misma regla que los del país. Mientras el archivo no llegó, la nacional. */
 function escalaLocal(ind){
-  if (!(ESC_LOCAL && sel && MZS && ind.k_mz && MZS[ind.k_mz])) return null;
-  const d = MZS[ind.k_mz].dist && MZS[ind.k_mz].dist[sel];
-  if (!d) return null;
-  let lo = d.p10, hi = d.p90;
-  if (!(hi > lo)){ lo = d.min; hi = d.max; }          // ciudad muy pareja
-  if (!(hi > lo)) return null;                         // todas iguales: no hay escala
-  const pad = (hi - lo) * .08;
-  const piv = Math.min(Math.max(d.p50, lo + pad), hi - pad);
-  return {lo, piv, hi, pivReal: d.p50, tipo: "mediana de la ciudad", local: true,
-          tonos: rampa(ind.dir), q: null, ord: null,
-          min: d.min, max: d.max, recorte: d.min < lo || d.max > hi, n: d.n};
+  if (!(ESC_LOCAL && sel && ind.k_mz)) return null;
+  const D = decilesDe(ind.k_mz), d = D && D.loc && D.loc[sel];
+  if (!d || !d.c || !d.c.length) return null;
+  const dec = {cortes: d.c, masa: d.m, n: d.c.length + 1, p_masa: d.pm};
+  const clases = clasesConMasa(dec, ind);
+  const lo = d.min, hi = d.max > d.min ? d.max : d.min + 1;
+  return {lo, piv: (lo + hi) / 2, hi, pivReal: d.med, tipo: "mediana de la ciudad", local: true,
+          tonos: rampa(ind.dir), dec, clases, q: null, ord: null,
+          min: d.min, max: d.max, recorte: false, n: d.n};
 }
 
 function escalaManzanaBase(ind){
   const st = MZS && MZS[ind.k_mz];
   if (!st || !st.esc) return null;
   const e = st.esc;
-  /* La MISMA escala declarada que usa el nivel municipal: es lo que hace que un
-     valor tenga el mismo color arriba y abajo. `e.lo/e.hi/e.piv` —los de las
-     manzanas solas— quedan para el perfil y los percentiles del panel, que sí
-     son del nivel manzana. */
+  /* `ind.esc` (la escala única de los dos niveles, 2026-09-04) queda sólo de
+     respaldo para un indicador sin deciles; `e.lo/e.hi/e.piv` —los de las
+     manzanas solas— para los percentiles del tooltip. */
   let lo = ind.esc ? ind.esc[0] : e.lo, hi = ind.esc ? ind.esc[2] : e.hi;
   if (hi <= lo){ lo = e.min; hi = e.max > lo ? e.max : lo + 1; }
   const pivReal = ind.esc ? ind.esc[1] : e.piv, pad = (hi - lo) * .08;
   const piv = pad > 0 ? Math.min(Math.max(pivReal, lo + pad), hi - pad) : pivReal;
+  /* ★ LOS DECILES DE LAS MANZANAS DEL PAÍS (2026-10-31): los cortes los calcula
+     `estadisticas_manzana.py` sobre la columna PUBLICADA, que es la que pinta
+     el mapa. */
+  const dec = e.dec && e.dec.n > 1 ? e.dec : null;
   return {lo, piv, hi, pivReal, tipo: ind.esc ? "centro" : e.tipo,
-          tonos: rampa(ind.dir),
+          tonos: rampa(ind.dir), dec, clases: dec ? clasesConMasa(dec, ind) : null,
           q: e.q, ord: null, min: e.min, max: e.max,
-          recorte: e.min < lo || e.max > hi, n: e.n};
+          recorte: !dec && (e.min < lo || e.max > hi), n: e.n};
 }
 
 /* Posición 0-1 de un valor sobre la rampa, con el pivote clavado en el 0,5:
@@ -1671,6 +1990,8 @@ const _hex = c => "#" + c.map(x => Math.max(0,Math.min(255,Math.round(x))).toStr
 function tonoDe(e, v){
   if (!e || v === null || v === undefined || !isFinite(v))
     return SIN_DATO[esOscuro() ? "oscuro" : "claro"];
+  // con deciles, el color de su clase: el mismo `step` que pinta el mapa
+  if (e.clases) return e.clases[claseDe(v, e.dec.cortes)];
   const x = posEnRampa(e, v) * (e.tonos.length - 1), i = Math.floor(x);
   if (i >= e.tonos.length - 1) return e.tonos[e.tonos.length - 1];
   const a = _rgb(e.tonos[i]), b = _rgb(e.tonos[i + 1]), f = x - i;
@@ -1725,6 +2046,13 @@ function expresionColor(e, campo){
      Un estado sin fijar devuelve null → gris de "sin dato", igual que antes
      un atributo ausente. */
   const ref = campo === null ? ["feature-state", "v"] : ["get", campo];
+  /* ★ CON DECILES, UN `step`: cada clase de un solo color, sin degradé entre
+     clases (2026-10-31). */
+  if (e.clases){
+    const paso = ["step", ["to-number", ref], e.clases[0]];
+    e.dec.cortes.forEach((c, i) => paso.push(c, e.clases[i + 1]));
+    return ["case", ["==", ref, null], SIN_DATO[esOscuro() ? "oscuro" : "claro"], paso];
+  }
   return ["case", ["==", ref, null], SIN_DATO[esOscuro() ? "oscuro" : "claro"],
           ["interpolate", ["linear"], ["to-number", ref], ...paradas]];
 }
@@ -1979,6 +2307,23 @@ function montarDeptos(){
     dd.classList.remove("open");
     if (map) map.fitBounds(d === "Bolivia" ? BBOX_PAIS : cajas[d],
                            {padding: padPaneles(), duration: 800});
+    /* ★ (2026-10-31) ir a un departamento también abre SU comparación (sus
+       provincias). Un municipio elegido de OTRO departamento se suelta: el
+       mapa ya no lo muestra y el panel hablaría de un lugar fuera de vista. */
+    if (typeof AMB !== "undefined" && TERR){
+      const dc = d === "Bolivia" ? null : (Object.values(TERR.dptos).find(x => x.nombre === d) || {}).cod || null;
+      const ms = sel ? MUN.find(x => x.sigep === sel) : null;
+      if (ms && dc && ms.dcod !== dc){
+        sel = null;
+        if (map && map.getSource("mun")) map.setFilter("mun-sel", ["==", ["get", "sigep"], ""]);
+      }
+      if (sel && dc)        // el elegido es de este departamento: sus provincias, con la suya marcada
+        Object.assign(AMB, {auto: false, irA: null, nivel: "dpto", dpto: dc, prov: ms.prov, lista: "provs"});
+      else                  // sin elegido: el departamento (o el país)
+        Object.assign(AMB, {auto: true, irA: dc, lista: "provs"});
+      pintar();
+      escribirURL(true);
+    }
   });
   dd.querySelector(".tbbtn").onclick = ev => { ev.stopPropagation(); dd.classList.toggle("open"); };
   document.addEventListener("click", () => dd.classList.remove("open"));
@@ -2064,7 +2409,10 @@ Promise.all([
     .catch(() => fetch("datos/municipios.geojson").then(r => r.json())),
   fetch("datos/region.geojson").then(r => r.json()),
   fetch("datos/mini.json").then(r => r.json()),
-]).then(async ([cat, mun, fis, gmun, greg, mini]) => {
+  /* ★ (2026-10-31) provincias y departamentos para la comparación por ámbito.
+     Si faltara, el panel vuelve al comparativo de municipios de antes. */
+  fetch("datos/territorios.json").then(r => r.ok ? r.json() : null).catch(() => null),
+]).then(async ([cat, mun, fis, gmun, greg, mini, terr]) => {
   CAT = cat; MUN = mun; FIS = fis; MINI = mini;
   /* Las estadísticas del nivel manzana (10 KB gzip) son lo que reemplaza a los
      24,1 MB de datos crudos: con teselas el cliente ya no puede calcular
@@ -2085,6 +2433,7 @@ Promise.all([
   BANCO = null;
   anio_i = FIS.anios.length - 1;
   MUN.forEach(m => { m.geom = gmun.features.find(f => f.properties.sigep === m.sigep); });
+  TERR = armarTerritorios(terr);
 
   // `.flat(3)` NO alcanza para un MultiPolygon: deja arrays anidados adentro y
   // los mínimos/máximos salían basura — el mapa arrancaba encuadrado sobre
@@ -2220,12 +2569,22 @@ Promise.all([
     nuevaCapa({id: "mun-hov", type: "line", source: "mun",
       paint: {"line-color": TINTA_HOV[esOscuro() ? "oscuro" : "claro"], "line-width": 2.6,
               "line-opacity": ["case", ["boolean", ["feature-state", "hov"], false], .9, 0]}});
+    /* ★ (2026-10-31) el contorno de la provincia o el departamento que se está
+       señalando en el panel (`marcarAmbito`): un halo del papel y la tinta
+       encima, para que se lea sobre cualquier color de la rampa. */
+    nuevaFuente("amb", {type: "geojson", data: {type: "FeatureCollection", features: []}});
+    nuevaCapa({id: "amb-halo", type: "line", source: "amb",
+      layout: {"line-join": "round", "line-cap": "round"},
+      paint: {"line-color": esOscuro() ? "#0b1318" : "#f2efe8", "line-width": 5.5, "line-opacity": .75}});
+    nuevaCapa({id: "amb-line", type: "line", source: "amb",
+      layout: {"line-join": "round", "line-cap": "round"},
+      paint: {"line-color": TINTA_HOV[esOscuro() ? "oscuro" : "claro"], "line-width": 2.2, "line-opacity": .95}});
     /* ★ EL BORDE MUNICIPAL VA ARRIBA DE TODO (2026-08-26). Se monta antes que
        las capas de manzana —tiene que existir aunque no haya manzanas—, así que
        sin esto las 38.892 manzanas se dibujan ENCIMA y se comen la división
        justo al bajar, que es cuando se pidió que sobreviviera. `moveLayer` sin
        segundo argumento la manda al final del orden de pintado. */
-    ["mun-halo", "mun-line", "mun-hov", "mun-sel"].forEach(id => { if (map.getLayer(id)) map.moveLayer(id); });
+    ["mun-halo", "mun-line", "mun-hov", "amb-halo", "amb-line", "mun-sel"].forEach(id => { if (map.getLayer(id)) map.moveLayer(id); });
     /* ★ Y LOS RÓTULOS POR ENCIMA DE TODO (2026-09-26). Con OpenFreeMap son capas
        vectoriales `symbol` (`MAPA_BASE.rotulos`): arriba de la coropleta se
        leen nítidos, en vez de quedar lavados por su transparencia como la
@@ -2316,36 +2675,78 @@ function valorParaMini(m, ind){
 const ambitoMini = ind => ind.k_mun ? "municipio" : "urbano";
 /* Miniatura de la región pintada con el indicador de la tarjeta, igual que en
    los atlas nacionales: 9 siluetas precalculadas en un lienzo 100×100. */
+/* ★★ LOS MINIMAPAS, EN LIENZO (2026-10-31, «optimiza los gráficos y las
+   imágenes»). Eran un SVG con los 343 trazos completos por tarjeta: una
+   categoría de ocho indicadores metía ~2.700 elementos y medio megabyte de
+   coordenadas en la página, y se rearmaba entera al cambiar de categoría o de
+   tema. Ahora la tarjeta lleva un <canvas> vacío; los 343 contornos se
+   convierten UNA vez en `Path2D` y cada minimapa se pinta recién cuando su
+   tarjeta entra en pantalla, a la densidad de la pantalla (nítido en un
+   teléfono). Mismo dibujo: el país de fondo, cada municipio con su color —el
+   de su grupo, como en el mapa— y el borde al peso del Atlas (0,22 unidades).
+   ⛔ Sigue valiendo lo del borrón negro (2026-09-04): el contorno del país es
+   UNA silueta (`MINI.pais`), no las 343 engordadas. */
 function miniSVG(ind){
   if (!MINI) return "";
+  return `<canvas class="mini" data-mini="${ind.key}" aria-hidden="true"></canvas>`;
+}
+let _miniP2D = null, _miniObs = null;
+function miniPaths(){
+  if (_miniP2D || !MINI || typeof Path2D === "undefined") return _miniP2D;
+  _miniP2D = {};
+  Object.keys(MINI.paths).forEach(s => { try { _miniP2D[s] = new Path2D(MINI.paths[s]); } catch (_) {} });
+  try { _miniP2D.__pais = MINI.pais ? new Path2D(MINI.pais) : null; } catch (_) { _miniP2D.__pais = null; }
+  return _miniP2D;
+}
+function dibujarMini(cv){
+  const P = miniPaths();
+  if (!P || !cv.isConnected) return;
+  let ind = null;
+  for (const g of CAT.grupos) { ind = g.indicadores.find(x => x.key === cv.dataset.mini); if (ind) break; }
+  if (!ind) return;
+  const r = cv.getBoundingClientRect();
+  if (!r.width || !r.height) return;
+  const dpr = Math.min(2.5, window.devicePixelRatio || 1);
+  const W = Math.round(r.width * dpr), H = Math.round(r.height * dpr);
+  if (cv.width !== W) cv.width = W;
+  if (cv.height !== H) cv.height = H;
+  /* el lienzo AJUSTADO de antes (`viewBoxTight`), centrado como «meet» */
+  const [x, y, w, h] = (MINI.viewBoxTight || MINI.viewBox).split(/[\s,]+/).map(Number);
+  const s = Math.min(W / w, H / h), ox = (W - w * s) / 2 - x * s, oy = (H - h * s) / 2 - y * s;
+  const c = cv.getContext("2d");
+  c.setTransform(1, 0, 0, 1, 0, 0);
+  c.clearRect(0, 0, W, H);
+  c.setTransform(s, 0, 0, s, ox, oy);
+  c.lineJoin = "round";
+  const osc = esOscuro();
+  if (P.__pais){ c.fillStyle = osc ? "#1b2a33" : (getComputedStyle(document.body).getPropertyValue("--gris-card").trim() || "#ece8df"); c.fill(P.__pais); }
   const vals = MUN.map(m => valorParaMini(m, ind));
-  const pes = MUN.map(pesoMunicipal);
-  const e = escala(vals, pes, ind, ambitoMini(ind));
-  /* ⛔ EL BORRÓN NEGRO DEL MINIMAPA (2026-09-04). El contorno del conjunto se
-     conseguía dibujando TODAS las siluetas engordadas detrás de los rellenos:
-     lo que asomaba alrededor era el borde de la unión. Con nueve municipios es
-     un truco elegante; con 343 son 343 manchas gruesas superpuestas y el país
-     queda con una costra oscura encima que tapa el dato.
-     Ahora `mini.json` trae el contorno de verdad —una sola silueta, calculada
-     sobre la unión de los 343 en `preparar_web.py`—, así el borde es un trazo. */
-  const halo = MINI.pais ? `<path d="${MINI.pais}" stroke-linejoin="round"/>` : "";
-  const p = MUN.map((m, k) => {
-    const d = MINI.paths[m.sigep];
-    /* ★ CADA MUNICIPIO CON SU BORDE, PERO AL PESO DEL ATLAS (2026-09-04).
-       Con `non-scaling-stroke` el borde vale 1 px del dispositivo cualquiera sea
-       el zoom: con nueve municipios es un pelo y con 343 es la mitad del dibujo
-       —el occidente, donde los municipios son chicos, quedaba convertido en una
-       reja gris—. El Atlas Socioeconómico dibuja los mismos 343 con un trazo de
-       0,22 unidades del lienzo y translúcido; se copia ese peso, que es el que
-       deja ver el color y sigue mostrando el territorio. */
-    return d ? `<path d="${d}" fill="${tonoDe(e, vals[k])}"
-      stroke-linejoin="round"/>` : "";
-  }).join("");
-  /* ★ EL LIENZO AJUSTADO. `mini.json` trae también la caja real de la región
-     (`viewBoxTight`). Con el lienzo cuadrado la silueta usaba el 40% del
-     recuadro y el resto era aire. */
-  return `<svg class="mini" viewBox="${MINI.viewBoxTight || MINI.viewBox}"
-    preserveAspectRatio="xMidYMid meet"><g class="mh">${halo}</g>${p}</svg>`;
+  const e = escala(vals, MUN.map(pesoMunicipal), ind, ambitoMini(ind));
+  c.lineWidth = .22;
+  c.strokeStyle = osc ? "rgba(8,14,20,.55)" : "rgba(15,22,30,.28)";
+  MUN.forEach((m, k) => {
+    const p = P[m.sigep];
+    if (!p) return;
+    c.fillStyle = tonoDe(e, vals[k]);
+    c.fill(p);
+    c.stroke(p);
+  });
+  if (P.__pais){
+    c.lineWidth = .4;
+    c.strokeStyle = osc ? "rgba(232,244,250,.28)" : "rgba(15,22,30,.3)";
+    c.stroke(P.__pais);
+  }
+}
+/* Cada minimapa se dibuja al entrar en pantalla (y un poco antes). */
+function observarMinis(raiz){
+  const cvs = raiz.querySelectorAll("canvas.mini[data-mini]");
+  if (!("IntersectionObserver" in window)){ cvs.forEach(dibujarMini); return; }
+  if (!_miniObs) _miniObs = new IntersectionObserver(ents => ents.forEach(en => {
+    if (!en.isIntersecting) return;
+    _miniObs.unobserve(en.target);
+    dibujarMini(en.target);
+  }), {rootMargin: "160px"});
+  cvs.forEach(cv => _miniObs.observe(cv));
 }
 
 /* Los indicadores se separan por NIVEL dentro de cada categoría. Mezclados, el
@@ -2406,6 +2807,7 @@ function montarIndicadores(){
   l.querySelectorAll(".ind").forEach(el => el.onclick = () => elegirIndicador(el.dataset.k));
   marcarActivo();
   medirFranja();
+  observarMinis(l);
 }
 /* ★ LA FRANJA DEL MÓVIL SE MIDE, NO SE ADIVINA (2026-08-26). Ver el porqué en
    el bloque `@media (max-width:820px)`. Va al final de `montarIndicadores()`
@@ -2750,6 +3152,14 @@ function estadoActual(){
   }
   // las dos zonas, si están: centro y radio de cada una (2026-10-30)
   if (typeof zonasEstado === "function") Object.assign(e, zonasEstado());
+  /* ★ (2026-10-31) el ámbito de la comparación, cuando el lector lo eligió:
+     `amb=dpto:07` (las provincias de Santa Cruz), `amb=dpto:07:m` (sus
+     municipios), `amb=prov:0701`, `amb=pais`. Si sigue a la selección, no va. */
+  if (typeof AMB !== "undefined"){
+    if (!AMB.auto) e.amb = AMB.nivel === "pais" ? "pais"
+      : `${AMB.nivel}:${AMB.nivel === "dpto" ? AMB.dpto : AMB.prov}${AMB.nivel === "dpto" && AMB.lista === "munis" ? ":m" : ""}`;
+    else if (AMB.irA) e.amb = `dpto:${AMB.irA}${AMB.lista === "munis" ? ":m" : ""}`;
+  }
   return e;
 }
 
@@ -2821,6 +3231,21 @@ function aplicarEstado(e, encuadrar_){
     if (_mm){
       if (sel !== _mm.sigep) seleccionar(_mm.sigep);
     } else if (sel) seleccionar(sel);           // deseleccionar
+    /* el ámbito de la comparación, si la dirección lo trae (después de la
+       selección: elegir un municipio lo vuelve a «seguir») */
+    if (typeof AMB !== "undefined" && TERR){
+      const [t, c, l] = (e.amb || "").split(":");
+      if (t === "pais") Object.assign(AMB, {auto: false, irA: null, nivel: "pais", dpto: null, prov: null, lista: "provs"});
+      else if (t === "dpto" && TERR.dptos[c]){
+        const ms = sel ? MUN.find(x => x.sigep === sel) : null;
+        Object.assign(AMB, {auto: false, irA: null, nivel: "dpto", dpto: c, prov: ms && ms.dcod === c ? ms.prov : null, lista: l === "m" ? "munis" : "provs"});
+        sincronizarIrA(TERR.dptos[c].nombre);
+      } else if (t === "prov" && TERR.provs[c]){
+        Object.assign(AMB, {auto: false, irA: null, nivel: "prov", dpto: TERR.provs[c].dpto, prov: c, lista: "provs"});
+        sincronizarIrA(TERR.dptos[TERR.provs[c].dpto].nombre);
+      } else Object.assign(AMB, {auto: true, irA: null});
+      pintar();
+    }
     if (encuadrar_ && e.z && e.c && map && map.jumpTo){
       const [lng, lat] = e.c.split(",").map(Number);
       if (isFinite(lng) && isFinite(lat)) map.jumpTo({center: [lng, lat], zoom: +e.z});
@@ -3330,25 +3755,36 @@ function pintar(){
   /* El coroplético municipal se pinta SIEMPRE, aunque el nivel lógico sea
      manzana: durante el fundido las dos capas conviven en pantalla y la de
      abajo no puede quedar del gris de "sin dato". */
+  const vm = MUN.map(m => valorMunicipal(m, i));
+  const em = escala(vm, MUN.map(pesoMunicipal), i, "municipio");
+  ESC_MUN = em;
   if (conMapa && map.getSource("mun")){
-    const vm = MUN.map(m => valorMunicipal(m, i));
-    const em = escala(vm, MUN.map(pesoMunicipal), i, "municipio");
     /* ★ Antes: reescribir `properties.v` en los 343 y `setData()` = 2,5 MB
        reserializados y reteselados en el worker por cada cambio de indicador
        o de año. Ahora: 343 `setFeatureState` (la fuente ya tenía
-       `promoteId: "sigep"`) y la expresión lee `["feature-state","v"]`. */
-    MUN.forEach(m => {
-      const v = valorMunicipal(m, i);
-      map.setFeatureState({source: "mun", id: m.sigep},
-                          {v: v === undefined || v === null || !isFinite(v) ? null : v});
-    });
-    if (em) map.setPaintProperty("mun-fill", "fill-color", expresionColor(em, null));
+       `promoteId: "sigep"`) y la expresión lee `["feature-state","v"]`.
+       ★ (2026-10-31) y sólo cuando cambia QUÉ se pinta: elegir un municipio
+       o cambiar el ámbito del panel vuelve a pasar por acá, y los 343 valores
+       eran los mismos. */
+    const clave = i.key + "|" + ANIO + "|" + anio_i;
+    if (clave !== _munPintado){
+      _munPintado = clave;
+      MUN.forEach((m, k) => {
+        const v = vm[k];
+        map.setFeatureState({source: "mun", id: m.sigep},
+                            {v: v === undefined || v === null || !isFinite(v) ? null : v});
+      });
+    }
+    if (em) pintarCapa("mun-fill", expresionColor(em, null));
   }
+  // el foco de un color vale para un nivel y un indicador: si cambió, se suelta
+  if (FOCO.rango && (FOCO.nivel !== nivel || FOCO.k !== i.key)){ FOCO.fija = false; enfocarClase(null); }
+  FOCO.k = i.key;
+  // lo del panel de este indicador (gente por color, deciles de cada ciudad)
+  if (i.k_mz) decilesDe(i.k_mz);
 
   if (nivel === "municipio"){
-    const vals = MUN.map(m => valorMunicipal(m, i));
-    const pes = MUN.map(pesoMunicipal);
-    e = escala(vals, pes, i, "municipio");   // ya pintado arriba
+    e = em;                                   // ya pintado arriba
   } else {
     /* ★ ACÁ ESTABA EL COSTO. Antes este bloque recorría los 38.892 polígonos
        reescribiendo `properties.v` y llamaba `setData()`: 12,1 MB
@@ -3357,13 +3793,24 @@ function pintar(){
        basta apuntar la expresión de color a otro atributo. */
     e = escalaManzana(i);
     if (conMapa && map.getLayer("mz-fill")){
-      map.setPaintProperty("mz-fill", "fill-color", expresionColor(e, null));
+      pintarCapa("mz-fill", expresionColor(e, null));
       aplicarColumna(i.k_mz);      // baja la columna si hace falta y fija el estado
     }
   }
   ESC = e;
   termometro(e, i);
   ficha(e, i);
+}
+let ESC_MUN = null, _munPintado = "";
+/* `setPaintProperty` hace que MapLibre vuelva a procesar la capa: no se manda
+   si la expresión es la misma que ya tiene (elegir un municipio no cambia los
+   colores del mapa). */
+const _pintura = {};
+function pintarCapa(capa, expr){
+  const k = JSON.stringify(expr);
+  if (_pintura[capa] === k) return;
+  _pintura[capa] = k;
+  map.setPaintProperty(capa, "fill-color", expr);
 }
 
 /* ── LEYENDA ─────────────────────────────────────────────────────────────── */
@@ -3373,6 +3820,7 @@ function termometro(e, i){
   document.getElementById("tm-t").innerHTML =
     `${i.label} <small>${u || ""}${eti}</small>`;
   const bar = document.getElementById("tm-bar");
+  bar.innerHTML = "";
   if (!e){ bar.style.background = "var(--linea)";
     document.getElementById("tm-lo").textContent = "";
     document.getElementById("tm-hi").textContent = "";
@@ -3380,64 +3828,76 @@ function termometro(e, i){
     // mapa no dice nada, y "sin datos" no distingue un hueco de una imposibilidad
     document.getElementById("tm-st").textContent =
       mudo(i) ? motivoSinSerie(i) : "sin datos"; return; }
-  bar.style.background = `linear-gradient(to right,${e.tonos.join(",")})`;
-  const cap = e.recorte;
-  document.getElementById("tm-lo").innerHTML = `<span class="cap">${cap ? "≤ " : ""}</span>${fmtM(e.lo, i)}`;
-  document.getElementById("tm-hi").innerHTML = `<span class="cap">${cap ? "≥ " : ""}</span>${fmtM(e.hi, i)}`;
-  bar.querySelectorAll(".tm-mk, .tm-ref").forEach(m => m.remove());
-  const mk = document.createElement("div"); mk.className = "tm-mk"; mk.style.left = "50%";
-  bar.appendChild(mk);
-  /* ★★ LAS REFERENCIAS SE MARCAN SOBRE LA BARRA (2026-09-04).
-     El centro de la rampa ya no es una estadística —es el punto que mejor
-     reparte la paleta en los dos niveles— así que rotularlo «país» sería
-     rebautizar un número de diseño con el nombre de un dato. Lo que sí son
-     datos van marcados aparte y con su nombre: dónde cae el país y dónde la
-     mitad de las unidades que el mapa está dibujando. Sin esto, al soltar el
-     ancla-país el lector perdía la referencia absoluta. */
+  bar.style.background = fondoRampa(e);
+  /* con clases, las puntas son el mínimo y el máximo de verdad: no hay recorte */
+  const cap = e.recorte && !e.clases;
+  document.getElementById("tm-lo").innerHTML = `<span class="cap">${cap ? "≤ " : ""}</span>${fmtM(e.clases ? e.min : e.lo, i)}`;
+  document.getElementById("tm-hi").innerHTML = `<span class="cap">${cap ? "≥ " : ""}</span>${fmtM(e.clases ? e.max : e.hi, i)}`;
+  /* ★ CADA CASILLERO ES UN BOTÓN (2026-10-31, el molde de la Gobernación):
+     al pasar el cursor dice su rango y deja con color sólo a ese grupo en el
+     mapa; tocarlo lo deja fijo. Funciona en los dos niveles. */
+  if (e.clases){
+    const n = e.clases.length;
+    for (let k = 0; k < n; k++){
+      const s = document.createElement("button");
+      s.type = "button";
+      s.className = "tm-c" + (FOCO.fija && FOCO.clase === k ? " on" : "");
+      s.style.cssText = `left:${(k * 100 / n).toFixed(3)}%;width:${(100 / n).toFixed(3)}%`;
+      s.dataset.k = k;
+      s.setAttribute("aria-label", `Grupo ${k + 1} de ${n}: ${rangoClaseTxt(e, k, i)}`);
+      bar.appendChild(s);
+    }
+  }
+  /* ★★ LAS REFERENCIAS SE MARCAN SOBRE LA BARRA (2026-09-04): dónde cae el país
+     (ámbar de señal) y dónde la mitad de las unidades que el mapa dibuja. Con
+     deciles caen DENTRO de su casillero, en proporción a su valor. */
   const refs = [];
   if (e.local){
     refs.push(["mediana", e.pivReal]);
-  } else if (i.ref){
-    if (i.ref.pais !== null && i.ref.pais !== undefined) refs.push(["país", i.ref.pais]);
-    const med = nivel === "municipio" ? i.ref.med_mun : i.ref.med_mz;
-    if (med !== null && med !== undefined) refs.push(["mediana", med]);
+  } else {
+    const rp = refPais(i);
+    if (rp !== null) refs.push(["país", rp]);
+    if (e.ord && e.ord.length) refs.push(["mediana", cuantil(e.ord, .5)]);
+    else if (i.ref){
+      const med = nivel === "municipio" ? i.ref.med_mun : i.ref.med_mz;
+      if (med !== null && med !== undefined) refs.push(["mediana", med]);
+    }
   }
   refs.forEach(([nom, v]) => {
-    if (!isFinite(v) || v < e.lo || v > e.hi) return;
+    if (v === null || !isFinite(v) || v < e.min || v > e.max) return;
     const d = document.createElement("div");
     d.className = "tm-ref" + (nom === "país" ? " pais" : "");
-    d.style.left = (posEnRampa(e, v) * 100).toFixed(2) + "%";
+    d.style.left = (posDibujada(e, v) * 100).toFixed(2) + "%";
     d.title = `${nom}: ${fmtM(v, i)}`;
-    d.dataset.n = nom;
     bar.appendChild(d);
   });
   /* El conmutador sólo tiene sentido con un municipio elegido y mirando sus
      manzanas: sin eso no hay «esta ciudad» que escalar. */
-  /* ★ AVISO DE RAMPA APLASTADA (2026-09-17). Medido en el propio catálogo: en el
-     24 % de los pares ciudad×indicador la ciudad usa menos de un quinto de la
-     rampa nacional, y el mapa urbano sale liso. El conmutador existía pero
-     callaba. Ahora, si el 80 % central de las manzanas de la ciudad (p10–p90)
-     ocupa menos del 20 % del rango nacional, la leyenda lo dice y el botón
-     de la ciudad se marca en ámbar. No cambia la escala solo: un turquesa
-     local no significa lo mismo que uno nacional, y eso lo decide el lector. */
+  /* ★ AVISO DE CIUDAD DE POCOS COLORES (2026-09-17, rehecho con deciles el
+     2026-10-31). Antes medía cuánto de la rampa continua ocupaba la ciudad;
+     ahora, cuánta de su gente cae en sus dos colores más comunes. Si es el 75 %
+     o más, el mapa de esa ciudad se ve casi de dos colores, y la leyenda
+     ofrece sus propios deciles. No cambia sola: un color de la ciudad no
+     significa lo mismo que uno del país, y eso lo decide el lector. */
   let sug = "";
   const cesc = document.getElementById("tm-esc");
+  const D = i.k_mz ? DECS.get(i.k_mz) : null;
   if (cesc){
-    const hay = nivel !== "municipio" && sel && i.k_mz && MZS && MZS[i.k_mz]
-             && MZS[i.k_mz].dist && MZS[i.k_mz].dist[sel];
+    const hay = nivel !== "municipio" && sel && D && D.loc && D.loc[sel];
     cesc.hidden = !hay;
     let apl = false;
     if (hay){
       const _loc = document.getElementById("tm-esc-loc"), _m = MUN.find(m => m.sigep === sel);
       if (_loc) _loc.textContent = _m ? _m.nombre : "esta ciudad";
-      const d = MZS[i.k_mz].dist[sel], base = escalaManzanaBase(i);
-      if (!ESC_LOCAL && d && base && base.hi > base.lo && d.p90 !== undefined){
-        const uso = Math.max(0, d.p90 - d.p10) / (base.hi - base.lo);
-        apl = uso < .2;
+      const gp = D.p && D.p[sel];
+      if (!ESC_LOCAL && gp){
+        const T = gp.reduce((a, b) => a + b, 0) || 1;
+        const dos = gp.slice().sort((a, b) => b - a).slice(0, 2).reduce((a, b) => a + b, 0) / T;
+        apl = dos >= .75;
         if (apl){
-          const pct = Math.round(uso * 100);
-          sug = ` · <span class="tm-sug">${_m ? _m.nombre : "la ciudad"} ocupa el ${pct} % de la rampa: vela a su escala</span>`;
-          if (_loc) _loc.title = `El 80 % de sus manzanas cae en el ${pct} % del rango nacional`;
+          const pct = Math.round(dos * 100);
+          sug = `<span class="tm-sug">${_m ? _m.nombre : "La ciudad"} junta el ${pct} % de su gente en dos colores: mirala con sus propios grupos</span>`;
+          if (_loc) _loc.title = `El ${pct} % de su gente vive en manzanas de dos colores del país`;
         }
       }
     }
@@ -3445,26 +3905,116 @@ function termometro(e, i){
     cesc.querySelectorAll("button").forEach(b =>
       b.classList.toggle("on", (b.dataset.e === "local") === ESC_LOCAL));
   }
-  const unidad = nivel === "municipio" ? "municipios"
-               : e.local ? `manzanas de ${(MUN.find(m => m.sigep === sel) || {}).nombre || "la ciudad"}`
-               : "manzanas con dato";
-  /* ⚠️ El pivote se recorta para que no quede pegado a un borde de la rampa
-     (`pad` en `escala`). Cuando eso pasa, el número dibujado YA NO ES el agregado
-     de la región: publicarlo igual bajo el rótulo "región" es rebautizar un borde
-     con el nombre de una estadística. Se dice el real y se nombra el recorte. */
-  const rec = e.pivReal !== undefined && e.pivReal !== null
-           && Math.abs(e.pivReal - e.piv) > 1e-9;
-  /* Con escala declarada el pie nombra las REFERENCIAS, no el centro: el centro
-     es geometría de la rampa y no significa nada por sí solo. */
-  const piv = i.esc
-    ? refs.map(([nom, v]) => `<span class="${nom === "país" ? "tm-l-pais" : "tm-l-med"}">${
-        nom} ${fmtM(v, i)}</span>`).join(" · ")
-    : (rec ? `${e.tipo} <b>${fmtM(e.pivReal, i)}</b> <small>(escala centrada en ${fmtM(e.piv, i)})</small>`
-           : `${e.tipo} <b>${fmtM(e.piv, i)}</b>`);
+  const mloc = e.local ? (MUN.find(m => m.sigep === sel) || {}).nombre || "la ciudad" : null;
+  const unidad = nivel === "municipio" ? "municipios" : e.local ? `manzanas de ${mloc}` : "manzanas del país";
+  const quien = refs.map(([nom, v]) => `<span class="${nom === "país" ? "tm-l-pais" : "tm-l-med"}">${
+      nom} ${fmtM(v, i)}</span>`).join(" · ");
+  const grupos = e.clases
+    ? `${e.clases.length} grupos con la misma cantidad de ${unidad}`
+      + (e.dec.masa !== null ? ` (${fmtM(e.dec.masa, i)} va aparte: ${nf(e.dec.p_masa * 100, 0)} %)` : "")
+    : `n <b>${nf(e.n, 0)}</b> ${unidad}`;
   document.getElementById("tm-st").innerHTML =
-    `n <b>${nf(e.n,0)}</b> ${unidad} · mín <b>${fmtM(e.min,i)}</b>${piv ? " · " + piv : ""}`
-    + ` · máx <b>${fmtM(e.max,i)}</b>` + sug;
+    `<span class="tm-g">${grupos}</span>${quien ? `<span class="tm-q">${quien}</span>` : ""}${sug}`;
 }
+
+/* La cifra del PAÍS de un indicador: la del catálogo (microdato) o, para los 17
+   que sólo existen por manzana, la suma de todas las manzanas urbanas del país
+   (`territorios.json`, 2026-10-31: antes el panel decía «país s/d»). */
+function refPais(i){
+  const r = refRegion(i);
+  if (r && r.v !== null && r.v !== undefined && isFinite(r.v)) return r.v;
+  const t = TERR && TERR.pais ? TERR.pais[i.k_mz || i.k_mun] : null;
+  return t === null || t === undefined || !isFinite(t) ? null : t;
+}
+
+/* ── EL FOCO DE UN COLOR ───────────────────────────────────────────────────
+   Pasar el cursor por un casillero de la leyenda o por un color del panel deja
+   con su color sólo a ese grupo —municipios o manzanas, según el nivel que se
+   esté mirando— y apaga el resto; tocarlo lo deja fijo. Se arma como opacidad
+   por unidad DENTRO del fundido por zoom (MapLibre exige el ["zoom"] arriba de
+   todo), así el cruce municipio ↔ manzana no cambia.
+   ⚠️ Cambiar la opacidad hace que MapLibre vuelva a procesar las teselas: se
+   manda sólo cuando cambia el grupo, nunca a cada movimiento del cursor. */
+const FOCO = {rango: null, fija: false, clase: null, k: null, nivel: null};
+function condRango(r){
+  const v = ["to-number", ["feature-state", "v"]];
+  const c = [["!=", ["feature-state", "v"], null]];
+  if (isFinite(r[0])) c.push([">=", v, r[0]]);
+  if (isFinite(r[1])) c.push(["<", v, r[1]]);
+  return ["all", ...c];
+}
+function opacidadMz(){
+  const b = opacidades().mz;
+  if (!(FOCO.rango && FOCO.nivel === "manzana")) return fundidoMz(b);
+  const cond = condRango(FOCO.rango);
+  const F = x => ["case", cond, x, +(x * .12).toFixed(3)];
+  return ["interpolate", ["linear"], ["zoom"], Z0, 0, Z0 + (Z1 - Z0) * .4, F(b * .7), Z1, F(b)];
+}
+function opacidadMun(){
+  const a = opacidades().mun;
+  if (!(FOCO.rango && FOCO.nivel === "municipio")) return hayManzana() ? fundidoMun(a) : a;
+  const cond = condRango(FOCO.rango);
+  // el grupo resaltado sube un poco: con el resto apagado se puede leer más lleno
+  const F = x => ["case", cond, +Math.min(.92, x * 1.3).toFixed(3), +(x * .1).toFixed(3)];
+  if (!hayManzana()) return F(a);
+  return ["interpolate", ["linear"], ["zoom"], Z0, F(a), Z0 + (Z1 - Z0) * .3, F(a * .28), Z1, 0];
+}
+let _focoAplicado = "";
+function aplicarFoco(forzar){
+  if (!map || !map.getLayer) return;
+  const clave = (FOCO.rango ? FOCO.rango.join(",") + "@" + FOCO.nivel : "") + "|" + esOscuro();
+  if (!forzar && clave === _focoAplicado) return;
+  _focoAplicado = clave;
+  if (map.getLayer("mz-fill")) map.setPaintProperty("mz-fill", "fill-opacity", opacidadMz());
+  if (map.getLayer("mun-fill")) map.setPaintProperty("mun-fill", "fill-opacity", opacidadMun());
+}
+/* `k` = el grupo; `e` = la escala que lo define (la del mapa si no se dice);
+   `niv` = el nivel donde se enciende (el que se está mirando si no se dice). */
+function enfocarClase(k, e, niv){
+  e = e || ESC;
+  if (k === null || k === undefined || !e || !e.clases){
+    FOCO.clase = null; FOCO.rango = null; FOCO.nivel = null;
+  } else {
+    FOCO.clase = k; FOCO.rango = rangoClase(e, k); FOCO.nivel = niv || nivel;
+  }
+  aplicarFoco();
+  marcarLeyenda();
+}
+function marcarLeyenda(){
+  document.querySelectorAll("#tm-bar .tm-c").forEach(x =>
+    x.classList.toggle("on", FOCO.fija && FOCO.nivel === nivel && FOCO.clase === +x.dataset.k));
+}
+/* La leyenda escucha UNA vez (sus casilleros se rehacen en cada pintado). */
+(function(){
+  const bar = document.getElementById("tm-bar");
+  if (!bar) return;
+  let encima = null;
+  const tipCasillero = k => {
+    const e = ESC, i = ind_actual, n = e.clases.length;
+    const fijo = FOCO.fija && FOCO.clase === k && FOCO.nivel === nivel;
+    return `<div class="pd">${nivel === "municipio" ? "Municipios" : e.local ? "Manzanas de la ciudad" : "Manzanas del país"}</div>
+      <div class="pn">${i.label}</div>
+      <div class="pind">grupo <b>${k + 1}</b> de ${n}</div>
+      <div class="pv"><span class="pchip" style="background:${e.clases[k]}"></span><b>${rangoClaseTxt(e, k, i)}</b></div>
+      <div class="pgr">${fijo ? "Tocá de nuevo para soltarlo." : "Tocá para dejarlo fijo en el mapa."}</div>`;
+  };
+  bar.addEventListener("mousemove", ev => {
+    const c = ev.target.closest(".tm-c");
+    if (!c || !ESC || !ESC.clases){ if (encima !== null){ encima = null; ocultarPop(); if (!FOCO.fija) enfocarClase(null); } return; }
+    const k = +c.dataset.k;
+    if (k !== encima){ encima = k; if (!FOCO.fija) enfocarClase(k); }
+    mostrarPop(tipCasillero(k), ev.clientX, ev.clientY);
+  });
+  bar.addEventListener("mouseleave", () => { encima = null; ocultarPop(); if (!FOCO.fija) enfocarClase(null); });
+  bar.addEventListener("click", ev => {
+    const c = ev.target.closest(".tm-c");
+    if (!c || !ESC || !ESC.clases) return;
+    const k = +c.dataset.k;
+    if (FOCO.fija && FOCO.clase === k && FOCO.nivel === nivel){ FOCO.fija = false; enfocarClase(null); }
+    else { FOCO.fija = true; enfocarClase(k); pista(nivel === "manzana" ? "foco" : "foco_mun"); }
+    encima = null;
+  });
+})();
 
 /* ── COMPARATIVO ENTRE MUNICIPIOS ────────────────────────────────────────────
    Barras horizontales, una por municipio, ordenadas por valor y pintadas con la
@@ -3851,218 +4401,13 @@ function comparativo(e, ind){
 
    Se dibuja a mano en SVG, igual que el comparativo y por la misma razón: son
    veinte puntos y una librería de gráficos costaría 200 KB por nada. */
-/* ── DISTRIBUCIÓN DENTRO DE CADA MUNICIPIO ───────────────────────────────
-   Lo que las barras de arriba NO pueden mostrar. El comparativo ordena los
-   nueve promedios; esto abre cada promedio y enseña de qué manzanas está hecho.
-
-   ★ POR QUÉ ESTÁ ACÁ, medido sobre las 38.892 manzanas: en 36 de los 59
-     indicadores la brecha DENTRO de un municipio (p90−p10) es mayor que todo
-     el rango ENTRE los nueve. O sea que en seis de cada diez casos el
-     comparativo está retratando la MENOR de las dos desigualdades.
-     El caso que lo resume: Santa Cruz de la Sierra tiene 63,9% de
-     alcantarillado con su decil de abajo en 0% y el de arriba en 100% — el
-     promedio municipal no describe a casi nadie.
-     Antes, este lugar del panel repetía nombre, valor y orden de las barras.
-
-   El eje es PROPIO y va rotulado: las distribuciones de manzana son mucho más
-   anchas que el rango de los nueve promedios, así que forzarlas al eje de
-   arriba las recortaría. El color sí es compartido — sale de la escala del
-   nivel manzana, que es la que pinta el mapa cuando bajás. */
-/* ★★ LA DISTRIBUCIÓN, EN DOS LECTURAS (2026-09-04).
-   Por defecto: DÓNDE CAE ESTO — el perfil de las 131.797 manzanas del país y,
-   encima, la caja del municipio elegido. Es la lectura que justifica el nivel
-   manzana y que hasta ahora estaba calculada y no se veía: la ficha de Santa
-   Cruz de la Sierra dice 70,4% de alcantarillado, pero un cuarto de sus
-   manzanas no llega a 13%.
-   A pedido: la tira municipio por municipio, que es la versión vieja y sigue
-   sirviendo para comparar cómo de parejo es cada uno. Se saca de la vista por
-   defecto porque son 277 filas. */
-function distribucion(ind){
-  if (!MZS || !ind.k_mz) return "";
-  const st = MZS[ind.k_mz];
-  if (!st || !st.esc) return "";
-  return VER_TODOS.dist ? distribucionMunicipios(ind) : perfilPais(ind, st);
-}
-
-/* Interpola un percentil sobre la rejilla de 51 cortes que publica
-   `estadisticas_manzana.py` (cada 2%). Sin esto habría que elegir el corte más
-   cercano y `p25` caería en 24% o 26%, que no es lo que dice el rótulo. */
-function cuantilQ(q, pr){
-  if (!q || !q.length) return null;
-  const h = (q.length - 1) * pr, b = Math.floor(h), r = h - b;
-  if (q[b] === null || q[b] === undefined) return null;
-  return b + 1 < q.length && q[b + 1] !== null ? q[b] + r * (q[b + 1] - q[b]) : q[b];
-}
-
-function perfilPais(ind, st){
-  const e = escalaManzana(ind);
-  const q = st.esc.q || [];
-  if (q.length < 10) return "";
-  const lo = st.esc.lo, hi = st.esc.hi, rango = (hi - lo) || 1;
-  const W = 100, LX = 2, VX = 98, HP = 15;          // HP: alto del perfil
-  const x = v => LX + Math.max(0, Math.min(1, (v - lo) / rango)) * (VX - LX);
-
-  /* ★ HISTOGRAMA DE CANASTAS FIJAS, NO DENSIDAD POR CUANTIL.
-     ⛔ El primer intento derivaba la altura de la distancia entre cortes vecinos
-        (entre dos siempre vive el 2% de las manzanas, así que densidad = 2% /
-        ancho). Es correcto en teoría y se ve VACÍO en la práctica: en indicadores
-        como alcantarillado la mitad de las manzanas está exactamente en 0% y otra
-        parte exactamente en 100%, así que casi todos los tramos tienen ancho cero,
-        la densidad se dispara y aplasta a las barras que sí se ven.
-     Acá el 2% de cada tramo se REPARTE entre las canastas que toca, y si el tramo
-     no tiene ancho —un apilamiento en un valor exacto— su 2% entero cae en una
-     sola canasta. Los apilamientos, que son la forma real de estos datos, quedan
-     como una barra alta en vez de romper la escala. */
-  const NB = 26, masa = new Array(NB).fill(0);
-  const canasta = v => Math.max(0, Math.min(NB - 1,
-    Math.floor(((v - lo) / rango) * NB)));
-  for (let i = 0; i < q.length - 1; i++){
-    if (q[i] === null || q[i + 1] === null) continue;
-    const a = Math.min(q[i], q[i + 1]), b = Math.max(q[i], q[i + 1]);
-    const ca = canasta(a), cb = canasta(b);
-    if (ca === cb || b - a <= 0){ masa[ca] += 1; continue; }
-    // repartido en proporción a lo que el tramo ocupa de cada canasta
-    for (let c = ca; c <= cb; c++){
-      const c0 = lo + (c / NB) * rango, c1 = lo + ((c + 1) / NB) * rango;
-      masa[c] += Math.max(0, Math.min(b, c1) - Math.max(a, c0)) / (b - a);
-    }
-  }
-  const tope = Math.max(...masa) || 1;
-  let s = "";
-  const anchoB = (VX - LX) / NB;
-  masa.forEach((mm, c) => {
-    if (mm <= 0) return;
-    const h = (mm / tope) * HP;
-    const v = lo + ((c + .5) / NB) * rango;
-    s += `<rect class="pf-c" data-c="${c}" x="${(LX + c * anchoB).toFixed(2)}" y="${(HP - h).toFixed(2)}"
-            width="${(anchoB - .12).toFixed(2)}" height="${h.toFixed(2)}"
-            fill="${tonoDe(e, v)}" fill-opacity=".9"/>`;
-  });
-  /* ★ (2026-10-30) CADA TRAMO SE SEÑALA: pasar el cursor (o tocar) enciende
-     en el mapa las manzanas de ese tramo y apaga el resto (`FOCO`). Es lo que
-     conecta el histograma con el mapa, igual que «cuánta gente vive en cada
-     color» en el tablero de la Gobernación. El primero y el último abarcan
-     también lo que la escala recorta por fuera. */
-  const totalM = masa.reduce((a, b) => a + b, 0) || 1;
-  PERFIL_ACT = {ind, lo, rango, NB, masa, totalM};
-  masa.forEach((mm, c) => {
-    if (mm <= 0) return;
-    s += `<rect class="pf-hit" data-c="${c}" x="${(LX + c * anchoB).toFixed(2)}" y="0"
-            width="${anchoB.toFixed(2)}" height="${HP}"/>`;
-  });
-  /* ⚠️ EL MISMO «PAÍS» QUE LA LEYENDA, y no el de `mz_stats`. Son dos números
-     distintos —el del microdato municipal y el promedio ponderado de las
-     manzanas— y verlos los dos en la misma pantalla con el mismo rótulo es
-     peor que no ver ninguno: en alcantarillado decían 47,9% y 65,8%. */
-  const _pais = ind.ref && ind.ref.pais != null ? ind.ref.pais : st.esc.piv;
-  const xp = x(_pais);
-  s += `<line x1="${xp}" y1="0" x2="${xp}" y2="${HP + 3}" class="pf-piv"/>`;
-  s += `<text x="${xp}" y="${HP + 6.5}" class="pf-piv-t" text-anchor="${
-        xp > 70 ? "end" : xp < 30 ? "start" : "middle"}">país ${fmtM(_pais, ind)}</text>`;
-
-  // ── la caja del municipio elegido, sobre el mismo eje ────────────────────
-  const m = sel ? MUN.find(z => z.sigep === sel) : null;
-  const d = m && st.dist ? st.dist[m.sigep] : null;
-  let alto = HP + 9, frase = "";
-  if (d){
-    const y = HP + 11;
-    alto = y + 11;
-    s += `<line x1="${x(d.min)}" y1="${y + 3}" x2="${x(d.max)}" y2="${y + 3}" class="pf-rango"/>`;
-    s += `<line x1="${x(d.p10)}" y1="${y + 3}" x2="${x(d.p90)}" y2="${y + 3}" class="ds-w"/>`;
-    s += `<rect x="${x(d.p25)}" y="${y + .8}" width="${Math.max(.6, x(d.p75) - x(d.p25))}"
-            height="4.4" fill="${tonoDe(e, d.p50)}" stroke="${SENAL}" stroke-width=".5"/>`;
-    s += `<line x1="${x(d.p50)}" y1="${y + .2}" x2="${x(d.p50)}" y2="${y + 5.6}" class="ds-med"/>`;
-    s += `<text x="${LX}" y="${y + 10}" class="ds-ax">${nombreCorto(m.nombre)} · ${
-            nf(d.n, 0)} manzanas con ficha</text>`;
-    /* La frase dice lo que la caja muestra. Es el hallazgo del nivel manzana:
-       una cifra municipal puede esconder un cuarto del municipio en otra
-       realidad, y eso no se lee en ningún otro producto del ecosistema. */
-    /* ⚠️ La cola de arriba se dice distinto cuando el p75 YA ES el máximo, que
-       en los indicadores de servicios pasa todo el tiempo: «el cuarto más alto
-       pasa de 100%» no significa nada. */
-    const techo = d.p75 >= d.max - 1e-9;
-    frase = `<div class="pf-frase">La mitad de las manzanas de <b>${m.nombre}</b> está entre
-      <b>${fmtM(d.p25, ind)}</b> y <b>${fmtM(d.p75, ind)}</b>; el cuarto más bajo no llega a
-      <b>${fmtM(d.p25, ind)}</b>${techo
-        ? ` y un cuarto está en <b>${fmtM(d.p75, ind)}</b>`
-        : ` y el más alto supera <b>${fmtM(d.p75, ind)}</b>`}.</div>`;
-  } else {
-    const p25 = cuantilQ(q, .25), p50 = cuantilQ(q, .5), p75 = cuantilQ(q, .75);
-    if (p25 !== null)
-      frase = `<div class="pf-frase">La mitad de las manzanas del país está entre
-        <b>${fmtM(p25, ind)}</b> y <b>${fmtM(p75, ind)}</b>, con la mediana en
-        <b>${fmtM(p50, ind)}</b>. Elegí un municipio para ver cómo se reparte adentro.</div>`;
-  }
-  const boton = st.dist && Object.keys(st.dist).length > 1
-    ? `<button class="ver-mas" data-ver="dist">ver municipio por municipio (${
-        nf(Object.keys(st.dist).length, 0)})</button>` : "";
-  return `<section class="sec"><div class="cmp-t">Dónde cae en el país<span>${nf(st.esc.n, 0)} manzanas con ficha</span></div>
-    <p class="sec-q">Cada barra junta las manzanas del país con ese valor, en el color del mapa. Pasá el cursor por una barra —o tocala— para encontrarlas en el mapa.</p>
-    <svg class="cmp pf" id="pf-svg" viewBox="0 0 ${W} ${alto}" preserveAspectRatio="xMidYMin meet">${s}</svg>
-    <div class="pf-ax"><span>${fmtM(lo, ind)}</span><span>${fmtM(hi, ind)}</span></div>
-    ${frase}${boton}</section>`;
-}
-/* La inversa del mapeo, para saber qué valor pintar en cada tramo del perfil. */
-function invX(px, lo, rango, LX, VX){ return lo + ((px - LX) / (VX - LX)) * rango; }
-
-function distribucionMunicipios(ind){
-  if (!MZS || !ind.k_mz) return "";
-  const st = MZS[ind.k_mz];
-  if (!st || !st.dist) return "";
-  const eMz = escalaManzana(ind);
-  /* ⚠️ EL MISMO ORDEN QUE EL COMPARATIVO, no el propio. Ordenar por mediana
-     parecía lo natural, pero deja las filas de arriba y las de abajo
-     desalineadas y entonces hay que buscar cada municipio dos veces: se pierde
-     justo la lectura que motiva la tira —cuánto arriba, qué tan parejo
-     abajo—. Con el orden compartido, cada fila se lee en vertical. */
-  const filas = MUN.map(m => ({m, d: st.dist[m.sigep], v: valorParaMini(m, ind)}))
-    .filter(f => f.d)
-    .sort((a, b) => (b.v === null ? -Infinity : b.v) - (a.v === null ? -Infinity : a.v));
-  if (filas.length < 2) return "";
-
-  const lo = Math.min(...filas.map(f => f.d.p10));
-  const hi = Math.max(...filas.map(f => f.d.p90));
-  const rango = (hi - lo) || 1;
-  const H = 11.5, W = 100, LX = 35, VX = 82;
-  const alto = filas.length * H + 11;
-  const x = v => LX + ((v - lo) / rango) * (VX - LX);
-
-  let s = "";
-  filas.forEach((f, k) => {
-    const y = k * H + 3, d = f.d, sel_ = f.m.sigep === sel;
-    const corto = f.m.nombre.length > 16 ? f.m.nombre.slice(0, 15) + "…" : f.m.nombre;
-    s += `<text x="0" y="${y + 5.4}" class="cmp-n${sel_ ? " sel" : ""}">${corto}</text>`;
-    const x10 = x(d.p10), x25 = x(d.p25), x50 = x(d.p50), x75 = x(d.p75), x90 = x(d.p90);
-    // bigote p10–p90: el 80% central de las manzanas del municipio
-    s += `<line x1="${x10}" y1="${y + 4}" x2="${x90}" y2="${y + 4}" class="ds-w"/>`;
-    s += `<line x1="${x10}" y1="${y + 1.8}" x2="${x10}" y2="${y + 6.2}" class="ds-w"/>`;
-    s += `<line x1="${x90}" y1="${y + 1.8}" x2="${x90}" y2="${y + 6.2}" class="ds-w"/>`;
-    // caja p25–p75, con el tono que le toca a la mediana en el mapa
-    s += `<rect x="${x25}" y="${y + 1.2}" width="${Math.max(.5, x75 - x25)}" height="5.6"
-            fill="${tonoDe(eMz, d.p50)}" fill-opacity="${sel_ ? .95 : .72}"
-            ${sel_ ? `stroke="${SENAL}" stroke-width="0.7"` : ""}/>`;
-    s += `<line x1="${x50}" y1="${y + .6}" x2="${x50}" y2="${y + 7.4}" class="ds-med"/>`;
-    // la brecha es el dato nuevo: cuánto separa al decil de arriba del de abajo
-    s += `<text x="${W}" y="${y + 5.4}" class="ds-g" text-anchor="end">${
-            nf(d.p90 - d.p10, 0)}<tspan class="ds-u"> ${unidadDif(ind.unit)}</tspan></text>`;
-    /* Con las tarjetas fuera, el panel se quedaba sin manera de elegir un
-       municipio sin ir al mapa. La fila entera es el blanco. */
-    s += `<rect x="0" y="${y}" width="${W}" height="${H - .5}" class="ds-hit"
-            data-s="${f.m.sigep}"><title>${f.m.nombre}: la mitad de sus manzanas está entre ${
-            fmtM(d.p25, ind)} y ${fmtM(d.p75, ind)}</title></rect>`;
-  });
-  // los extremos del eje, porque no es el mismo que el de las barras
-  const yb = filas.length * H + 8;
-  s += `<text x="${LX}" y="${yb}" class="ds-ax">${fmtM(lo, ind)}</text>`
-     + `<text x="${VX}" y="${yb}" class="ds-ax" text-anchor="end">${fmtM(hi, ind)}</text>`;
-  return `<section class="sec"><div class="cmp-t">Cómo se reparte dentro de cada uno<span>${
-      nf(st.esc.n, 0)} manzanas con ficha</span></div>
-    <svg class="cmp" viewBox="0 0 ${W} ${alto}" preserveAspectRatio="xMidYMin meet">${s}</svg>
-    <div class="ds-ley"><span class="ds-k1"></span>80% central de las manzanas
-      <span class="ds-k2"></span>mitad más común <span class="ds-k3"></span>mediana</div>
-    <button class="ver-mas" data-ver="dist">volver al perfil del país</button></section>`;
-}
-
+/* ✂ (2026-10-31) SE FUERON «DÓNDE CAE EN EL PAÍS» (el histograma de las
+   manzanas del país con la caja del municipio) y «CÓMO SE REPARTE DENTRO DE
+   CADA UNO» (la tira de 277 filas). Con los deciles, cada color junta la misma
+   cantidad de manzanas del país: el histograma salía parejo por construcción.
+   Su lugar lo ocupa «cuánta gente vive en cada color» (`gentePorColorHTML`),
+   que muestra lo mismo —cómo se reparte un lugar entre los grupos— para el país
+   y para los lugares del ámbito, y que también enciende su grupo en el mapa. */
 function serieDe(sigep, ind){
   const e = FIS.entidades[sigep];
   const s = e && e.s && e.s[ind.k_mun];
@@ -4179,15 +4524,18 @@ function ficha(e, i){
        cae en el país (que enciende su tramo en el mapa) y la guía al pie. */
     document.getElementById("cifra").innerHTML = cifraHTML(e, i);
     /* Sin «comparar con», no hay segundo indicador: queda la mancuerna cuando hay
-       dos censos y las barras cuando no. */
+       dos censos y las barras cuando no.
+       ★ (2026-10-31) las barras comparan dentro de un ÁMBITO —departamentos,
+       provincias de uno, municipios de una provincia— y ya no recorren los 343
+       (pedido de Carlos). */
     document.getElementById("cmp").innerHTML =
-      (i.s12 && i.fuente !== "fiscal" && i.k_mun) ? mancuerna(e, i) : comparativoForonda(e, i);
-    /* La distribución va SIEMPRE que el indicador baje a manzana: es la lectura
-       que el panel no tenía. Con un municipio elegido queda resaltado, así que
-       sirve igual en los dos estados. */
-    document.getElementById("dist").innerHTML = distribucion(i);
+      (i.s12 && i.fuente !== "fiscal" && i.k_mun) ? mancuerna(e, i) : comparacionHTML(e, i);
+    /* ★ (2026-10-31) «cuánta gente vive en cada color» reemplaza al histograma
+       «dónde cae en el país»: con deciles cada color junta la misma cantidad
+       de manzanas, y lo que cambia de un lugar a otro es cuánta de su gente
+       vive en cada uno. Mismas filas que la comparación. */
+    document.getElementById("dist").innerHTML = gentePorColorHTML(i);
     document.getElementById("guia").innerHTML = guiaHTML(e, i);
-    activarPerfil();
   }
   document.getElementById("kg-h").innerHTML = "";
   if (sel){
@@ -4206,14 +4554,23 @@ function ficha(e, i){
        `ambito` de la región metropolitana. A escala nacional ese campo no
        existe, así que los 343 salían rotulados «Área de influencia». Lo que
        ubica a un municipio en el país es su DEPARTAMENTO. */
-    document.getElementById("d-sub").textContent = m.dpto || "";
+    /* ★ (2026-10-31) y su PROVINCIA, que es el ámbito en que lo compara el panel */
+    const _pv = TERR && m.prov && TERR.provs[m.prov];
+    document.getElementById("d-sub").textContent =
+      (_pv && _pv.munis.length > 1 ? "Provincia " + _pv.nombre + " · " : "") + (m.dpto || "");
     document.getElementById("kg-h").innerHTML =
       `<section class="sec"><div class="cmp-t">${cat_actual.label} en ${nombreCorto(m.nombre)}<span>contra el país</span></div>
        <p class="sec-q">Todos los indicadores de la categoría para este municipio. Tocá uno para verlo en el mapa.</p></section>`;
     g.innerHTML = cat_actual.indicadores.filter(x => x.k_mun).map((x, n) => {
       const sinSerie = mudo(x);
       const v = valorMunicipal(m, x);
-      const ref = sinSerie ? null : refRegion(x);
+      let ref = sinSerie ? null : refRegion(x);
+      /* ★ (2026-10-31) los 17 que sólo existen por manzana tienen ahora su cifra
+         del país —la suma de las manzanas urbanas— y dejan de decir «país s/d» */
+      if (!sinSerie && (!ref || ref.v === null || ref.v === undefined)){
+        const rp = refPais(x);
+        if (rp !== null) ref = {v: rp, tipo: "país"};
+      }
       let comp;
       if (sinSerie)
         comp = `<span class="k-w">${motivoSinSerie(x)}</span>`;
@@ -4232,11 +4589,25 @@ function ficha(e, i){
     }).join("");
   } else {
     document.getElementById("serie").innerHTML = "";
-    document.getElementById("d-mun").textContent = "Bolivia";
     // ✂ Y ACÁ TAMPOCO VA LA POBLACIÓN. Es el MISMO renglón que el del municipio
     //   elegido: dejar el total de la región mientras el municipio ya no lo
     //   muestra parte el criterio en dos dentro del mismo elemento.
-    document.getElementById("d-sub").textContent = `${MUN.length} municipios`;
+    /* ★ (2026-10-31) sin municipio elegido, el encabezado nombra el ÁMBITO que
+       tiene abierto la comparación: el país, un departamento o una provincia. */
+    const _a = typeof ambitoEfectivo === "function" ? ambitoEfectivo() : {nivel: "pais"};
+    if (TERR && _a.nivel === "dpto"){
+      const d = TERR.dptos[_a.dpto];
+      document.getElementById("d-mun").textContent = d.nombre;
+      document.getElementById("d-sub").textContent = `${d.provs.length} provincias · ${d.munis.length} municipios`;
+    } else if (TERR && _a.nivel === "prov"){
+      const p = TERR.provs[_a.prov];
+      document.getElementById("d-mun").textContent = "Provincia " + p.nombre;
+      document.getElementById("d-sub").textContent = `${TERR.dptos[p.dpto].nombre} · ${p.munis.length} municipios`;
+    } else {
+      document.getElementById("d-mun").textContent = "Bolivia";
+      document.getElementById("d-sub").textContent = TERR
+        ? `${Object.keys(TERR.dptos).length} departamentos · ${MUN.length} municipios` : `${MUN.length} municipios`;
+    }
     /* ⚠️ ACÁ HABÍA NUEVE TARJETAS QUE REPETÍAN LAS BARRAS: mismo municipio,
        mismo valor, mismo orden, y de nuevo el nombre. Lo único que agregaban
        era el ámbito y el conteo de manzanas.
@@ -4296,15 +4667,13 @@ function ficha(e, i){
   const _lam = document.getElementById("lamina");
   if (_lam) _lam.innerHTML = pastillaLamina(i);
   g.querySelectorAll(".kpi[data-s]").forEach(el => el.onclick = () => seleccionar(el.dataset.s));
-  document.querySelectorAll("#dist .ds-hit").forEach(el =>
-    el.onclick = () => seleccionar(el.dataset.s));
   /* Cada fila de la mancuerna elige su municipio, igual que hacían las tarjetas
      que reemplazó: si no, sacarlas le quitaba al panel una forma de navegar. */
   document.querySelectorAll("#cmp .mc-hit").forEach(el =>
     el.onclick = () => seleccionar(el.dataset.s));
-  /* Abrir o cerrar la lista completa vuelve a pintar el panel entero: el estado
-     vive en `VER_TODOS` y no en el DOM, así que sobrevive a cualquier otro
-     cambio (indicador, año, municipio) sin que haya que acordarse de restaurarlo. */
+  /* ✂ (2026-10-31) se fueron «ver los 343 ordenados» y «ver municipio por
+     municipio (277)»: las barras comparan dentro de un ámbito y sus oyentes
+     viven, una sola vez, en el contenedor del panel. */
   const _ce = document.getElementById("tm-esc");
   if (_ce) _ce.querySelectorAll("button").forEach(b => b.onclick = ev => {
     ev.stopPropagation();
@@ -4313,8 +4682,6 @@ function ficha(e, i){
     ESC_LOCAL = nuevo;
     pintar();
   });
-  document.querySelectorAll("#cmp .ver-mas, #dist .ver-mas").forEach(el =>
-    el.onclick = () => { VER_TODOS[el.dataset.ver] = !VER_TODOS[el.dataset.ver]; pintar(); });
   g.querySelectorAll(".kpi[data-k]").forEach(el => el.onclick = () => elegirIndicador(el.dataset.k));
   /* Clicar un año del gráfico hace lo mismo que su botón de gestión. Con eso
      cada valor de la serie se alcanza SIN hover —al fijar la gestión, la cifra
@@ -4357,6 +4724,11 @@ let _saltarSeguir = false;
 function seleccionar(s, op){
   op = op || {};
   sel = op.seguir ? s : (sel === s ? null : s);
+  /* ★ (2026-10-31) el ámbito de la comparación vuelve a seguir a la selección
+     (la provincia del elegido), salvo que el municipio se haya tocado EN la
+     lista del panel: ahí el lector está recorriendo ese ámbito y no se le
+     cambia la lista de abajo. */
+  if (typeof AMB !== "undefined" && !op.seguir && !op.desdePanel){ AMB.auto = true; AMB.irA = null; }
   if (map && map.getSource("mun")) map.setFilter("mun-sel", ["==", ["get", "sigep"], sel || ""]);
   if (!op.seguir){
     if (sel) encuadrarMunicipio(MUN.find(x => x.sigep === sel));
@@ -4535,9 +4907,9 @@ function tooltipHTML(p, esMz){
     const ref = m && m.urbano ? m.urbano[i.k_mz] : null;
     if (hay && ref !== null && ref !== undefined && isFinite(ref))
       filas += `<div class="pr"><span>urbano de ${m.nombre}</span><span><b>${fmt(ref, i.unit)}</b> ${flecha(v - ref, i.unit)}</span></div>`;
-    const q = hay && e ? percentilRejilla(e.q, v) : null;
+    const q = hay && e && !e.local ? percentilRejilla(e.q, v) : null;
     if (q !== null)
-      filas += `<div class="pr"><span>en la región</span><span>supera al <b>${nf(Math.round(q * 100), 0)}%</b> de las manzanas</span></div>`;
+      filas += `<div class="pr"><span>en el país</span><span>supera al <b>${nf(Math.round(q * 100), 0)}%</b> de las manzanas</span></div>`;
     if (!hay)
       nota = "Sin ficha. El INE no publica los datos de las manzanas más chicas, por privacidad.";
   } else {
@@ -4561,10 +4933,15 @@ function tooltipHTML(p, esMz){
         if (r && r.v !== null)
           filas += `<div class="pr"><span>${r.tipo}</span><span><b>${fmtM(r.v, i)}</b> ${flecha(v - r.v, uMode(i))}</span></div>`;
       } else {
-        // el pivote se recorta para no degenerar la rampa: la diferencia se mide
-        // contra el REAL, o el tooltip informa una brecha que no existe
-        const pr = e.pivReal != null ? e.pivReal : e.piv;
-        filas += `<div class="pr"><span>${e.tipo}</span><span><b>${fmtM(pr, i)}</b> ${flecha(v - pr, uMode(i))}</span></div>`;
+        /* ★ (2026-10-31) contra el PAÍS y contra su DEPARTAMENTO, con su
+           diferencia. Antes decía «centro», que era el punto de diseño de la
+           rampa continua y no una cifra de nada. */
+        const rp = refPais(i);
+        if (rp !== null)
+          filas += `<div class="pr"><span>país</span><span><b>${fmtM(rp, i)}</b> ${esConteo(i) ? "" : flecha(v - rp, uMode(i))}</span></div>`;
+        const dd = TERR && m.dcod ? TERR.dptos[m.dcod] : null, vd = dd ? valorTerr(dd, i) : null;
+        if (vd !== null && !esConteo(i))
+          filas += `<div class="pr"><span>${dd.nombre}</span><span><b>${fmtM(vd, i)}</b> ${flecha(v - vd, uMode(i))}</span></div>`;
       }
       /* ✂ SE FUE EL PUESTO (pedido de Carlos, 2026-08-26). Decía «3.º más alto
          de 9» y convertía una comparación en un RANKING: pone a los municipios
@@ -4578,15 +4955,21 @@ function tooltipHTML(p, esMz){
   const kicker = i.label
     + (i.fuente === "fiscal" && ANIO === "2024" ? ` · ${FIS.anios[anio_i]}` : "")
     + (ANIO === "2012" ? " · censo 2012" : ANIO === "cambio" ? " · cambio 2012→2024" : "");
+  /* la rampa del mapa en miniatura, con la marca donde cae: con deciles, en
+     casilleros, y debajo en qué grupo cae */
   const rampa = hay && e
-    ? `<div class="pramp" style="background:linear-gradient(to right,${e.tonos.join(",")})">
-         <i style="left:${(posEnRampa(e, v) * 100).toFixed(1)}%"></i></div>`
+    ? `<div class="pramp" style="background:${fondoRampa(e)}">
+         <i style="left:${(posDibujada(e, v) * 100).toFixed(1)}%"></i></div>`
+    : "";
+  const grupo = hay && e && e.clases
+    ? `<div class="pgr">grupo <b>${claseDe(v, e.dec.cortes) + 1}</b> de ${e.clases.length} · ${
+        esMz ? (e.local ? "entre las manzanas de la ciudad" : "entre las manzanas del país") : `entre los ${MUN.length} municipios`}</div>`
     : "";
   return `<div class="pn">${nom}</div><div class="pd">${sub}</div>
     <div class="pind">${kicker}</div>
     <div class="pv"><span class="pchip" style="background:${tonoDe(e, v)}"></span>
       <b>${hay ? fmtM(v, i) : "s/d"}</b></div>
-    ${rampa}${mcHTML}${filas}${nota ? `<div class="pnota">${nota}</div>` : ""}`;
+    ${rampa}${grupo}${mcHTML}${filas}${nota ? `<div class="pnota">${nota}</div>` : ""}`;
 }
 /* Sigue al cursor y se planta del otro lado cuando no entra: contra el borde
    derecho o el inferior, un tooltip anclado siempre abajo-a-la-derecha se sale
@@ -4742,176 +5125,450 @@ const difTxtR = (d, i) => (d > 0 ? "+" : d < 0 ? "−" : "±") + nf(Math.abs(d),
 const claseDif = (d, i) => !i.dir || Math.abs(d) < .05 ? "igual" : (d > 0) === (i.dir >= 0) ? "arriba" : "abajo";
 
 /* ── 1 · LA CIFRA ─────────────────────────────────────────────────────────
-   Lo que se está mirando, arriba de todo: el indicador, el valor (del
-   municipio elegido o del país), contra qué se lee, y qué pinta el mapa en
-   ese momento. Antes el panel abría directo en las barras y la cifra del país
-   había que buscarla en el encabezado del gráfico. */
+   Lo que se está mirando, arriba de todo: el indicador, el valor, contra qué
+   se lee, y qué pinta el mapa en ese momento.
+   ★ (2026-10-31) el valor es el del lugar que se está mirando: el municipio
+   elegido, o la provincia o el departamento que tiene abierto la comparación,
+   o el país. Y debajo, sus ámbitos: un municipio se lee también contra su
+   provincia y su departamento, no sólo contra el país. */
+function lugarActual(i){
+  const a = ambitoEfectivo();
+  const m = sel ? MUN_POR[sel] : null;
+  if (m) return {tipo: "mun", nombre: m.nombre, v: valorParaMini(m, i), m};
+  if (a.nivel === "prov" && TERR) { const p = TERR.provs[a.prov]; return {tipo: "prov", nombre: "Provincia " + p.nombre, v: valorTerr(p, i), p}; }
+  if (a.nivel === "dpto" && TERR) { const d = TERR.dptos[a.dpto]; return {tipo: "dpto", nombre: d.nombre, v: valorTerr(d, i), d}; }
+  return {tipo: "pais", nombre: "Bolivia", v: refPais(i)};
+}
 function cifraHTML(e, i){
-  const rg = refRegion(i), rv = rg && rg.v !== null && isFinite(rg.v) ? rg.v : null;
-  const m = sel ? MUN.find(x => x.sigep === sel) : null;
-  const v = m ? valorParaMini(m, i) : rv;
+  const rv = refPais(i);
+  const L = lugarActual(i), v = L.v;
   let ctx;
-  if (m){
-    if (rv === null || v === null || !isFinite(v)) ctx = `<b>${m.nombre}</b>${m.dpto ? " · " + m.dpto : ""}`;
-    else if (esConteo(i)) ctx = `<b>${m.nombre}</b> · el <b>${nf(100 * v / rv, 1)}%</b> del país`;
-    else {
-      const d = v - rv;
-      ctx = `<b>${m.nombre}</b> · país ${fmtM(rv, i)}<span class="c-dif ${claseDif(d, i)}">${difTxtR(d, i)}</span>`;
-    }
-  } else ctx = `<b>Bolivia</b> · ${i.k_mun ? `los ${MUN.length} municipios, urbano y rural` : "la suma de las manzanas urbanas"}`;
+  if (L.tipo === "pais") ctx = `<b>Bolivia</b> · ${i.k_mun && !i.solo_mz ? `los ${MUN.length} municipios, urbano y rural` : "la suma de las manzanas urbanas"}`;
+  else if (rv === null || v === null || v === undefined || !isFinite(v)) ctx = `<b>${L.nombre}</b>`;
+  else if (esConteo(i)) ctx = `<b>${L.nombre}</b> · el <b>${nf(100 * v / rv, 1)}%</b> del país`;
+  else {
+    const d = v - rv;
+    ctx = `<b>${L.nombre}</b> · país ${fmtM(rv, i)}<span class="c-dif ${claseDif(d, i)}">${difTxtR(d, i)}</span>`;
+  }
+  /* los ámbitos de arriba, con su cifra: provincia y departamento */
+  const arriba = [];
+  if (TERR && !esConteo(i)){
+    const pc = L.tipo === "mun" ? L.m.prov : L.tipo === "prov" ? L.p.cod : null;
+    const dc = L.tipo === "mun" ? L.m.dcod : L.tipo === "prov" ? L.p.dpto : null;
+    if (L.tipo === "mun" && pc && TERR.provs[pc] && TERR.provs[pc].munis.length > 1)
+      arriba.push(`<button type="button" class="c-amb" data-amb="prov:${pc}">prov. ${TERR.provs[pc].nombre} <b>${fmtM(valorTerr(TERR.provs[pc], i), i)}</b></button>`);
+    if (dc && TERR.dptos[dc])
+      arriba.push(`<button type="button" class="c-amb" data-amb="dpto:${dc}">${TERR.dptos[dc].nombre} <b>${fmtM(valorTerr(TERR.dptos[dc], i), i)}</b></button>`);
+  }
+  const loc = ESC && ESC.local ? (MUN_POR[sel] || {}).nombre : null;
   const mapa = nivel === "manzana"
-    ? "Cada manzana tiene el color de su propio valor; las grises son las que el INE no publica. Alejá el mapa para volver a los municipios."
-    : `El mapa muestra los ${MUN.length} municipios. Acercá el mapa a una ciudad —o buscá un municipio— para ver cada manzana.`;
+    ? (loc ? `Cada manzana tiene el color de su grupo entre las de <b>${loc}</b>; las grises son las que el INE no publica.`
+           : "Cada manzana tiene el color de su grupo entre las del país; las grises son las que el INE no publica. Alejá el mapa para volver a los municipios.")
+    : `El mapa reparte los ${MUN.length} municipios en grupos con la misma cantidad cada uno. Acercá el mapa a una ciudad —o buscá un municipio— para ver cada manzana.`;
   return `<div class="c-k">${cat_actual ? cat_actual.label : ""}</div><div class="c-t">${i.label}</div>
     <div class="c-fila"><div class="c-v">${v === null || v === undefined || !isFinite(v) ? "s/d" : fmtM(v, i)}</div>
-      <div class="c-c">${ctx}</div></div><p class="c-mapa">${mapa}</p>`;
+      <div class="c-c">${ctx}</div></div>${arriba.length ? `<div class="c-arr">${arriba.join("")}</div>` : ""}
+    <p class="c-mapa">${mapa}</p>`;
 }
 
-/* ── 2 · LA COMPARACIÓN ENTRE MUNICIPIOS ──────────────────────────────────
-   La misma lista corta de siempre (`recorte`: las puntas del país y el
-   vecindario del elegido, con el recorte DICHO), dibujada como en el tablero
-   de la Gobernación: barras gruesas de UN tono, casi pegadas, y la tapa de
-   cada una unida a la de la vecina por un escalón, así el contorno se lee
-   como una sola línea. Antes cada barra iba en el color de la rampa: largo y
-   color decían dos veces lo mismo. El elegido, en tono pleno y con el ámbar
-   del contorno del mapa. El país, punteado y sin rótulo: su cifra va arriba. */
-function comparativoForonda(e, ind){
-  const todas = filasComparativo(ind);
-  const con = todas.filter(f => f.v !== null && isFinite(f.v));
-  if (!con.length) return `<div class="sin">${mudo(ind) ? motivoSinSerie(ind) : "Sin datos para este indicador."}</div>`;
-  const filas = VER_TODOS.cmp ? con.map((f, k) => Object.assign({pos: k + 1}, f)) : recorte(todas).filas;
-  const pais = ind.ref && ind.ref.pais != null ? ind.ref.pais : ((refRegion(ind) || {}).v);
-  const hayPais = pais !== null && pais !== undefined && isFinite(pais);
+/* ── 2 · EL ÁMBITO DE LA COMPARACIÓN (2026-10-31) ─────────────────────────
+   Pedido de Carlos: «que en el panel derecho las barras sean por municipio
+   y/o provincia, no que salgan la lista de los 343 municipios». La comparación
+   ya no recorre el país municipio por municipio: compara DENTRO de un ámbito,
+   que se baja como una escalera —Bolivia › departamento › provincia—:
+     · en Bolivia, los 9 departamentos;
+     · en un departamento, sus provincias (o, a pedido, sus municipios);
+     · en una provincia, sus municipios.
+   Tocar una barra baja un escalón (y el mapa va a ese lugar); la miga de
+   arriba sube. Con un municipio elegido, el ámbito es SU provincia —o su
+   departamento, si la provincia es de un solo municipio—, con él marcado.
+   Las cifras de provincia y departamento salen de `territorios.json`
+   (`scripts/agregados_territoriales.py`), calculadas como la del país. */
+const AMB = {auto: true, irA: null, nivel: "pais", dpto: null, prov: null, lista: "provs"};
+let MUN_POR = {};
+function armarTerritorios(t){
+  MUN_POR = {};
+  MUN.forEach(m => { MUN_POR[m.sigep] = m; });
+  if (!t) return null;
+  const idx = {}, dptos = {}, provs = {};
+  t.claves.forEach((k, j) => { idx[k] = j; });
+  t.dptos.forEach(d => { dptos[d.cod] = Object.assign(d, {provs: [], munis: [], tipo: "dpto"}); });
+  t.provs.forEach(p => {
+    provs[p.cod] = Object.assign(p, {munis: [], tipo: "prov"});
+    if (dptos[p.dpto]) dptos[p.dpto].provs.push(p.cod);
+  });
+  MUN.forEach(m => {
+    const pc = t.mun[m.sigep];
+    m.prov = pc || null;
+    m.dcod = pc ? pc.slice(0, 2) : (m.cod_ine || "").slice(0, 2);
+    if (provs[pc]) provs[pc].munis.push(m.sigep);
+    if (dptos[m.dcod]) dptos[m.dcod].munis.push(m.sigep);
+  });
+  // la caja de cada uno, para ir a él: la suma de las de sus municipios
+  const caja = sigeps => {
+    let c = null;
+    sigeps.forEach(s => {
+      const m = MUN_POR[s], b = m && m.geom ? bboxDe(m.geom.geometry.coordinates) : null;
+      if (!b) return;
+      c = c ? [[Math.min(c[0][0], b[0][0]), Math.min(c[0][1], b[0][1])], [Math.max(c[1][0], b[1][0]), Math.max(c[1][1], b[1][1])]] : b;
+    });
+    return c;
+  };
+  Object.values(dptos).forEach(d => { d.caja = caja(d.munis); });
+  Object.values(provs).forEach(p => { p.caja = caja(p.munis); });
+  return {idx, dptos, provs, pais: t.pais || {}};
+}
+function valorTerr(o, i){
+  if (!o || !TERR) return null;
+  const j = TERR.idx[i.key], v = j === undefined ? null : o.v[j];
+  return v === null || v === undefined || !isFinite(v) ? null : v;
+}
+function ambitoEfectivo(){
+  if (!TERR) return {nivel: "pais", dpto: null, prov: null, lista: "provs"};
+  if (!AMB.auto) return AMB;
+  const m = sel ? MUN_POR[sel] : null;
+  if (m && m.prov && TERR.provs[m.prov]){
+    const p = TERR.provs[m.prov];
+    return p.munis.length >= 2 ? {nivel: "prov", dpto: p.dpto, prov: p.cod, lista: "provs"}
+                               : {nivel: "dpto", dpto: p.dpto, prov: p.cod, lista: "provs"};
+  }
+  if (AMB.irA && TERR.dptos[AMB.irA]) return {nivel: "dpto", dpto: AMB.irA, prov: null, lista: AMB.lista};
+  return {nivel: "pais", dpto: null, prov: null, lista: "provs"};
+}
+/* Las filas del ámbito: los hijos del escalón en el que se está. */
+function filasAmbito(i, a){
+  if (!TERR) return [];
+  if (a.nivel === "pais")
+    return Object.values(TERR.dptos).map(d => ({tipo: "dpto", cod: d.cod, nombre: d.nombre, v: valorTerr(d, i), o: d}));
+  if (a.nivel === "dpto" && a.lista !== "munis")
+    return TERR.dptos[a.dpto].provs.map(c => TERR.provs[c])
+      .map(p => ({tipo: "prov", cod: p.cod, nombre: p.nombre, v: valorTerr(p, i), o: p}));
+  const munis = a.nivel === "dpto" ? TERR.dptos[a.dpto].munis : TERR.provs[a.prov].munis;
+  return munis.map(s => MUN_POR[s]).filter(Boolean)
+    .map(m => ({tipo: "mun", cod: m.sigep, nombre: m.nombre, v: valorParaMini(m, i), o: m}));
+}
+function ordenarFilas(filas){
+  return filas.slice().sort((a, b) => (b.v === null ? -Infinity : b.v) - (a.v === null ? -Infinity : a.v)
+                                    || a.nombre.localeCompare(b.nombre, "es"));
+}
+/* ¿Esta fila es (o contiene) el municipio elegido? */
+function filaElegida(f){
+  const m = sel ? MUN_POR[sel] : null;
+  if (!m) return false;
+  return f.tipo === "mun" ? f.cod === sel : f.tipo === "prov" ? f.cod === m.prov : f.cod === m.dcod;
+}
+function nombreAmbito(a){
+  if (a.nivel === "pais") return "Bolivia";
+  if (a.nivel === "dpto") return TERR.dptos[a.dpto].nombre;
+  return "Provincia " + TERR.provs[a.prov].nombre;
+}
+/* La miga: Bolivia › departamento › provincia. El escalón activo en negrita;
+   los demás se tocan para subir (o bajar, si hay un municipio elegido). */
+function migaHTML(a){
+  const m = sel ? MUN_POR[sel] : null;
+  const dc = a.dpto || (m && m.dcod), pc = a.prov || (m && m.prov);
+  const pasos = [["pais", "", "Bolivia"]];
+  if (dc && TERR.dptos[dc]) pasos.push(["dpto", dc, TERR.dptos[dc].nombre]);
+  if (pc && TERR.provs[pc] && TERR.provs[pc].munis.length >= 2) pasos.push(["prov", pc, TERR.provs[pc].nombre]);
+  return `<nav class="amb-m" aria-label="Ámbito de la comparación">${pasos.map(([t, c, n]) => {
+    const on = t === a.nivel && (t === "pais" || c === (t === "dpto" ? a.dpto : a.prov));
+    return `<button type="button" class="amb-c${on ? " on" : ""}" data-amb="${t}:${c}"${on ? ' aria-current="true"' : ""}>${n}</button>`;
+  }).join('<span class="amb-s" aria-hidden="true">›</span>')}</nav>`;
+}
+function comparacionHTML(e, ind){
+  const a = ambitoEfectivo();
+  if (!TERR) return comparativoForondaViejo(e, ind);
+  const filas = ordenarFilas(filasAmbito(ind, a));
+  const con = filas.filter(f => f.v !== null && isFinite(f.v));
+  const pais = refPais(ind);
+  const hayPais = pais !== null && isFinite(pais);
+  const toggle = a.nivel === "dpto"
+    ? `<div class="amb-l" role="group" aria-label="Qué comparar"><button type="button" data-lista="provs" class="${a.lista !== "munis" ? "on" : ""}">${TERR.dptos[a.dpto].provs.length} provincias</button><button type="button" data-lista="munis" class="${a.lista === "munis" ? "on" : ""}">${TERR.dptos[a.dpto].munis.length} municipios</button></div>` : "";
+  const cab = `<div class="cmp-t">Comparación<span>${hayPais ? "país " + fmtM(pais, ind) : ""}</span></div>${migaHTML(a)}${toggle}`;
+  if (!con.length) return `<section class="sec" id="cmp-sec">${cab}<div class="sin">${mudo(ind) ? motivoSinSerie(ind) : "Sin datos para este indicador."}</div></section>`;
   const vals = con.map(f => f.v).concat(hayPais ? [pais] : []);
   let lo = Math.min(0, ...vals), hi = Math.max(0, ...vals);
   const pad = (hi - lo) * .03;
   if (hi > 0) hi += pad; if (lo < 0) lo -= pad;
   const X = v => 100 * (v - lo) / ((hi - lo) || 1), z0 = X(0);
+  /* las barras crecen cuando cambia QUÉ se compara (otro indicador u otro
+     ámbito), no en cada repintado: elegir un municipio que ya está en la
+     lista sólo mueve la marca */
+  const firma = ind.key + "|" + a.nivel + a.dpto + a.prov + a.lista;
+  const anima = firma !== _firmaCmp; _firmaCmp = firma;
+  const baja = {dpto: "ver sus provincias", prov: "ver sus municipios", mun: "ir a él"};
+  /* ★ EL BORDE, PAREJO EN LOS CUATRO LADOS (2026-10-31, Carlos: «que sea una
+     línea delgada, que se note, y que sea el mismo grosor en todos los
+     bordes»). Antes el contorno era un escalón en SVG estirado (`viewBox` 100 ×
+     N con `preserveAspectRatio="none"`): el tramo vertical caía entero sobre
+     la punta de la barra y el horizontal en medio píxel, así que uno se veía
+     grueso y el otro tenue. Ahora cada barra lleva su propio borde de 1 px
+     (CSS) y se monta 1 px sobre la de abajo: donde se tocan, las dos líneas
+     son UNA sola, y el contorno de afuera —el escalón— sale igual de fino en
+     horizontal y en vertical. */
   let html = "";
-  const tramos = [];
-  let tramo = [];
   filas.forEach((f, k) => {
-    if (f.hueco !== undefined){
-      html += `<div class="fr-h">··· ${nf(f.hueco, 0)} municipios más ···</div>`;
-      if (tramo.length) tramos.push(tramo);
-      tramo = [];
-      return;
-    }
-    const x = X(f.v), esSel = f.m.sigep === sel;
-    html += `<button type="button" class="fr-f${esSel ? " sel" : ""}" data-s="${f.m.sigep}" title="${f.m.nombre}${f.m.dpto ? " · " + f.m.dpto : ""}">
-      <span class="fr-n">${f.pos ? `<i>${f.pos}</i>` : ""}${f.m.nombre}</span>
-      <span class="fr-b"><i style="left:${Math.min(z0, x).toFixed(2)}%;width:${Math.max(.4, Math.abs(x - z0)).toFixed(2)}%"></i></span>
-      <b>${fmtM(f.v, ind)}</b></button>`;
-    tramo.push([x, k]);
+    const hay = f.v !== null && isFinite(f.v);
+    const x = hay ? X(f.v) : z0, esSel = filaElegida(f);
+    html += `<button type="button" class="fr-f${esSel ? " sel" : ""}${f.tipo !== "mun" ? " baja" : ""}" data-t="${f.tipo}" data-c="${f.cod}" title="${f.nombre}: ${baja[f.tipo]}" style="--k:${Math.min(k, 14)}">
+      <span class="fr-n">${f.nombre}</span>
+      <span class="fr-b">${hay ? `<i style="left:${Math.min(z0, x).toFixed(2)}%;width:${Math.max(.4, Math.abs(x - z0)).toFixed(2)}%"></i>` : ""}</span>
+      <b>${hay ? fmtM(f.v, ind) : "s/d"}</b></button>`;
   });
-  if (tramo.length) tramos.push(tramo);
   const N = filas.length;
-  const tapas = tramos.map(t => `<polyline vector-effect="non-scaling-stroke" points="${
-    t.map(([x, k]) => `${x.toFixed(2)},${k} ${x.toFixed(2)},${k + 1}`).join(" ")}"/>`).join("");
   const xp = hayPais ? X(pais) : null;
   const linea = xp === null ? "" : `<line class="fr-pais" vector-effect="non-scaling-stroke" x1="${xp.toFixed(2)}" y1="0" x2="${xp.toFixed(2)}" y2="${N}"/>`;
-  const boton = con.length > 12 ? `<button class="ver-mas" data-ver="cmp">${VER_TODOS.cmp
-    ? "ver sólo las puntas y el vecindario" : "ver los " + nf(con.length, 0) + " ordenados"}</button>` : "";
-  const que = (VER_TODOS.cmp ? "Los " + nf(con.length, 0) + " municipios, en orden."
-    : sel ? "Las puntas del país y el vecindario del municipio elegido, en orden."
-          : "Las cinco puntas de cada lado, en orden.")
-    + (ind.k_mun ? " Cada barra es el municipio entero —urbano y rural—" : " Cada barra suma las manzanas urbanas del municipio")
-    + "; la línea punteada es el país. Tocá uno para ir a él.";
-  const rg = refRegion(ind);
-  return `<section class="sec"><div class="cmp-t">Comparación entre municipios<span>${hayPais ? "país " + fmtM(pais, ind) : ""}</span></div>
+  const quien = a.nivel === "pais" ? `Los ${N} departamentos`
+    : a.nivel === "dpto" ? (a.lista === "munis" ? `Los ${N} municipios de ${nombreAmbito(a)}` : `Las ${N} provincias de ${nombreAmbito(a)}`)
+    : `Los ${N} municipios de la ${nombreAmbito(a).replace("Provincia", "provincia")}`;
+  const que = `${quien}, en orden. ${ind.k_mun && !ind.solo_mz ? "Cada barra es el territorio entero —urbano y rural—" : "Cada barra suma las manzanas urbanas"}; la línea punteada es el país. ${
+    a.nivel === "pais" ? "Tocá un departamento para ver sus provincias."
+    : a.nivel === "dpto" && a.lista !== "munis" ? "Tocá una provincia para ver sus municipios."
+    : "Tocá un municipio para ir a él."}`;
+  return `<section class="sec" id="cmp-sec">${cab}
     <p class="sec-q">${que}</p>
-    <div class="fr"><svg class="fr-tapa" viewBox="0 0 100 ${N}" preserveAspectRatio="none" aria-hidden="true">${linea}${tapas}</svg>${html}</div>
-    ${boton}${lecturaPanel(con.map(f => ({m: f.m, act: f.v})), ind, rg ? rg.v : null)}</section>`;
+    <div class="fr${anima ? " anima" : ""}">${html}<svg class="fr-tapa" viewBox="0 0 100 ${N}" preserveAspectRatio="none" aria-hidden="true">${linea}</svg></div>
+    ${lecturaAmbito(con, ind, pais, a)}</section>`;
+}
+let _firmaCmp = "", _firmaCls = "";
+/* La lectura de las barras, escrita: quién encabeza, quién cierra, cuántos
+   quedan por encima del país. */
+function lecturaAmbito(con, ind, pais, a){
+  if (con.length < 2) return "";
+  const s = con.slice().sort((x, y) => y.v - x.v), top = s[0], fin = s[s.length - 1];
+  const u = ind.unit === "%" && !esConteo(ind) ? "pp" : (ind.unit || "");
+  let t = `<b>${top.nombre}</b> encabeza con ${fmtM(top.v, ind)} y <b>${fin.nombre}</b> cierra con ${fmtM(fin.v, ind)}: ${
+    nf(top.v - fin.v, decimales(top.v - fin.v, u))} ${u} entre los dos.`;
+  if (pais !== null && isFinite(pais) && !esConteo(ind)){
+    const arriba = con.filter(f => f.v > pais).length;
+    t += ` <b>${arriba}</b> de ${con.length} quedan por encima del país (${fmtM(pais, ind)}).`;
+  }
+  return `<p class="fr-lec">${t}</p>`;
 }
 
-/* ── 3 · EL FOCO DEL MAPA ─────────────────────────────────────────────────
-   Pasar el cursor por un tramo de «Dónde cae en el país» (o tocarlo, y queda
-   fijo) deja con su color sólo a las manzanas de ese tramo y apaga el resto.
-   Se arma como opacidad por manzana DENTRO del fundido por zoom —MapLibre
-   exige el ["zoom"] arriba de todo—, así el cruce municipio ↔ manzana no
-   cambia. ⚠️ Cambiar la opacidad hace que MapLibre vuelva a procesar las
-   teselas: por eso se manda sólo cuando cambia el tramo, nunca a cada
-   movimiento del cursor. */
-let PERFIL_ACT = null;
-const FOCO = {rango: null, fija: false, c: null, k: null};
-function opacidadMz(){
-  const b = opacidades().mz;
-  if (!FOCO.rango) return fundidoMz(b);
-  const v = ["to-number", ["feature-state", "v"]];
-  const conds = [["!=", ["feature-state", "v"], null]];
-  if (isFinite(FOCO.rango[0])) conds.push([">=", v, FOCO.rango[0]]);
-  if (isFinite(FOCO.rango[1])) conds.push(["<", v, FOCO.rango[1]]);
-  const cond = ["all", ...conds];
-  const F = x => ["case", cond, x, +(x * .12).toFixed(3)];
-  return ["interpolate", ["linear"], ["zoom"], Z0, 0, Z0 + (Z1 - Z0) * .4, F(b * .7), Z1, F(b)];
-}
-function aplicarFoco(){
-  if (map && map.getLayer && map.getLayer("mz-fill")) map.setPaintProperty("mz-fill", "fill-opacity", opacidadMz());
-}
-function enfocarRango(r){ FOCO.rango = r; aplicarFoco(); }
-function activarPerfil(){
-  document.querySelectorAll("#cmp .fr-f[data-s]").forEach(el => el.onclick = () => seleccionar(el.dataset.s));
-  const svg = document.getElementById("pf-svg"), P = PERFIL_ACT;
-  if (!svg || !P){ if (FOCO.rango){ FOCO.fija = false; FOCO.c = null; enfocarRango(null); } return; }
-  // otro indicador: el tramo de antes ya no significa nada
-  if (FOCO.k !== P.ind.key){ FOCO.k = P.ind.key; FOCO.fija = false; FOCO.c = null; if (FOCO.rango) enfocarRango(null); }
-  const tramo = c => [c === 0 ? -Infinity : P.lo + c / P.NB * P.rango,
-                      c === P.NB - 1 ? Infinity : P.lo + (c + 1) / P.NB * P.rango];
-  const dice = c => { const [a, b] = tramo(c);
-    return !isFinite(a) ? `hasta ${fmtM(b, P.ind)}` : !isFinite(b) ? `desde ${fmtM(a, P.ind)}` : `de ${fmtM(a, P.ind)} a ${fmtM(b, P.ind)}`; };
-  const marcar = c => svg.querySelectorAll("rect.pf-c").forEach(r => r.classList.toggle("dim", c !== null && +r.dataset.c !== c));
-  const eMz = escalaManzana(P.ind);
-  let encima = null, tip = "";
-  const ficha_ = c => {
-    const pct = 100 * P.masa[c] / P.totalM, medio = P.lo + (c + .5) / P.NB * P.rango;
-    return `<div class="pd">Dónde cae en el país</div><div class="pn">${P.ind.label}</div>
-      <div class="pind">manzanas ${dice(c)}</div>
-      <div class="pv"><span class="pchip" style="background:${tonoDe(eMz, medio)}"></span><b>${nf(pct, pct < 1 ? 1 : 0)}%</b></div>
-      <div class="pr"><span>de las manzanas del país con ficha</span></div>
-      <div class="pgr">${nivel !== "manzana" ? "Acercá el mapa a una ciudad para verlas." : FOCO.fija ? "Tocá de nuevo para soltarlo." : "Tocá para dejarlo fijo en el mapa."}</div>`;
+/* ── 3 · CUÁNTA GENTE VIVE EN CADA COLOR (2026-10-31) ─────────────────────
+   Reemplaza al histograma «Dónde cae en el país», que con los deciles ya no
+   tenía sentido: cada grupo junta, por construcción, la misma cantidad de
+   manzanas del país. Lo que SÍ cambia de un lugar a otro es cuánta de SU gente
+   vive en cada grupo. Cada barra es un lugar —el país arriba y, debajo, los
+   mismos del ámbito de la comparación, en el mismo orden— partida en los
+   colores del mapa de manzanas. Pasar el cursor por un color lo encuentra en
+   el mapa; tocarlo lo deja fijo. Molde: el tablero de la Gobernación.
+   ⚠️ Son los colores de las MANZANAS (sus grupos del país, o los de la ciudad
+   con «esta ciudad»), que no son los del mapa de municipios. */
+function gentePorColorHTML(i){
+  if (!i.k_mz) return "";
+  const D = decilesDe(i.k_mz);
+  const cab = `<div class="cmp-t">Cuánta gente vive en cada color<span>% de las personas</span></div>`;
+  if (D === null && !DECS.has(i.k_mz))
+    return `<section class="sec cls" id="cls">${cab}<p class="sec-q cls-cargando">Cargando las manzanas de este indicador…</p></section>`;
+  if (!D) return "";
+  const local = ESC_LOCAL && sel && nivel === "manzana" && D.loc && D.loc[sel] && D.loc[sel].p;
+  const e = local ? escalaLocal(i) : escalaManzanaBase(i);
+  if (!e || !e.clases || e.clases.length !== (local ? D.loc[sel].p.length : D.n)) return "";
+  const a = ambitoEfectivo();
+  const suma = sigeps => {
+    const out = new Array(D.n).fill(0);
+    sigeps.forEach(s => { const p = D.p[s]; if (p) p.forEach((x, k) => { out[k] += x; }); });
+    return out;
   };
-  svg.addEventListener("mousemove", ev => {
-    const h = ev.target.closest(".pf-hit");
-    if (!h){
-      if (encima !== null){ encima = null; ocultarPop(); if (!FOCO.fija){ enfocarRango(null); marcar(null); } }
+  let filas;
+  if (local){
+    const m = MUN_POR[sel];
+    filas = [{tipo: "mun", cod: sel, nombre: m.nombre, p: D.loc[sel].p, ref: true}];
+  } else {
+    filas = [{tipo: "pais", cod: "", nombre: "Bolivia", p: D.pais, ref: true}];
+    ordenarFilas(filasAmbito(i, a)).forEach(f => {
+      const p = f.tipo === "mun" ? D.p[f.cod] : suma(f.o.munis);
+      filas.push({tipo: f.tipo, cod: f.cod, nombre: f.nombre, p: p || null, o: f.o});
+    });
+  }
+  const firma = i.key + "|" + (local ? "L" + sel : a.nivel + a.dpto + a.prov + a.lista) + "|" + esOscuro();
+  const anima = firma !== _firmaCls; _firmaCls = firma;
+  const barra = f => {
+    if (!f.p) return `<span class="cls-sin">sin manzanas con ficha</span>`;
+    const T = f.p.reduce((s, x) => s + x, 0);
+    if (!T) return `<span class="cls-sin">sin manzanas con ficha</span>`;
+    // sin cifras adentro (2026-10-31, «más sutil»): la parte de cada color va en el tooltip
+    return f.p.map((x, k) => {
+      const w = 100 * x / T;
+      if (w <= 0) return "";
+      return `<i data-k="${k}" data-p="${w.toFixed(2)}" data-n="${x}" style="width:${w.toFixed(3)}%;background:${e.clases[k]}"></i>`;
+    }).join("");
+  };
+  const fila = (f, n) => `<div class="cls-f${f.ref ? " ref" : ""}${filaElegida(f) ? " on" : ""}" data-t="${f.tipo}" data-c="${f.cod}" style="--k:${Math.min(n, 14)}">
+      ${f.tipo === "pais" || local ? `<span class="cls-n">${f.nombre}</span>`
+        : `<button type="button" class="cls-n" data-t="${f.tipo}" data-c="${f.cod}" title="${f.nombre}">${f.nombre}</button>`}
+      <div class="cls-b">${barra(f)}</div></div>`;
+  const q = local
+    ? `En la escala de <b>${MUN_POR[sel].nombre}</b> cada color junta la misma cantidad de SUS manzanas; la barra dice cuánta de su gente vive en cada uno.`
+    : `Cada barra es un lugar partido en los colores del mapa de manzanas: el largo de cada color es la parte de su gente que vive en manzanas de ese grupo. ${
+        nivel === "manzana" ? "Pasá el cursor por un color para encontrarlas en el mapa; tocalo para dejarlo fijo." : "Acercá el mapa a una ciudad para verlas."}`;
+  return `<section class="sec cls${anima ? " anima" : ""}" id="cls">${cab}<p class="sec-q">${q}</p>
+    ${filas.map(fila).join("")}
+    <div class="cls-ley"><span>${fmtM(e.min, i)}</span><span class="cls-ley-b" style="background:${fondoRampa(e)}"></span><span>${fmtM(e.max, i)}</span></div>
+  </section>`;
+}
+
+/* ── LO QUE ESCUCHA EL PANEL, UNA SOLA VEZ ────────────────────────────────
+   El panel se rehace en cada pintado, así que no se le cuelgan oyentes a sus
+   piezas: se escucha en el contenedor y se mira qué hay debajo. */
+function irAmbito(t, c, volar){
+  if (!TERR) return;
+  const mm = sel ? MUN_POR[sel] : null;
+  if (t === "pais") Object.assign(AMB, {auto: false, nivel: "pais", dpto: null, prov: null});
+  else if (t === "dpto") Object.assign(AMB, {auto: false, nivel: "dpto", dpto: c, prov: mm && mm.dcod === c ? mm.prov : null, lista: "provs"});
+  else if (t === "prov") Object.assign(AMB, {auto: false, nivel: "prov", dpto: TERR.provs[c].dpto, prov: c});
+  if (volar && map){
+    const o = t === "dpto" ? TERR.dptos[c] : t === "prov" ? TERR.provs[c] : null;
+    const caja = o ? o.caja : BBOX;
+    if (caja) map.fitBounds(caja, {padding: padPaneles(), duration: 800, maxZoom: 11.5});
+    sincronizarIrA(t === "dpto" ? TERR.dptos[c].nombre : t === "prov" ? TERR.dptos[TERR.provs[c].dpto].nombre : "Bolivia");
+  }
+  marcarAmbito(null);
+  pintar();
+  escribirURL(true);          // el ámbito queda en la dirección (y atrás lo deshace)
+}
+function sincronizarIrA(nombre){
+  const lab = document.getElementById("dept-lab");
+  if (lab) lab.textContent = nombre;
+  document.querySelectorAll("#dept-drop .tbop").forEach(o => o.classList.toggle("on", o.dataset.d === nombre));
+}
+(function(){
+  const panel = document.getElementById("panel-det");
+  if (!panel) return;
+  let hovK = null, clsK = null, clsTip = "";
+  const hacer = el => {
+    const [t, c] = (el.dataset.amb || `${el.dataset.t}:${el.dataset.c}`).split(":");
+    if (t === "mun"){ if (sel !== c) seleccionar(c, {desdePanel: true}); return; }
+    /* las barras bajan y el mapa va al lugar; la miga también, salvo que haya
+       un municipio elegido: ahí el lector está mirando ESE lugar y cambiar el
+       escalón de la comparación no tiene por qué sacarlo de su ciudad */
+    const vuela = el.classList.contains("fr-f") || el.classList.contains("cls-n")
+               || (el.classList.contains("amb-c") && !sel);
+    if (t === "pais" || t === "dpto" || t === "prov") irAmbito(t, c, vuela);
+  };
+  panel.addEventListener("click", ev => {
+    const b = ev.target.closest(".amb-c, .c-amb, #cmp .fr-f, #cls button.cls-n");
+    if (b){ hacer(b); return; }
+    const l = ev.target.closest(".amb-l button[data-lista]");
+    if (l){ const a = ambitoEfectivo(); Object.assign(AMB, {auto: false, nivel: "dpto", dpto: a.dpto, prov: a.prov, lista: l.dataset.lista}); pintar(); escribirURL(true); return; }
+    const s = ev.target.closest("#cls .cls-b i");
+    if (s && nivel === "manzana"){
+      const k = +s.dataset.k, e = escalaDelPanel();
+      if (!e) return;
+      if (FOCO.fija && FOCO.clase === k && FOCO.nivel === "manzana"){ FOCO.fija = false; enfocarClase(null); marcarCls(null); }
+      else { FOCO.fija = true; enfocarClase(k, e, "manzana"); marcarCls(k); pista("foco"); }
+      clsK = null;
+    }
+  });
+  /* pasar por una fila dibuja su contorno en el mapa; por un color, lo enciende */
+  panel.addEventListener("mouseover", ev => {
+    const f = ev.target.closest("#cmp .fr-f, #cls .cls-f[data-t], .amb-c, .c-amb");
+    const k = f ? (f.dataset.amb || `${f.dataset.t}:${f.dataset.c}`) : null;
+    if (k === hovK) return;
+    hovK = k;
+    if (!k){ marcarAmbito(null); return; }
+    const [t, c] = k.split(":");
+    marcarAmbito(t === "pais" ? null : t, c);
+  });
+  panel.addEventListener("mouseleave", () => { hovK = null; marcarAmbito(null); });
+  panel.addEventListener("mousemove", ev => {
+    const s = ev.target.closest("#cls .cls-b i");
+    if (!s){
+      if (clsK !== null){ clsK = null; ocultarPop(); if (!FOCO.fija){ enfocarClase(null); marcarCls(null); } }
       return;
     }
-    const c = +h.dataset.c;
-    if (c !== encima){
-      encima = c;
-      if (!FOCO.fija){ enfocarRango(tramo(c)); marcar(c); }
-      tip = ficha_(c);
+    const fila = s.closest(".cls-f"), k = +s.dataset.k;
+    const clave = k + "|" + fila.dataset.c + "|" + FOCO.fija;
+    if (clave !== clsK){
+      clsK = clave;
+      const e = escalaDelPanel(), i = ind_actual;
+      if (!e) return;
+      if (!FOCO.fija && nivel === "manzana"){ enfocarClase(k, e, "manzana"); marcarCls(k); }
+      const nom = fila.querySelector(".cls-n").textContent;
+      clsTip = `<div class="pd">${fila.dataset.t === "pais" ? "Todo el país" : fila.dataset.t === "dpto" ? "Departamento" : fila.dataset.t === "prov" ? "Provincia" : "Municipio"}</div>
+        <div class="pn">${nom}</div>
+        <div class="pind">${i.label}: manzanas ${rangoClaseTxt(e, k, i)}</div>
+        <div class="pv"><span class="pchip" style="background:${e.clases[k]}"></span><b>${nf(+s.dataset.p, +s.dataset.p < 1 ? 1 : 0)}%</b></div>
+        <div class="pr"><span>de su gente vive en manzanas de este color</span><span><b>${nf(+s.dataset.n, 0)}</b> pers.</span></div>
+        <div class="pgr">grupo <b>${k + 1}</b> de ${e.clases.length} · ${nivel !== "manzana" ? "acercá el mapa a una ciudad para verlas"
+          : FOCO.fija ? "tocá de nuevo para soltarlo" : "tocá para dejarlo fijo en el mapa"}</div>`;
     }
-    mostrarPop(tip, ev.clientX, ev.clientY);
+    mostrarPop(clsTip, ev.clientX, ev.clientY);
   });
-  svg.addEventListener("mouseleave", () => {
-    encima = null; ocultarPop();
-    if (!FOCO.fija){ enfocarRango(null); marcar(null); }
+})();
+function escalaDelPanel(){
+  const i = ind_actual;
+  if (!i || !i.k_mz) return null;
+  return (ESC_LOCAL && sel && nivel === "manzana" ? escalaLocal(i) : null) || escalaManzanaBase(i);
+}
+function marcarCls(k){
+  document.querySelectorAll("#cls .cls-b i").forEach(x => x.classList.toggle("dim", k !== null && +x.dataset.k !== k));
+}
+
+/* ── EL CONTORNO DEL ÁMBITO EN EL MAPA ────────────────────────────────────
+   El borde de una provincia o un departamento sale de la TOPOLOGÍA de los
+   municipios (`municipios.topojson`): son los arcos que usa un solo miembro del
+   grupo —los que comparten dos miembros son divisiones internas—. Nada de
+   geometría nueva que bajar. Un municipio usa su propio contorno. */
+const _contornos = new Map();
+function contornoDe(sigeps){
+  if (!TOPO_AMB) return null;
+  const n = new Map();
+  sigeps.forEach(s => (TOPO_AMB.porMun[s] || []).forEach(a => n.set(a, (n.get(a) || 0) + 1)));
+  const lineas = [];
+  n.forEach((c, a) => { if (c === 1) lineas.push(TOPO_AMB.arcos[a]); });
+  return lineas.length ? {type: "Feature", properties: {}, geometry: {type: "MultiLineString", coordinates: lineas}} : null;
+}
+let _ambMarcado = "";
+function marcarAmbito(t, c){
+  if (!map || !map.getSource || !map.getSource("amb")) return;
+  const clave = t ? t + ":" + c : "";
+  if (clave === _ambMarcado) return;
+  _ambMarcado = clave;
+  let f = null;
+  if (t && TERR){
+    if (!_contornos.has(clave)){
+      const sigeps = t === "mun" ? [c] : t === "prov" ? (TERR.provs[c] || {}).munis || [] : (TERR.dptos[c] || {}).munis || [];
+      _contornos.set(clave, contornoDe(sigeps));
+    }
+    f = _contornos.get(clave);
+  }
+  map.getSource("amb").setData({type: "FeatureCollection", features: f ? [f] : []});
+}
+
+/* El comparativo de antes (las puntas del país y el vecindario), sólo como
+   reserva si `territorios.json` no llegara. */
+function comparativoForondaViejo(e, ind){
+  const todas = filasComparativo(ind);
+  const con = todas.filter(f => f.v !== null && isFinite(f.v));
+  if (!con.length) return `<div class="sin">${mudo(ind) ? motivoSinSerie(ind) : "Sin datos para este indicador."}</div>`;
+  const filas = recorte(todas).filas;
+  let html = "";
+  filas.forEach(f => {
+    if (f.hueco !== undefined){ html += `<div class="fr-h">··· ${nf(f.hueco, 0)} municipios más ···</div>`; return; }
+    html += `<button type="button" class="fr-f${f.m.sigep === sel ? " sel" : ""}" data-t="mun" data-c="${f.m.sigep}">
+      <span class="fr-n">${f.pos ? `<i>${f.pos}</i>` : ""}${f.m.nombre}</span><span class="fr-b"></span><b>${fmtM(f.v, ind)}</b></button>`;
   });
-  svg.addEventListener("click", ev => {
-    const h = ev.target.closest(".pf-hit");
-    if (!h) return;
-    const c = +h.dataset.c;
-    if (FOCO.fija && FOCO.c === c){ FOCO.fija = false; FOCO.c = null; enfocarRango(null); marcar(null); }
-    else { FOCO.fija = true; FOCO.c = c; enfocarRango(tramo(c)); marcar(c); pista(nivel === "manzana" ? "foco" : "foco_lejos"); }
-    encima = null;
-  });
-  if (FOCO.fija && FOCO.c !== null) marcar(FOCO.c);
+  return `<section class="sec"><div class="cmp-t">Comparación entre municipios</div><div class="fr">${html}</div></section>`;
 }
 
 /* ── 4 · CÓMO LEER EL MAPA ──────────────────────────────────────────────── */
 function guiaHTML(e, i){
-  const r = rampa(i.dir || 0);
-  const grad = `<span class="rampa-mini" style="background:linear-gradient(to right,${r.join(",")})"></span>`;
+  const r = rampaDec(i.dir || 0);
+  const grad = `<span class="rampa-mini" style="background:linear-gradient(to right,${r.map((c, k) =>
+    `${c} ${k * 10}% ${(k + 1) * 10}%`).join(",")})"></span>`;
   const lado = i.dir
     ? `${grad} Hacia el <b>petróleo</b>, mejor; hacia el <b>rojo</b>, peor.`
     : `${grad} Del <b>petróleo</b> (lo más bajo) al <b>rojo</b> (lo más alto): este indicador no tiene un lado bueno.`;
   const items = [
-    `${lado} Una sola escala para todo el país y para los dos niveles: el mismo color quiere decir lo mismo en un municipio y en una manzana. La marca <b>ámbar</b> de la leyenda es el país.`,
+    `${lado} El color reparte en <b>grupos con la misma cantidad</b> (deciles): los ${MUN.length} municipios entre sí, y las manzanas entre las del país. Cuando un mismo valor junta a más de una de cada diez —casi siempre 100 % o 0 %— va en su propio grupo, en un tono más suave si es la mayoría. La marca <b>ámbar</b> de la leyenda es el país.`,
+    `Pasá el cursor por un casillero de la <b>leyenda</b> para dejar con color sólo ese grupo; tocalo para dejarlo fijo.`,
     `Las manzanas <b>grises</b> son las que el INE no publica por privacidad (muy pocas personas o viviendas). No son ceros.`,
     `<b>Alejado</b> se ven los ${MUN.length} municipios; al <b>acercarte</b> a una ciudad, cada manzana. El cambio lo decide el zoom.`,
-    `Con un municipio elegido, la leyenda ofrece <b>«esta ciudad»</b>: reparte la rampa entre sus manzanas. Mientras está activa, el color ya no se compara con el resto del país.`,
-    `El contorno <b>ámbar</b> del mapa es el municipio elegido. Pasá el cursor por «Dónde cae en el país» para encontrar en el mapa las manzanas de un tramo.`,
+    `La <b>comparación</b> baja por escalones: los departamentos, las provincias de uno, los municipios de una provincia. Las cifras de provincia y departamento se calculan como la del país, ponderadas por el universo de cada indicador.`,
+    `Con un municipio elegido, la leyenda ofrece <b>su escala</b>: reparte los grupos entre sus propias manzanas. Mientras está activa, el color ya no se compara con el resto del país.`,
     `<b>«Comparar zonas»</b> pone dos círculos en el mapa y compara lo que vive adentro de cada uno.`,
   ];
   return `<details class="guia"><summary>Cómo leer el mapa</summary><ul>${items.map(t => `<li>${t}</li>`).join("")}</ul></details>`;
@@ -4940,8 +5597,9 @@ function guiaHTML(e, i){
    recuerda en el navegador). Se van solos a los nueve segundos. */
 const PISTAS = {
   inicio: "Acercá el mapa a una ciudad para ver cada manzana. «Ir a» te lleva a un departamento; en el panel de la derecha, buscá un municipio.",
-  foco: "Quedaron con color sólo las manzanas de ese tramo. Tocalo de nuevo para ver todas.",
-  foco_lejos: "Acercá el mapa a una ciudad para ver las manzanas de ese tramo.",
+  foco: "Quedaron con color sólo las manzanas de ese grupo. Tocalo de nuevo para ver todas.",
+  foco_mun: "Quedaron con color sólo los municipios de ese grupo. Tocalo de nuevo para ver todos.",
+  foco_lejos: "Acercá el mapa a una ciudad para ver las manzanas de ese grupo.",
   oculto: "El panel quedó oculto. «Mostrar panel», arriba a la derecha, lo trae de vuelta.",
   zonas: "Arrastrá la letra A o B para mover cada círculo, y el cuadradito del borde para cambiar su tamaño. El panel compara lo que vive adentro.",
 };
@@ -4993,7 +5651,8 @@ const PREGUNTAS = [
 const DUDAS = [
   ["¿Qué es el Retrato Censal?", "El Censo de Población y Vivienda 2024 en dos niveles con la misma definición: los 343 municipios y, al acercarse, cada manzana de las ciudades. Es un producto del Observatorio de Finanzas Públicas y Desarrollo Territorial."],
   ["¿De dónde salen los datos?", "Del Censo 2024 del INE: el nivel municipal, del microdato; el de manzana, de las fichas por manzano que publica el INE, verificadas contra el microdato."],
-  ["¿Qué dicen los colores?", "Una sola escala para todo el país y los dos niveles: hacia el petróleo, mejor; hacia el rojo, peor. La marca ámbar de la leyenda es el país. Con un municipio elegido, «esta ciudad» reparte la rampa entre sus manzanas."],
+  ["¿Qué dicen los colores?", "Cada color es un grupo con la misma cantidad (deciles): los 343 municipios en diez grupos de unos 34, y las manzanas en diez grupos de las del país. Hacia el petróleo, mejor; hacia el rojo, peor. Cuando un mismo valor junta a más de una de cada diez —casi siempre 100 % o 0 %— va en su propio grupo, en un tono más suave si es la mayoría, para que se vea lo que varía. La marca ámbar de la leyenda es el país. Con un municipio elegido, su escala reparte los grupos entre sus propias manzanas."],
+  ["¿Cómo se calculan las cifras de provincia y departamento?", "Igual que la del país: el promedio de sus municipios ponderado por el universo de cada indicador (viviendas para lo de vivienda, personas para lo de personas). Para los indicadores que sólo existen por manzana, la suma de sus manzanas urbanas. La población se suma."],
   ["¿Por qué hay manzanas grises?", "Son las que el INE no publica por privacidad (muy pocas personas o viviendas). No son ceros: se dibujan para que el hueco no se lea como «acá no vive nadie»."],
   ["¿Cómo comparo dos barrios?", "Con «Comparar zonas»: dos círculos que se arrastran y se agrandan; el panel compara lo que vive adentro de cada uno, indicador por indicador. La dirección guarda las zonas, así que se pueden compartir."],
   ["¿Dónde están los demás indicadores municipales?", "En el Atlas Socioeconómico del Observatorio: 215 indicadores municipales, con la serie 2012. Acá están los 91 que existen también por manzana."],
@@ -5494,7 +6153,7 @@ async function zonasAbrir(desde){
   ZONAS.on = true;
   document.body.classList.add("zonas-on");
   znBotones();
-  if (FOCO.rango){ FOCO.fija = false; FOCO.c = null; enfocarRango(null); }
+  if (FOCO.rango){ FOCO.fija = false; enfocarClase(null); }
   znCapas();
   if (desde){ ZONAS.z.a = desde.a; ZONAS.z.b = desde.b; }
   else {

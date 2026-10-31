@@ -13,13 +13,32 @@ Con PMTiles el navegador sólo ve las teselas del viewport, así que lo que ante
 se computaba sobre la marcha hay que **precalcularlo**: es `escala()` movido de
 tiempo de ejecución a tiempo de armado.
 
-Produce `docs/datos/mz_stats.json` con dos bloques por indicador:
+Produce `docs/datos/mz_stats.json` con un bloque por indicador:
 
-  `esc`  — q02/q98 (el dominio dibujado), pivote ponderado por personas, mín,
-           máx, n y una rejilla de cuantiles, para que el tooltip pueda decir en
-           qué percentil cae una manzana sin tener las 131.801 al lado.
-  `dist` — la distribución DENTRO de cada municipio (min · p10 · p25 · p50 · p75
-           · p90 · max, y n), que es lo que dibuja la tira del panel derecho.
+  `esc`  — q02/q98, pivote ponderado por personas, mín, máx, n, una rejilla de
+           cuantiles (para que el tooltip diga en qué percentil cae una manzana
+           sin tener las 131.801 al lado) y `dec`: las CLASES del mapa.
+
+★★ LOS DECILES (2026-10-31, Carlos: «la paleta por deciles creo que está mejor,
+   para hacer los contrastes»). `esc.dec` son los cortes de `scripts/deciles.py`
+   —la misma regla del tablero de la Gobernación— sobre las manzanas del país.
+   ⚠️ SE CALCULAN SOBRE LOS VALORES PUBLICADOS (`docs/datos/col/`), no sobre los
+   del motor: el mapa pinta la columna publicada, y los porcentajes viajan sin
+   decimal. Una manzana con 99,6 % se publica 100 y el mapa la pinta en la clase
+   del 100: si los cortes salieran del valor crudo, la clase de la leyenda y la
+   del polígono no coincidirían justo en el punto de masa.
+
+   Y aparte, por indicador, `docs/datos/deciles/<clave>.json` (se baja con el
+   indicador, no al abrir):
+     `pais` — personas que viven en cada clase, en todo el país;
+     `p`    — lo mismo por municipio (sigep). Las personas SE SUMAN, así que la
+              provincia y el departamento se arman en el navegador sin más datos;
+     `loc`  — los deciles de las manzanas de cada municipio (con 30 o más), para
+              el conmutador «esta ciudad», más su n, mínimo, máximo y mediana.
+
+  ✂ SE FUE `dist` DE ESTE ARCHIVO (los cuartiles de cada municipio): era el 90 %
+    de sus 2,3 MB y se bajaba al abrir el tablero para una tira de 277 filas que
+    el panel ya no muestra. Lo que queda de él vive en `loc`, con el indicador.
 
 ★ POR QUÉ LA TIRA: la desigualdad dentro de un municipio suele ser mayor que
   todo el rango entre municipios. El comparativo de barras retrata la variación
@@ -40,11 +59,14 @@ import pandas as pd
 import sys as _sys
 _sys.stdout.reconfigure(encoding="utf-8")
 _sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent / "catalogo"))
+_sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from alias import renombrar
+from deciles import clases
 
 RAIZ = pathlib.Path(__file__).resolve().parent.parent
 DATOS = RAIZ / "docs" / "datos"
 SALIDA = DATOS / "mz_stats.json"
+DIR_DEC = DATOS / "deciles"
 CORTES = [i / 50 for i in range(51)]     # 51 cortes: cada 2%
 MIN_MZ = 30                              # con menos, los deciles no dicen nada
 
@@ -163,6 +185,9 @@ def escala_unica(cat, out, mun):
 
 
 def main():
+    import pyarrow.parquet as pq
+    from motor_manzana import FUENTE
+
     cat = json.loads((DATOS / "catalogo_manzana.json").read_text(encoding="utf-8"))
     orden = [i["key"] for g in cat["grupos"] for i in g["indicadores"]]
     mun = json.loads((DATOS / "municipios_manzana.json").read_text(encoding="utf-8"))
@@ -180,10 +205,27 @@ def main():
     #    cuenta: un promedio simple de manzanas le da el mismo peso a una de 20
     #    personas que a una de 2.000. Es la misma regla del motor municipal.
     peso = mz["pob_total"].to_numpy(dtype=float)
-    sig = mz["sigep"].to_numpy()
     print(f"  {len(mz):,} manzanas · {len(orden)} indicadores del catálogo")
 
-    out = {}
+    # ── el orden de las columnas publicadas: la fila de `manzanos.parquet` ──
+    #    (es el `id` de la tesela; `columnas.json` lo declara)
+    cod_id = pq.read_table(str(FUENTE / "manzanos.parquet"), columns=["codigo"]) \
+        .column(0).to_pandas().astype(str).to_numpy()
+    cols_pub = json.loads((DATOS / "columnas.json").read_text(encoding="utf-8"))
+    if len(cod_id) != cols_pub["n"]:
+        raise SystemExit(f"⛔ {len(cod_id)} manzanas y el manifiesto declara {cols_pub['n']}")
+    por_cod = mz.set_index("codigo")
+    pers_id = np.nan_to_num(por_cod["pob_total"].reindex(cod_id).to_numpy(dtype=float))
+    sig_id = pue.assign(codigo=pue.codigo.astype(str)).set_index("codigo")["sigep"] \
+        .astype(str).reindex(cod_id).to_numpy()
+    sin_mun = int(pd.isna(pd.Series(sig_id)).sum() + (pd.Series(sig_id) == "nan").sum())
+    print(f"  en el orden de la tesela: {len(cod_id):,} · sin municipio: {sin_mun:,}")
+    if DIR_DEC.exists():
+        for f in DIR_DEC.glob("*.json"):
+            f.unlink()
+    DIR_DEC.mkdir(parents=True, exist_ok=True)
+
+    out, dentro_rango, peso_dec = {}, {}, 0
     for k in orden:
         if k not in mz.columns:
             continue
@@ -191,39 +233,63 @@ def main():
         ok = np.isfinite(v)
         if not ok.any():
             continue
-        vv, pp, ss = v[ok], peso[ok], sig[ok]
+        vv, pp = v[ok], peso[ok]
         ordenados = np.sort(vv)
         sw = np.nansum(pp)
         piv = (float(np.nansum(vv * np.nan_to_num(pp)) / sw) if sw > 0
                else cuantil(ordenados, .5))
+        esc = {
+            "lo": r1(cuantil(ordenados, .02)), "hi": r1(cuantil(ordenados, .98)),
+            "piv": r1(piv), "tipo": "país" if sw > 0 else "mediana",
+            "min": r1(float(ordenados[0])), "max": r1(float(ordenados[-1])),
+            "n": int(len(ordenados)),
+            "q": [r1(cuantil(ordenados, c)) for c in CORTES],
+        }
 
-        dist = {}
-        d = pd.DataFrame({"s": ss, "v": vv})
+        # ── ★ LAS CLASES, SOBRE LA COLUMNA PUBLICADA ──────────────────────
+        pth = DATOS / "col" / f"{k}.json"
+        if not pth.exists():
+            out[k] = {"esc": esc}
+            continue
+        pub = np.array([np.nan if x is None else x
+                        for x in json.loads(pth.read_text(encoding="utf-8"))], dtype=float)
+        okp = np.isfinite(pub)
+        dec = clases(pub[okp].tolist())
+        esc["dec"] = dec
+        out[k] = {"esc": esc}
+        cortes = np.asarray(dec["cortes"], dtype=float)
+        n_cls = dec["n"]
+        # clase de cada manzana = el `step` de MapLibre = `clase_de()`
+        cls = np.searchsorted(cortes, pub[okp], side="right")
+        pp_ok, ss_ok = pers_id[okp], sig_id[okp]
+        pais = np.bincount(cls, weights=pp_ok, minlength=n_cls)
+        mz_cls = np.bincount(cls, minlength=n_cls)
+        d = pd.DataFrame({"s": ss_ok, "c": cls, "p": pp_ok, "v": pub[okp]})
+        gente = {}
+        for (s, c), p_ in d.groupby(["s", "c"], sort=False)["p"].sum().items():
+            if s in (None, "nan"):
+                continue
+            gente.setdefault(s, [0] * n_cls)[int(c)] = int(round(p_))
+        loc, rangos = {}, []
         for s, g in d.groupby("s", sort=False):
-            if len(g) < MIN_MZ:
+            if s in (None, "nan") or len(g) < MIN_MZ:
                 continue
             a = np.sort(g["v"].to_numpy())
-            dist[s] = {
-                "n": int(len(a)),
-                # ★ min y max ADEMÁS de los deciles: el bigote p10-p90 cubre el
-                #   80% central y deja fuera una manzana de cada diez en cada
-                #   punta. No es el rango, y confundirlos hace parecer que el
-                #   mínimo del municipio es el p10.
-                "min": r1(float(a[0])), "max": r1(float(a[-1])),
-                "p10": r1(cuantil(a, .10)), "p25": r1(cuantil(a, .25)),
-                "p50": r1(cuantil(a, .50)), "p75": r1(cuantil(a, .75)),
-                "p90": r1(cuantil(a, .90)),
-            }
-        out[k] = {
-            "esc": {
-                "lo": r1(cuantil(ordenados, .02)), "hi": r1(cuantil(ordenados, .98)),
-                "piv": r1(piv), "tipo": "país" if sw > 0 else "mediana",
-                "min": r1(float(ordenados[0])), "max": r1(float(ordenados[-1])),
-                "n": int(len(ordenados)),
-                "q": [r1(cuantil(ordenados, c)) for c in CORTES],
-            },
-            "dist": dist,
-        }
+            dl = clases(a.tolist())
+            # la gente de la ciudad en SUS clases: es lo que el panel muestra
+            # cuando el mapa está en la escala de la ciudad
+            cl_loc = np.searchsorted(np.asarray(dl["cortes"], dtype=float), g["v"].to_numpy(), side="right")
+            p_loc = np.bincount(cl_loc, weights=g["p"].to_numpy(), minlength=dl["n"])
+            loc[s] = {"c": dl["cortes"], "m": dl["masa"], "pm": dl["p_masa"],
+                      "n": int(len(a)), "min": r1(float(a[0])), "max": r1(float(a[-1])),
+                      "med": r1(cuantil(a, .5)), "p": [int(round(x)) for x in p_loc]}
+            rangos.append(cuantil(a, .9) - cuantil(a, .1))
+        dentro_rango[k] = rangos
+        bloque = {"k": k, "n": n_cls, "pais": [int(round(x)) for x in pais],
+                  "mz": [int(x) for x in mz_cls], "p": gente, "loc": loc}
+        txt = json.dumps(bloque, ensure_ascii=False, separators=(",", ":"))
+        (DIR_DEC / f"{k}.json").write_text(txt, encoding="utf-8")
+        peso_dec += len(gzip.compress(txt.encode("utf-8"), 9))
 
     escala_unica(cat, out, mun)
 
@@ -232,18 +298,19 @@ def main():
     b = SALIDA.read_bytes()
     print(f"{SALIDA.name}: {len(out)} indicadores · {len(b)/1024:.0f} KB "
           f"({len(gzip.compress(b,9))/1024:.0f} KB gzip)")
-    print(f"  distribución en {sum(len(v['dist']) for v in out.values()):,} "
-          f"pares indicador×municipio")
+    n_dec = len(list(DIR_DEC.glob("*.json")))
+    print(f"deciles/: {n_dec} archivos · {peso_dec/1024/max(1, n_dec):.1f} KB gzip cada uno en promedio")
+    clases_n = [v["esc"]["dec"]["n"] for v in out.values() if "dec" in v["esc"]]
+    print(f"  clases por indicador: mín {min(clases_n)} · mediana {int(np.median(clases_n))} · "
+          f"con punto de masa: {sum(1 for v in out.values() if v['esc'].get('dec', {}).get('masa') is not None)}")
 
     gana = 0
-    for k, v in out.items():
+    for k, rangos in dentro_rango.items():
         entre = [m["municipal"].get(k) for m in mun
                  if m.get("municipal", {}).get(k) is not None]
-        if len(entre) < 8 or not v["dist"]:
+        if len(entre) < 8 or not rangos:
             continue
-        rango = max(entre) - min(entre)
-        dentro = np.sort([d["p90"] - d["p10"] for d in v["dist"].values()])
-        if cuantil(dentro, .5) > rango:
+        if cuantil(np.sort(rangos), .5) > max(entre) - min(entre):
             gana += 1
     print(f"  en {gana} de {len(out)} indicadores la desigualdad DENTRO de un "
           f"municipio supera el rango ENTRE los 343")

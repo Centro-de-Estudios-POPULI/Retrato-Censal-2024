@@ -69,15 +69,51 @@ Cada paso depende del anterior. Los cuatro primeros son de datos; los dos últim
 4. catalogo/armar_tableros.py       → docs/datos/catalogo_*.json · municipios_*.json
 5. scripts/preparar_web.py          → docs/datos/municipios.geojson · municipios.topojson
                                       region.geojson · mini.json
-   scripts/estadisticas_manzana.py  → docs/datos/mz_stats.json
    scripts/generar_pmtiles.py       → docs/datos/manzanas.pmtiles      (~8 min)
                                       docs/datos/col/<clave>.json · columnas.json
                                       (--solo-columnas: sólo las columnas, ~1 min)
+   scripts/estadisticas_manzana.py  → docs/datos/mz_stats.json · deciles/<clave>.json
+                                      (DESPUÉS de las columnas: los deciles salen
+                                      de la columna publicada; ~20 s)
+   scripts/agregados_territoriales.py → docs/datos/territorios.json (provincias y
+                                      departamentos; verifica contra el «país»; ~20 s)
    scripts/zonas_manzana.py         → docs/datos/zonas/  («Comparar zonas», ~2 min;
                                       DESPUÉS de las columnas: verifica contra ellas)
-6. scripts/generar_sitios.py        → docs/municipal/ · docs/manzana/
-   scripts/armar_portada.py         → docs/index.html
+6. scripts/generar_sitios.py        → docs/index.html (desde plantilla/tablero.html)
+   scripts/prueba_deciles.py        → verifica que los deciles del navegador (JS) sean
+                                      los de Python: 482 casos, tiene que dar todos iguales
 ```
+
+**Deciles y ámbitos (2026-10-31).** Pedido de Carlos: «que en el panel derecho
+las barras sean por municipio y/o provincia, no la lista de los 343» y «la paleta
+por deciles está mejor, para hacer los contrastes».
+
+- **El color va por deciles en los dos niveles** (`scripts/deciles.py`, la regla
+  del tablero de la Gobernación): diez grupos de igual cantidad, y un valor que
+  junta a más de 1 de cada 10 (casi siempre 100 % o 0 %) va en su propio grupo;
+  si es la mayoría, en un tinte claro del mismo matiz (en OKLab: mezclado con el
+  papel quedaba gris y se confundía con «sin dato»). Los municipios se cuentan en
+  el navegador (`clasesDeciles`, la misma cuenta en JS); las manzanas del país y
+  las de cada ciudad (el conmutador «esta ciudad») vienen hechas, sobre la
+  columna publicada. Los diez tonos salen de la misma rampa OFPDT, muestreada en
+  OKLab (`scripts/paleta.py`: `deciles`, y en oscuro con la luz corrida a
+  0,50–0,89 para que las puntas no desaparezcan contra el fondo).
+- **La comparación baja por ámbitos**: Bolivia (9 departamentos) › un
+  departamento (sus provincias o, a pedido, sus municipios) › una provincia (sus
+  municipios). Las cifras de provincia y departamento se calculan como la del
+  país (`region()` de `armar_tableros.py`, ponderada por el universo de cada
+  indicador); los 17 sólo-manzana, sumando manzanas; la población se suma. El
+  script se niega a escribir si con los 343 juntos no reproduce el «país»
+  publicado. La provincia sale del código INE (Jatun Ayllu Yura va a Antonio
+  Quijarro, como dice su código, aunque el mapa maestro la rotule Tomás Frías).
+- **«Cuánta gente vive en cada color»** reemplaza al histograma «Dónde cae en el
+  país» (con deciles salía parejo por construcción) y a la tira de 277
+  municipios: una barra por lugar, partida en los colores del mapa de manzanas.
+- **Más liviano**: `mz_stats.json` bajó de 2,3 MB (332 KB comprimido) a 39 KB
+  (7 KB): la distribución de cada municipio pasó a `deciles/<clave>.json`, que se
+  baja con el indicador (~18 KB). Los minimapas de las tarjetas son `<canvas>`
+  dibujados al entrar en pantalla, no 343 trazos SVG cada uno (la lista de una
+  categoría pasó de ~2.800 elementos a 57).
 
 **«Comparar zonas» (2026-10-30).** `zonas_manzana.py` escribe numerador y
 denominador de cada manzana (nunca porcentajes: una zona suma conteos), en el
@@ -107,7 +143,10 @@ de una vez: MapLibre recorre todo el estado guardado en cada tesela que carga.
 | `docs/datos/catalogo_*.json` | grupos, indicadores, dominio de color y el agregado país | paso 4 |
 | `docs/datos/manzanas.pmtiles` | geometría + `id` (posición en `manzanos.parquet`) + `s` (sigep), `nom`, `f` (ficha). **Sin indicadores** desde 2026-09-16 | paso 5 |
 | `docs/datos/col/<clave>.json` | un indicador = una columna de 247.429 valores en el orden del `id` (`null` = sin ficha); el tablero la aplica con `setFeatureState`. `columnas.json` declara `n`, rango y cuántas traen dato | paso 5 |
-| `docs/datos/municipios.topojson` | los 343 como TopoJSON (161 KB comprimido; el GeoJSON, 620) — el tablero lo infla con `topoAFeatures()` y cae al GeoJSON si falta | paso 5 |
+| `docs/datos/municipios.topojson` | los 343 como TopoJSON (161 KB comprimido; el GeoJSON, 620) — el tablero lo infla con `topoAFeatures()` y cae al GeoJSON si falta; sus arcos dan también el contorno de provincias y departamentos | paso 5 |
+| `docs/datos/mz_stats.json` | por indicador: rejilla de cuantiles de las manzanas del país (percentil del tooltip) y `esc.dec`, los cortes de sus deciles | paso 5 |
+| `docs/datos/deciles/<clave>.json` | `pais` y `p` (personas en cada grupo, del país y de cada municipio: se suman para provincia y departamento) y `loc` (los deciles de cada ciudad con 30 manzanas o más) | paso 5 |
+| `docs/datos/territorios.json` | `claves` + una fila de cifras por departamento (`dptos`) y provincia (`provs`), `mun` (sigep → provincia) y `pais` de los sólo-manzana | paso 5 |
 
 ---
 

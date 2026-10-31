@@ -134,6 +134,58 @@ def _brillar(h, k):
     return _rgb_hex(colorsys.hls_to_rgb(y, l + (1 - l) * k, min(1.0, s * 1.06)))
 
 
+def _oklab(h):
+    lin = [c / 12.92 if c <= .04045 else ((c + .055) / 1.055) ** 2.4 for c in _hex_rgb(h)]
+    r, g, b = lin
+    l = (.4122214708 * r + .5363325363 * g + .0514459929 * b) ** (1 / 3)
+    m = (.2119034982 * r + .6806995451 * g + .1073969566 * b) ** (1 / 3)
+    s = (.0883024619 * r + .2817188376 * g + .6299787005 * b) ** (1 / 3)
+    return (.2104542553 * l + .7936177850 * m - .0040720468 * s,
+            1.9779984951 * l - 2.4285922050 * m + .4505937099 * s,
+            .0259040371 * l + .7827717662 * m - .8086757660 * s)
+
+
+def _desde_oklab(L, a, b):
+    l = (L + .3963377774 * a + .2158037573 * b) ** 3
+    m = (L - .1055613458 * a - .0638541728 * b) ** 3
+    s = (L - .0894841775 * a - 1.2914855480 * b) ** 3
+    lin = (4.0767416621 * l - 3.3077115913 * m + .2309699292 * s,
+           -1.2684380046 * l + 2.6097574011 * m - .3413193965 * s,
+           -.0041960863 * l - .7034186147 * m + 1.7076147010 * s)
+    return _rgb_hex([12.92 * c if c <= .0031308 else 1.055 * c ** (1 / 2.4) - .055
+                     for c in (max(0.0, min(1.0, x)) for x in lin)])
+
+
+def _deciles(rampa, n, luz_oscuro):
+    """★ LOS COLORES DE LOS DECILES (2026-10-31).
+
+    `n` tonos de la MISMA rampa declarada, tomados a distancias parejas en OKLab
+    (la rampa son nueve paradas y los deciles diez clases: no hay una parada por
+    clase, así que se muestrea la rampa en vez de inventar un décimo color). En
+    OKLab y no en RGB para que el paso entre dos clases vecinas se vea parejo.
+    Medido: las vecinas quedan a ΔE ≥ 7,9 (×100 en OKLab) en el tema claro.
+
+    El OSCURO no puede ser el mismo, y es la única excepción a «una sola rampa»:
+    el petróleo profundo #00323d contra el fondo #12181c da 1,3:1 — la clase de
+    arriba DESAPARECE, y con deciles eso es el 10 % del mapa. Subir sólo las
+    puntas (el piso que usa la Gobernación) las pega a sus vecinas (ΔE 3,4), así
+    que se corre la LUZ de las diez a la vez, en proporción, al tramo
+    `luz_oscuro` (OKLab L), con el mismo matiz y croma: queda ≥ 3:1 contra el
+    fondo y las vecinas a ΔE ≥ 7,2."""
+    labs = [_oklab(h) for h in rampa]
+    out = []
+    for i in range(n):
+        x = i * (len(rampa) - 1) / (n - 1)
+        j = min(int(x), len(rampa) - 2)
+        t = x - j
+        out.append([labs[j][q] + (labs[j + 1][q] - labs[j][q]) * t for q in range(3)])
+    claro = [_desde_oklab(*c) for c in out]
+    lo, hi = luz_oscuro
+    l0, l1 = min(c[0] for c in out), max(c[0] for c in out)
+    oscuro = [_desde_oklab(lo + (c[0] - l0) * (hi - lo) / (l1 - l0), c[1], c[2]) for c in out]
+    return claro, oscuro
+
+
 def derivar(p):
     """`pinta` desde `declarada` + `ajustes`. Es la única cuenta del sistema."""
     d = p["declarada"]
@@ -147,10 +199,15 @@ def derivar(p):
     # 2 · el tema claro baja la saturación; 3 · el oscuro además se realza
     claro = [_suavizar(c, f) for c in base]
     oscuro = [_suavizar(_brillar(c, k), f) for c in base]
+    dec = a.get("deciles", {}).get("valor", 10)
+    luz = a.get("deciles_luz_oscuro", {}).get("valor", [0.50, 0.89])
+    dec_claro, dec_oscuro = _deciles(claro, dec, luz)
     return {
         "_": "DERIVADO por scripts/paleta.py — no editar a mano.",
         "divergente": claro,
         "divergente_oscuro": oscuro,
+        "deciles": dec_claro,
+        "deciles_oscuro": dec_oscuro,
         # ★ EL GRIS TAMBIÉN SE SUAVIZA, y la regla no tiene excepción. Se probó
         #   dejarlo crudo —es un aviso de ausencia, no un dato— y la diferencia
         #   es de UN punto por canal (#8b8f95 vs #8a8f96): invisible, pero
@@ -180,6 +237,8 @@ def _bloque_js(p):
         f"{ABRE}\n"
         f"const DIV_CLARA  = {arr(q['divergente'])};\n"
         f"const DIV_OSCURO = {arr(q['divergente_oscuro'])};\n"
+        f"const DEC_CLARA  = {arr(q['deciles'])};\n"
+        f"const DEC_OSCURO = {arr(q['deciles_oscuro'])};\n"
         f'const SIN_DATO = {{claro:"{q["sin_dato"]}", oscuro:"{q["sin_dato"]}"}};\n'
         f'const SENAL = "{q["senal"]}";\n'
         f"{CIERRA}"

@@ -33,6 +33,17 @@
     "sin_secuencial": {
       "valor": true,
       "por_que": "La divergente vale para TODOS los indicadores, también los neutros (`dir: 0`). El Atlas tomó la misma decisión y por la misma razón: el Banco dibuja sus láminas con esta lista leyendo el `dir` de este mismo catálogo, así que dos criterios distintos harían que la lámina y la pantalla pintaran distinto el mismo número."
+    },
+    "deciles": {
+      "valor": 10,
+      "por_que": "Pedido de Carlos (2026-10-31): «la paleta por deciles creo que está mejor, para hacer los contrastes». El mapa pinta por CLASES de igual cantidad (scripts/deciles.py, la regla del tablero de la Gobernación) y cada clase lleva uno de diez tonos tomados a distancias parejas en OKLab de ESTA misma rampa: no se agrega ningún color nuevo a la identidad, se muestrea la que ya está publicada."
+    },
+    "deciles_luz_oscuro": {
+      "valor": [
+        0.5,
+        0.89
+      ],
+      "por_que": "En el tema oscuro las puntas de la rampa desaparecían contra el fondo #12181c (el petróleo #00323d da 1,3:1) y con deciles cada punta es el 10 % del mapa. Subir sólo las puntas las pegaba a sus vecinas (ΔE 3,4), así que se corre la luz OKLab de los diez tonos a este tramo, en proporción y con el mismo matiz: todos quedan a 3:1 o más contra el fondo y las vecinas a ΔE 7,2 o más."
     }
   },
   "pinta": {
@@ -58,6 +69,30 @@
       "#df5d25",
       "#c71e1d",
       "#8f1f22"
+    ],
+    "deciles": [
+      "#00323d",
+      "#005a6d",
+      "#06878e",
+      "#71bdb0",
+      "#c6d6b1",
+      "#ecc07c",
+      "#e98b36",
+      "#da5123",
+      "#c11e1e",
+      "#8f1f22"
+    ],
+    "deciles_oscuro": [
+      "#3f6b77",
+      "#428a9e",
+      "#44adb4",
+      "#87d3c6",
+      "#d1e2bd",
+      "#face8a",
+      "#ffa351",
+      "#ff7549",
+      "#f25449",
+      "#c75550"
     ],
     "sin_dato": "#8c8378",
     "senal": "#ee9b00",
